@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeetaScan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="hero">
+
+        <div class="network-visual">
+
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+            <div class="orbit orbit-three"></div>
+
+            <div class="brand">
+
+    <img
+        src="images/keetascan-logo.png"
+        alt="KeetaScan Logo"
+        class="logo"
+    >
+
+    <h1>KeetaScan</h1>
+
+    <p>Explore the Keeta Network</p>
+
+</div>
+            
+            <div class="search-area">
+
+    <select id="searchType">
+        <option value="transaction">Transaction</option>
+        <option value="address">Address</option>
+        <option value="block">Block</option>
+        <option value="asset">Asset</option>
+    </select>
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search the Keeta Network">
+
+    <button id="searchButton">
+        Search
+    </button>
+ 
+</div>
+
+</main>
+
+<section class="network-overview">
+
+    <div class="stat-card">
+        <span class="stat-label">Total Transactions</span>
+        <strong class="stat-value">—</strong>
+    </div>
+
+    <div class="stat-card">
+    <span class="stat-label">Latest Block</span>
+    <strong class="stat-value" id="latestBlock">—</strong>
+</div>
+
+    <div class="stat-card">
+        <span class="stat-label">Network TPS</span>
+        <strong class="stat-value">—</strong>
+    </div>
+
+    <div class="stat-card">
+        <span class="stat-label">Assets</span>
+        <strong class="stat-value">—</strong>
+    </div>
+
+</section>
+<section class="activity-section">
+
+    <div class="activity-panel">
+
+        <div class="panel-header">
+            <h2>Latest Blocks</h2>
+            <a href="block.html">View All</a>
+        </div>
+
+        <div class="activity-list">
+
+            <div class="activity-row">
+                <div>
+                    <strong>Block —</strong>
+                    <span>Waiting for network data</span>
+                </div>
+
+                <span>—</span>
+            </div>
+
+            <div class="activity-row">
+                <div>
+                    <strong>Block —</strong>
+                    <span>Waiting for network data</span>
+                </div>
+
+                <span>—</span>
+            </div>
+
+            <div class="activity-row">
+                <div>
+                    <strong>Block —</strong>
+                    <span>Waiting for network data</span>
+                </div>
+
+                <span>—</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="activity-panel">
+
+        <div class="panel-header">
+            <h2>Latest Transactions</h2>
+            <a href="transaction.html">View All</a>
+        </div>
+
+        <div class="activity-list">
+
+            <div class="activity-row">
+                <div>
+                    <strong>Transaction —</strong>
+                    <span>Waiting for network data</span>
+                </div>
+
+                <span>—</span>
+            </div>
+
+            <div class="activity-row">
+                <div>
+                    <strong>Transaction —</strong>
+                    <span>Waiting for network data</span>
+                </div>
+
+                <span>—</span>
+            </div>
+
+            <div class="activity-row">
+                <div>
+                    <strong>Transaction —</strong>
+                    <span>Waiting for network data</span>
+                </div>
+
+                <span>—</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+<script src="https://static.test.keeta.com/keetanet-browser.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

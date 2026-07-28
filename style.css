@@ -1,0 +1,340 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #06080c;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 70px 30px 40px;
+}
+
+.network-visual {
+    position: relative;
+    width: 520px;
+    height: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.brand h1 {
+    margin: 0;
+    font-size: 3.5rem;
+    letter-spacing: 4px;
+}
+
+.brand p {
+    margin-top: 12px;
+    color: #aeb6c2;
+    letter-spacing: 1px;
+}
+
+.orbit {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 50%;
+}
+
+.orbit-one {
+    width: 500px;
+    height: 210px;
+    animation: orbitSpin 18s linear infinite;
+}
+
+.orbit-two {
+    width: 430px;
+    height: 270px;
+    animation: orbitSpin 24s linear infinite reverse;
+}
+
+.orbit-three {
+    width: 350px;
+    height: 310px;
+    animation: orbitSpin 30s linear infinite;
+}
+
+.search-area {
+    display: flex;
+    width: min(620px, 100%);
+}
+
+.search-area input {
+    flex: 1;
+    padding: 16px 18px;
+    border: 1px solid #303744;
+    border-radius: 0;
+    background: #10141b;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-area input:focus {
+    border-color: #8aa8ff;
+}
+
+.search-area button {
+    padding: 16px 28px;
+    border: none;
+    border-radius: 0 10px 10px 0;
+    background: white;
+    color: #06080c;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.search-area button:hover {
+    opacity: 0.85;
+}
+@keyframes orbitSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+@media (max-width: 500px) {
+    .network-visual {
+        width: 320px;
+        height: 280px;
+    }
+
+    .brand h1 {
+        font-size: 2.4rem;
+    }
+
+    .orbit-one {
+        width: 310px;
+        height: 150px;
+    }
+
+    .orbit-two {
+        width: 275px;
+        height: 210px;
+    }
+
+    .orbit-three {
+        width: 230px;
+        height: 250px;
+    }
+}
+.search-area {
+    display: flex;
+    flex-direction: row;
+    width: min(620px, 100%);
+}
+
+.search-area select {
+    padding: 16px 14px;
+    border: 1px solid #303744;
+    border-right: none;
+    border-radius: 10px 0 0 10px;
+    background: #10141b;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+}
+.search-area input {
+    flex: 1;
+    padding: 16px 18px;
+    border: 1px solid #303744;
+    border-radius: 0;
+    background: #10141b;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+}
+.search-area button {
+    padding: 16px 28px;
+    border: none;
+    border-radius: 0 10px 10px 0;
+    background: white;
+    color: #06080c;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.detail-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+}
+.details-page {
+    width: min(900px, 100%);
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+.details-page a {
+    color: #aeb6c2;
+    text-decoration: none;
+}
+
+.details-page a:hover {
+    color: white;
+}
+
+.details-page h1 {
+    margin: 40px 0 24px;
+    font-size: 2.5rem;
+}
+
+.details-card {
+    background: #10141b;
+    border: 1px solid #303744;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 24px;
+    padding: 20px 24px;
+    border-bottom: 1px solid #242a35;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: #aeb6c2;
+}
+
+.status-badge {
+    width: fit-content;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(77, 214, 127, 0.15);
+    color: #7ee2a2;
+    font-weight: bold;
+}
+
+
+
+/* ==========================
+   Network Overview
+========================== */
+
+.network-overview {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 20px;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    background: #10141b;
+    border: 1px solid #252d3a;
+    border-radius: 14px;
+    padding: 25px;
+    transition: 0.3s;
+}
+
+.stat-card:hover {
+    border-color: #3fa9ff;
+    transform: translateY(-4px);
+}
+
+.stat-label {
+    display: block;
+    color: #8f98a8;
+    font-size: .9rem;
+    margin-bottom: 12px;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    color: white;
+}
+
+
+
+/* ==========================
+   Activity Section
+========================== */
+
+.activity-section {
+    max-width: 1200px;
+    margin: 50px auto 80px;
+    padding: 0 20px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.activity-panel {
+    background: #10141b;
+    border: 1px solid #252d3a;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 24px;
+
+    border-bottom: 1px solid #252d3a;
+}
+
+.panel-header h2 {
+    font-size: 1.1rem;
+    color: white;
+}
+
+.panel-header a {
+    color: #3fa9ff;
+    text-decoration: none;
+    font-size: .9rem;
+}
+
+.activity-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 18px 24px;
+
+    border-bottom: 1px solid #242a35;
+}
+
+.activity-row:last-child {
+    border-bottom: none;
+}
+
+.activity-row strong {
+    display: block;
+    color: white;
+    margin-bottom: 4px;
+}
+
+.activity-row span {
+    color: #8f98a8;
+    font-size: .9rem;
+}
