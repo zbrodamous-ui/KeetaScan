@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Transaction | KeetaScan</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="details-page">
+
+        <a href="index.html">← Back to Search</a>
+
+        <h1>Transaction</h1>
+
+<section class="details-card">
+
+    <div class="detail-row">
+    <span class="detail-label">Transaction Hash</span>
+    <span id="transactionHash">Waiting for search data</span>
+</div>
+
+    <div class="detail-row">
+    <span class="detail-label">Status</span>
+    <span class="status-badge">Success</span>
+</div>
+   
+    <div class="detail-row">
+    <span class="detail-label">From</span>
+    <span>—</span>
+</div>
+    
+<div class="detail-row">
+    <span class="detail-label">To</span>
+    <span>—</span>
+</div>
+
+    <div class="detail-row">
+    <span class="detail-label">Amount</span>
+    <span>-</span>
+</div>
+
+    <div class="detail-row">
+    <span class="detail-label">Fee</span>
+    <span>-</span>
+</div>
+
+    <div class="detail-row">
+    <span class="detail-label">Block</span>
+    <span>-</span>
+</div>
+
+</section>
+
+    </main>
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const transactionHash = document.getElementById("transactionHash");
+
+transactionHash.textContent = params.get("search");
+
+</script>
+</body>
+
+</html>
