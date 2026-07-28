@@ -47,6 +47,9 @@ client.getNetworkStatus()
         document.getElementById("latestBlock").textContent =
             ledger.blockCount.toLocaleString();
 
+        document.getElementById("totalTransactions").textContent =
+            ledger.transactionCount.toLocaleString();
+
     })
     .catch((error) => {
         console.error("Status Error:", error);
