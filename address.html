@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Address Details</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="main-nav">
+    <a href="index.html">Home</a>
+    <a href="blocks.html">Blocks</a>
+    <a href="transactions.html">Transactions</a>
+    <a href="addresses.html" class="active">Addresses</a>
+    <a href="assets.html">Assets</a>
+    <a href="status.html">Status</a>
+
+    <button
+    id="themeToggle"
+    class="theme-toggle"
+    type="button"
+    aria-label="Switch to light mode"
+>
+    Light Mode
+</button>
+</nav>
+
+    <main class="address-page">
+
+        <div class="block-card">
+
+            <h1 id="addressTitle">Address Details</h1>
+
+            <div class="details-grid" id="addressDetails">
+                Loading address...
+            </div>
+
+            <h2 class="section-title" id="balancesTitle">Balances</h2>
+
+            <div id="balancesList">
+                Loading balances...
+            </div>
+<h2 class="section-title">Recent Activity</h2>
+
+<div class="activity-table">
+
+    <div class="activity-table-header">
+        <span>Block</span>
+        <span>Age</span>
+        <span>Type</span>
+        <span>From</span>
+        <span>To</span>
+        <span>Amount</span>
+    </div>
+
+    <div id="addressActivityList">
+        Loading activity...
+    </div>
+
+        </div>
+        
+    </div>
+
+</main>
+
+<script src="https://static.test.keeta.com/keetanet-browser.js"></script>
+<script src="shared.js"></script>
+<script src="address.js"></script>
+</body>
+</html>

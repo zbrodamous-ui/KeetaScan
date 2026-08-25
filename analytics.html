@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analytics | KeetaScan</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="blocks.html">Blocks</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="addresses.html">Addresses</a>
+        <a href="assets.html">Assets</a>
+        <a href="analytics.html" class="active">Analytics</a>
+        <a href="status.html">Status</a>
+
+        <button
+    id="themeToggle"
+    class="theme-toggle"
+    type="button"
+    aria-label="Switch to light mode"
+>
+    Light Mode
+</button>
+    </nav>
+
+    <main class="analytics-page">
+
+        <section class="analytics-header">
+            <h1>Analytics</h1>
+            <p>Network activity, asset movement, and address insights.</p>
+        </section>
+
+        <section class="analytics-grid">
+
+            <div class="stat-card">
+                <span class="stat-label">Loaded Blocks</span>
+                <strong class="stat-value" id="analyticsBlocks">—</strong>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Loaded Operations</span>
+                <strong class="stat-value" id="analyticsOperations">—</strong>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Unique Senders</span>
+                <strong class="stat-value" id="uniqueSenders">—</strong>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-label">Unique Recipients</span>
+                <strong class="stat-value" id="uniqueRecipients">—</strong>
+            </div>
+
+        </section>
+
+        <section class="analytics-panel">
+
+            <div class="panel-header">
+                <h2>Most Active Senders</h2>
+            </div>
+
+            <div class="analytics-list" id="topSenders">
+                Loading sender activity...
+            </div>
+
+        </section>
+
+        <section class="analytics-panel">
+<section class="analytics-panel">
+
+    <div class="panel-header">
+        <h2>Activity Over Time</h2>
+    </div>
+
+    <div id="activityGrowthChart" class="growth-chart">
+        Loading activity growth...
+    </div>
+<section class="analytics-panel">
+
+    <div class="panel-header">
+        <h2>Largest Recent Transfers</h2>
+    </div>
+
+    <div id="largestTransfers" class="analytics-list">
+        Loading largest transfers...
+    </div>
+
+</section>
+<section class="analytics-panel">
+    <h2>Network Growth</h2>
+
+    <div class="growth-grid">
+
+        <div class="growth-card">
+            <span class="growth-label">Average Operations / Block</span>
+            <strong id="avgOperations"></strong>
+        </div>
+
+        <div class="growth-card">
+            <span class="growth-label">Average KTA Transfer Size</span>
+            <strong id="avgTransfer"></strong>
+        </div>
+
+        <div class="growth-card">
+            <span class="growth-label">Largest KTA Transfer — Scanned Blocks</span>
+            <strong id="largestTransfer"></strong>
+        </div>
+
+        <div class="growth-card">
+            <span class="growth-label">Activity Score</span>
+            <strong id="activityScore"></strong>
+        </div>
+
+    </div>
+</section>
+</section>
+            <div class="panel-header">
+                <h2>Most Active Recipients</h2>
+            </div>
+
+            <div class="analytics-list" id="topRecipients">
+                Loading recipient activity...
+            </div>
+
+        </section>
+
+        <section class="analytics-panel">
+
+            <div class="panel-header">
+                <h2>Operation Types</h2>
+            </div>
+
+            <div class="analytics-list" id="operationTypes"> a
+                Loading operation data...
+            </div>
+
+        </section>
+<section class="analytics-panel">
+    <h2>🐋 Whale Watch</h2>
+
+    <div id="whaleList">
+         Loading whale activity...
+    </div>
+    <section class="analytics-panel">
+    <div class="panel-header">
+        <h2>Recent Largest KTA Trades</h2>
+    </div>
+
+    <div
+        id="recentKtaTrades"
+        class="analytics-list"
+    >
+        Loading recent KTA trades...
+    </div>
+</section>
+
+</section>
+<section class="analytics-panel">
+    <h2>👑 Top KTA Holders - Scanned Accounts</h2>
+
+    <div id="richList">
+        Building Rich List...
+    </div>
+</section>
+    </main>
+
+    <script src="https://static.test.keeta.com/keetanet-browser.js"></script>
+    <script src="shared.js"></script>
+    <script src="analytics.js"></script>
+
+</body>
+</html>

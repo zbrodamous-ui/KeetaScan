@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Asset | KeetaScan</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+<body>
+
+    <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="blocks.html">Blocks</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="addresses.html">Addresses</a>
+        <a href="assets.html">Assets</a>
+        <a href="analytics.html">Analytics</a>
+        <a href="status.html">Status</a>
+
+        <button
+            id="themeToggle"
+            class="theme-toggle"
+            type="button"
+        >
+            Light Mode
+        </button>
+    </nav>
+
+    <main class="asset-detail-page">
+
+        <section class="asset-detail-header">
+            <h1 id="assetTitle">
+                Loading Asset...
+            </h1>
+
+            <p id="assetDescription"></p>
+        </section>
+
+        <section class="analytics-panel">
+
+            <div class="asset-detail-row">
+                <span>Address</span>
+                <strong id="assetAddress">—</strong>
+            </div>
+
+            <div class="asset-detail-row">
+    <span>Network Asset Supply</span>
+    <strong id="assetSupply">—</strong>
+           </div>
+
+            <div class="asset-detail-row">
+                <span>Decimals</span>
+                <strong id="assetDecimals">—</strong>
+            </div>
+
+        </section>
+<section class="asset-transfers">
+    <h2>Recent Transfers</h2>
+
+    <div class="asset-transfer-header">
+        <span>From</span>
+        <span>To</span>
+        <span>Amount</span>
+        <span>Age</span>
+    </div>
+
+    <div id="assetTransfersList">
+        <p>Loading recent transfers...</p>
+    </div>
+</section>
+    </main>
+
+    <script src="https://static.test.keeta.com/keetanet-browser.js"></script>
+    <script src="shared.js"></script>
+    <script src="asset.js"></script>
+
+</body>
+
+</html>

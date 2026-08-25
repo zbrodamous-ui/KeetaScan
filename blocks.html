@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Blocks | KeetaScan</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="blocks.html" class="active">Blocks</a>
+        <a href="transactions.html">Transactions</a>
+        <a href="addresses.html">Addresses</a>
+        <a href="assets.html">Assets</a>
+        <a href="status.html">Status</a>
+
+        <button
+    id="themeToggle"
+    class="theme-toggle"
+    type="button"
+    aria-label="Switch to light mode"
+>
+    Light Mode
+</button>
+    </nav>
+
+    <main class="blocks-page">
+
+        <section class="latest-activity-panel">
+
+            <div class="panel-header">
+                <h1>Blocks</h1>
+            </div>
+
+            <div class="blocks-table">
+
+                <div class="blocks-table-header">
+                    <span>Block</span>
+                    <span>Age</span>
+                    <span>Operations</span>
+                    <span>Account</span>
+                    <span>Network</span>
+                </div>
+
+                <div id="blocksPageList">
+                    Loading blocks...
+                </div>
+
+            </div>
+
+            <div class="pagination-controls">
+                <button id="previousPage">← Previous</button>
+                <span id="pageNumber">Page 1</span>
+                <button id="nextPage">Next →</button>
+            </div>
+
+        </section>
+
+    </main>
+
+<script src="https://static.test.keeta.com/keetanet-browser.js"></script>
+<script src="shared.js"></script>
+<script src="blocks.js"></script>
+
+</body>
+</html>
