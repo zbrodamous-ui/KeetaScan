@@ -1,4 +1,5 @@
 import fs from "fs";
+import { DatabaseSync } from "node:sqlite";
 import * as KeetaNet from "@keetanetwork/keetanet-client";
 
 const client =
@@ -7,6 +8,56 @@ const client =
 const stateFile =
     "indexer/state.json";
 
+    const databaseFile =
+    "./indexer/keetascan.db";
+
+const database =
+    new DatabaseSync(databaseFile);
+
+    database.exec(`
+    CREATE TABLE IF NOT EXISTS blocks (
+        hash TEXT PRIMARY KEY,
+        timestamp TEXT,
+        operation_count INTEGER
+    )
+`);
+
+database.exec(`
+    CREATE TABLE IF NOT EXISTS transfers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        block_hash TEXT NOT NULL,
+        operation_index INTEGER NOT NULL,
+        sender TEXT,
+        recipient TEXT,
+        token TEXT,
+        amount TEXT,
+        timestamp TEXT NOT NULL,
+        UNIQUE(block_hash, operation_index)
+    )
+`);
+const insertBlock =
+    database.prepare(`
+        INSERT OR REPLACE INTO blocks (
+            hash,
+            timestamp,
+            operation_count
+        )
+        VALUES (?, ?, ?)
+    `);
+
+    const insertTransfer =
+    database.prepare(`
+        INSERT OR REPLACE INTO transfers (
+            block_hash,
+            operation_index,
+            sender,
+            recipient,
+            token,
+            amount,
+            timestamp
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
 console.log("KeetaView Indexer starting...");
 
 async function testConnection() {
@@ -104,6 +155,7 @@ return true;
 let discoveredAccounts;
 
 let discoveredTransfers;
+
 async function processHistoryEntry(entry) {
     const blocks =
         entry.voteStaple.blocks;
@@ -111,7 +163,18 @@ async function processHistoryEntry(entry) {
 const newestBlock =
     blocks[blocks.length - 1];
 
+    const timestamp =
+    entry.voteStaple
+        .timestamp()
+        .toISOString();
+
     for (const block of blocks) {
+
+           insertBlock.run(
+        block.hash.toString(),
+        timestamp,
+        block.operations.length
+    );
         const sender =
             block.account
                 ?.publicKeyString
@@ -121,22 +184,41 @@ const newestBlock =
            discoveredAccounts.add(sender);
         }
 
-        for (const operation of block.operations) {
+       for (
+    const [operationIndex, operation]
+    of block.operations.entries()
+) {
             const recipient =
                 operation.to
                     ?.publicKeyString
                     ?.toString?.();
 
+                    const token =
+    operation.token
+        ?.publicKeyString
+        ?.toString?.();
+
             if (recipient) {
                 discoveredAccounts.add(recipient);
             }
 
-            if (
-                operation.token &&
-                operation.amount
-            ) {
-                discoveredTransfers++;
-            }
+           if (
+    token &&
+    operation.amount &&
+    block.hash
+) {
+    insertTransfer.run(
+        block.hash.toString(),
+        operationIndex,
+        sender || null,
+        recipient || null,
+        token,
+        operation.amount.toString(),
+        timestamp
+    );
+
+    discoveredTransfers++;
+}
         }
     }
 
@@ -217,7 +299,14 @@ console.log(
 
 await testConnection();
 
-const batchesToIndex = 5;
+const requestedBatchCount =
+    Number(process.argv[2]);
+
+const batchesToIndex =
+    Number.isInteger(requestedBatchCount) &&
+    requestedBatchCount > 0
+        ? requestedBatchCount
+        : 5;
 
 for (
     let batchNumber = 1;
@@ -239,3 +328,5 @@ if (!historyFound) {
     break;
 }
 }
+database.close();
+process.exit(0);
