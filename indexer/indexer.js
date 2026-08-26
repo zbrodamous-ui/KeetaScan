@@ -31,15 +31,27 @@ async function testConnection() {
         state.lastIndexedBlockHash
     );
 }
-const batchStart =
-    performance.now();
-
 async function testHistoryFetch() {
-    const history =
-        await client.getHistory(
-            null,
-            { depth: 100 }
-        );
+    const batchStart =
+        performance.now();
+
+   const history =
+    await client.getHistory(
+        null,
+        {
+            startBlocksHash:
+            state.historyCursor ||
+            undefined,
+            depth: 100
+        }
+    );
+    if (history.length === 0) {
+    console.log(
+        "No more history entries."
+    );
+
+    return false;
+}
        const lastVoteStaple =
     history[history.length - 1].voteStaple;
 
@@ -48,7 +60,7 @@ async function testHistoryFetch() {
 
     state.historyCursor =
     nextHistoryCursor;
-    
+
 console.log(
     "Next history cursor:",
     nextHistoryCursor
@@ -75,7 +87,6 @@ console.log(
     "Accounts discovered:",
     state.accountsFound
 );
-
 console.log(
     "Transfers discovered:",
     state.transfersFound
@@ -87,11 +98,12 @@ console.log(
     "Batch time:",
     `${((batchEnd - batchStart) / 1000).toFixed(2)} seconds`
 );
+return true;
 }
-   const discoveredAccounts =
-    new Set();
 
-let discoveredTransfers = 0;
+let discoveredAccounts;
+
+let discoveredTransfers;
 async function processHistoryEntry(entry) {
     const blocks =
         entry.voteStaple.blocks;
@@ -131,6 +143,9 @@ const newestBlock =
 state.accountsFound =
     discoveredAccounts.size;
 
+state.discoveredAccounts =
+    [...discoveredAccounts];
+
 state.transfersFound =
     discoveredTransfers;
 
@@ -159,13 +174,28 @@ if (fs.existsSync(stateFile)) {
         historyCursor: null,
         lastIndexedBlockHash: null,
         accountsFound: 0,
+        discoveredAccounts: [],
         transfersFound: 0
     };
 
     console.log(
-        "New indexer state created."
-    );
+    "Indexer totals:",
+    {
+        accountsFound:
+            state.accountsFound,
+        transfersFound:
+            state.transfersFound
+    }
+);
+
 }
+discoveredAccounts =
+    new Set(
+        state.discoveredAccounts || []
+    );
+
+discoveredTransfers =
+    state.transfersFound || 0;
 
 fs.writeFileSync(
     stateFile,
@@ -175,7 +205,37 @@ fs.writeFileSync(
 console.log(
     "Indexer state saved."
 );
-console.log("Indexer state:", state);
+console.log(
+    "Indexer totals:",
+    {
+        accountsFound:
+            state.accountsFound,
+        transfersFound:
+            state.transfersFound
+    }
+);
 
 await testConnection();
-await testHistoryFetch();
+
+const batchesToIndex = 5;
+
+for (
+    let batchNumber = 1;
+    batchNumber <= batchesToIndex;
+    batchNumber++
+) {
+    console.log(
+        `Indexing batch ${batchNumber} of ${batchesToIndex}...`
+    );
+
+   const historyFound =
+    await testHistoryFetch();
+
+if (!historyFound) {
+    console.log(
+        "Indexer reached the end of history."
+    );
+
+    break;
+}
+}
