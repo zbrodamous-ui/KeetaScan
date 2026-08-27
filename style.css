@@ -1895,3 +1895,168 @@ html[data-theme="dark"] .home-search input::placeholder {
         border-color: var(--border-color);
     }
 }
+
+
+/* ==========================
+   Final Keeta Appearance
+========================== */
+
+:root,
+html[data-theme="keeta"] {
+    color-scheme: light;
+
+    --page-background: #ffffff;
+    --surface-background: #ffffff;
+    --surface-secondary: #f8f7f6;
+    --border-color: #d8d3cf;
+
+    --primary-text: #282529;
+    --secondary-text: #655f64;
+    --link-color: #2787df;
+
+    --row-hover: #f5f4f3;
+    --positive-color: #16846f;
+    --negative-color: #bc4f60;
+    --warning-color: #9a6413;
+
+    --panel-shadow: 0 8px 22px rgba(55, 49, 52, 0.08);
+
+    --keeta-graphite: #555152;
+    --keeta-graphite-soft: #656061;
+    --keeta-cream: #ffd5a6;
+}
+
+html[data-theme="clean"] {
+    --page-background: #ffffff;
+    --surface-background: #ffffff;
+    --surface-secondary: #ffffff;
+    --border-color: #dedede;
+
+    --primary-text: #171717;
+    --secondary-text: #555f6d;
+    --link-color: #1676cf;
+
+    --row-hover: #f7f7f7;
+    --panel-shadow: none;
+}
+
+html[data-theme="keeta"] .home-header,
+html[data-theme="keeta"] .home-navigation,
+html[data-theme="keeta"] .main-nav {
+    background: var(--keeta-graphite);
+    border-color: #716c6d;
+    box-shadow: none;
+}
+
+html[data-theme="keeta"] .home-brand,
+html[data-theme="keeta"] .home-navigation a,
+html[data-theme="keeta"] .main-nav a,
+html[data-theme="keeta"] .main-nav a:not(.active) {
+    color: #ffffff;
+}
+
+html[data-theme="keeta"] .home-brand span,
+html[data-theme="keeta"] .home-navigation a.active,
+html[data-theme="keeta"] .home-navigation a:hover,
+html[data-theme="keeta"] .main-nav a.active {
+    color: var(--keeta-cream);
+}
+
+html[data-theme="keeta"] .home-search select,
+html[data-theme="keeta"] .home-search input,
+html[data-theme="keeta"] .header-control,
+html[data-theme="keeta"] .theme-toggle,
+html[data-theme="keeta"] .main-nav .theme-toggle {
+    background: var(--keeta-graphite-soft);
+    border-color: #7b7577;
+    color: #ffffff;
+}
+
+html[data-theme="keeta"] .home-search input::placeholder {
+    color: #e1dcdd;
+}
+
+html[data-theme="keeta"] .home-search button {
+    background: var(--keeta-cream);
+    border-color: var(--keeta-cream);
+    color: #513424;
+}
+
+html[data-theme="keeta"] .market-panel {
+    background: var(--keeta-graphite);
+    border-color: #716c6d;
+}
+
+html[data-theme="keeta"] .market-panel .home-panel-header,
+html[data-theme="keeta"] .market-panel .market-facts,
+html[data-theme="keeta"] .market-panel .market-facts div {
+    border-color: #716c6d;
+}
+
+html[data-theme="keeta"] .market-panel h1,
+html[data-theme="keeta"] .market-panel h2,
+html[data-theme="keeta"] .market-panel strong {
+    color: #ffffff;
+}
+
+html[data-theme="keeta"] .market-panel p,
+html[data-theme="keeta"] .market-panel span,
+html[data-theme="keeta"] .market-panel .home-eyebrow {
+    color: #ded9da;
+}
+
+html[data-theme="keeta"] .market-panel .chart-ranges span.active {
+    background: var(--keeta-cream);
+    color: #513424;
+}
+
+html[data-theme="keeta"] .market-panel .market-placeholder line {
+    stroke: #756f71;
+}
+
+html[data-theme="keeta"] .market-panel .market-placeholder path {
+    stroke: var(--keeta-cream);
+}
+
+html[data-theme="clean"] .home-header,
+html[data-theme="clean"] .home-navigation,
+html[data-theme="clean"] .main-nav,
+html[data-theme="clean"] .market-panel {
+    background: #ffffff;
+    border-color: var(--border-color);
+    box-shadow: none;
+}
+
+html[data-theme="clean"] .home-brand,
+html[data-theme="clean"] .home-navigation a,
+html[data-theme="clean"] .main-nav a,
+html[data-theme="clean"] .market-panel h1,
+html[data-theme="clean"] .market-panel h2,
+html[data-theme="clean"] .market-panel strong {
+    color: var(--primary-text);
+}
+
+html[data-theme="clean"] .home-brand span,
+html[data-theme="clean"] .home-navigation a.active,
+html[data-theme="clean"] .home-navigation a:hover,
+html[data-theme="clean"] .main-nav a.active {
+    color: var(--link-color);
+}
+
+html[data-theme="clean"] .market-panel p,
+html[data-theme="clean"] .market-panel span,
+html[data-theme="clean"] .market-panel .home-eyebrow {
+    color: var(--secondary-text);
+}
+
+html[data-theme="clean"] .market-panel .market-placeholder line {
+    stroke: var(--border-color);
+}
+
+html[data-theme="clean"] .market-panel .market-placeholder path {
+    stroke: var(--link-color);
+}
+
+html[data-theme="clean"] .home-panel {
+    box-shadow: none;
+}
