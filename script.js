@@ -1,66 +1,376 @@
-const searchType = document.getElementById("searchType");
-const searchInput = document.getElementById("searchInput");
-const searchButton = document.getElementById("searchButton");
+const searchType =
+    document.getElementById("searchType");
 
-let lastActivitySignature = "";
+const searchInput =
+    document.getElementById("searchInput");
 
-function formatTokenAmount(amount, decimals) {
-    const rawAmount = BigInt(amount);
-    const divisor = 10n ** BigInt(decimals);
+const searchButton =
+    document.getElementById("searchButton");
 
-    const wholePart = rawAmount / divisor;
-    const fractionalPart = rawAmount % divisor;
+const homeBlocksList =
+    document.getElementById("homeBlocksList");
 
-    const fractionalText =
-        fractionalPart
-            .toString()
-            .padStart(decimals, "0")
-            .replace(/0+$/, "");
+const homeTransactionsList =
+    document.getElementById("homeTransactionsList");
 
-    return fractionalText
-        ? `${wholePart}.${fractionalText}`
-        : wholePart.toString();
-}
+const client =
+    KeetaNet.Client.fromNetwork("main");
 
-searchButton.addEventListener("click", function () {
-    const searchText = searchInput.value.trim();
+const tokenDisplayCache =
+    new Map();
 
-    console.log("Search:", searchText);
+function runSearch() {
+    const searchText =
+        searchInput.value.trim();
 
-    if (searchText === "") {
-        console.log("Please enter something to search.");
+    if (!searchText) {
+        searchInput.focus();
         return;
     }
 
-   if (searchText.startsWith("keeta_")) {
+    if (searchText.startsWith("keeta_")) {
+        window.location.href =
+            \`address.html?address=\${encodeURIComponent(
+                searchText
+            )}\`;
+
+        return;
+    }
+
+    const routes = {
+        transaction:
+            \`transaction.html?search=\${encodeURIComponent(
+                searchText
+            )}\`,
+        address:
+            \`address.html?address=\${encodeURIComponent(
+                searchText
+            )}\`,
+        block:
+            \`block.html?hash=\${encodeURIComponent(
+                searchText
+            )}\`,
+        asset:
+            \`asset.html?asset=\${encodeURIComponent(
+                searchText
+            )}\`
+    };
 
     window.location.href =
-        `address.html?address=${encodeURIComponent(searchText)}`;
+        routes[searchType.value];
+}
 
-    return;
-}   // <-- This brace is missing
+searchButton.addEventListener(
+    "click",
+    runSearch
+);
 
-// Existing dropdown logic can stay below for now.
-if (searchType.value === "transaction") {
-        window.location.href =
-            `transaction.html?search=${encodeURIComponent(searchText)}`;
-    } else if (searchType.value === "address") {
-        window.location.href =
-            `address.html?address=${encodeURIComponent(searchText)}`;
-    } else if (searchType.value === "block") {
-        window.location.href =
-            `block.html?hash=${encodeURIComponent(searchText)}`;
-    } else if (searchType.value === "asset") {
-        window.location.href =
-            `asset.html?asset=${encodeURIComponent(searchText)}`;
+searchInput.addEventListener(
+    "keydown",
+    (event) => {
+        if (event.key === "Enter") {
+            runSearch();
+        }
     }
-});
- 
+);
 
+function shortValue(
+    value,
+    start = 10,
+    end = 6
+) {
+    if (!value) {
+        return "Not available";
+    }
 
-console.log("Keeta SDK:", KeetaNet);
+    return \`\${value.slice(0, start)}...\${value.slice(-end)}\`;
+}
 
-const client = KeetaNet.Client.fromNetwork("main");
+async function getTokenDisplay(
+    tokenAddress,
+    rawAmount
+) {
+    let tokenInfo =
+        tokenDisplayCache.get(
+            tokenAddress
+        );
+
+    if (!tokenInfo) {
+        const tokenAccount =
+            KeetaNet.lib.Account
+                .fromPublicKeyString(
+                    tokenAddress
+                );
+
+        tokenInfo =
+            await client.getAccountInfo(
+                tokenAccount
+            );
+
+        tokenDisplayCache.set(
+            tokenAddress,
+            tokenInfo
+        );
+    }
+
+    let decimals = 0;
+
+    if (tokenInfo?.info?.metadata) {
+        const metadata =
+            JSON.parse(
+                atob(
+                    tokenInfo.info.metadata
+                )
+            );
+
+        decimals =
+            Number(
+                metadata.decimalPlaces ||
+                0
+            );
+    }
+
+    return {
+        amount:
+            formatTokenAmount(
+                rawAmount,
+                decimals
+            ),
+        name:
+            tokenInfo?.info?.name ||
+            shortValue(
+                tokenAddress,
+                8,
+                0
+            )
+    };
+}
+
+function createBlockRow(block) {
+    const row =
+        document.createElement("a");
+
+    row.className =
+        "home-preview-row";
+
+    row.href =
+        \`block.html?hash=\${encodeURIComponent(
+            block.hash
+        )}\`;
+
+    const operationCount =
+        Number(
+            block.operation_count
+        );
+
+    row.innerHTML = \`
+        <span class="preview-icon">□</span>
+
+        <span class="preview-main">
+            <strong>
+                \${shortValue(block.hash, 10, 6)}
+            </strong>
+
+            <small>
+                \${timeAgo(block.timestamp)}
+            </small>
+        </span>
+
+        <span class="preview-value">
+            \${operationCount.toLocaleString()}
+            operation\${operationCount === 1 ? "" : "s"}
+        </span>
+    \`;
+
+    return row;
+}
+
+async function createTransferRow(
+    transfer
+) {
+    const row =
+        document.createElement("a");
+
+    row.className =
+        "home-preview-row";
+
+    row.href =
+        \`transaction.html?block=\${encodeURIComponent(
+            transfer.block_hash
+        )}&operation=\${transfer.operation_index}\`;
+
+    let amountText =
+        BigInt(
+            transfer.amount
+        ).toLocaleString();
+
+    let tokenText =
+        shortValue(
+            transfer.token,
+            8,
+            4
+        );
+
+    try {
+        const tokenDisplay =
+            await getTokenDisplay(
+                transfer.token,
+                transfer.amount
+            );
+
+        amountText =
+            tokenDisplay.amount;
+
+        tokenText =
+            tokenDisplay.name;
+    } catch (error) {
+        console.warn(
+            "Unable to format homepage token:",
+            transfer.token,
+            error
+        );
+    }
+
+    row.innerHTML = \`
+        <span class="preview-icon">⇄</span>
+
+        <span class="preview-main">
+            <strong>
+                \${shortValue(transfer.sender, 9, 5)}
+                →
+                \${shortValue(transfer.recipient, 9, 5)}
+            </strong>
+
+            <small>
+                \${timeAgo(transfer.timestamp)}
+            </small>
+        </span>
+
+        <span class="preview-value">
+            \${amountText}
+            \${tokenText}
+        </span>
+    \`;
+
+    return row;
+}
+
+async function loadHomepage() {
+    try {
+        const [
+            statusResponse,
+            blocksResponse,
+            transfersResponse
+        ] =
+            await Promise.all([
+                fetch(
+                    "http://localhost:3000/api/status"
+                ),
+                fetch(
+                    "http://localhost:3000/api/blocks?limit=6&offset=0"
+                ),
+                fetch(
+                    "http://localhost:3000/api/transfers?limit=6"
+                )
+            ]);
+
+        if (
+            !statusResponse.ok ||
+            !blocksResponse.ok ||
+            !transfersResponse.ok
+        ) {
+            throw new Error(
+                "KeetaScan API did not return homepage data."
+            );
+        }
+
+        const status =
+            await statusResponse.json();
+
+        const blocks =
+            await blocksResponse.json();
+
+        const transfers =
+            await transfersResponse.json();
+
+        document.getElementById(
+            "snapshotBlocks"
+        ).textContent =
+            Number(
+                status.blocks
+            ).toLocaleString();
+
+        document.getElementById(
+            "snapshotTransfers"
+        ).textContent =
+            Number(
+                status.transfers
+            ).toLocaleString();
+
+        document.getElementById(
+            "snapshotAccounts"
+        ).textContent =
+            Number(
+                status.accounts
+            ).toLocaleString();
+
+        const totalRecentOperations =
+            blocks.reduce(
+                (total, block) =>
+                    total +
+                    Number(
+                        block.operation_count
+                    ),
+                0
+            );
+
+        const recentAverage =
+            blocks.length > 0
+                ? totalRecentOperations /
+                    blocks.length
+                : 0;
+
+        document.getElementById(
+            "snapshotAverage"
+        ).textContent =
+            recentAverage.toFixed(2);
+
+        homeBlocksList.innerHTML = "";
+
+        blocks.forEach((block) => {
+            homeBlocksList.appendChild(
+                createBlockRow(block)
+            );
+        });
+
+        homeTransactionsList.innerHTML = "";
+
+        const transferRows =
+            await Promise.all(
+                transfers.map(
+                    createTransferRow
+                )
+            );
+
+        transferRows.forEach((row) => {
+            homeTransactionsList.appendChild(
+                row
+            );
+        });
+    } catch (error) {
+        console.error(
+            "Homepage loading error:",
+            error
+        );
+
+        homeBlocksList.innerHTML =
+            "<p class=\\"home-error\\">Start the KeetaScan API to load indexed blocks.</p>";
+
+        homeTransactionsList.innerHTML =
+            "<p class=\\"home-error\\">Start the KeetaScan API to load indexed transactions.</p>";
+    }
+}
+
 function loadKnownAssets() {
     const saved =
         localStorage.getItem(
@@ -72,118 +382,14 @@ function loadKnownAssets() {
         : [];
 }
 
-function saveKnownAssets(assets) {
-    localStorage.setItem(
-        "keetascan_known_assets",
-        JSON.stringify(assets)
-    );
-}
-function loadLastAssetScan() {
-    return localStorage.getItem(
-        "keetascan_last_asset_scan"
-    );
-}
-
-function saveLastAssetScan(blockHash) {
-    localStorage.setItem(
-        "keetascan_last_asset_scan",
-        blockHash
-    );
-}
-let previousTransactionCount = null;
-let previousTransactionTime = null;
-
-console.log("Keeta Client:", client);
-
-console.log(client);
-
-client.getVersion()
-    .then((version) => {
-        console.log("Keeta Network Version:", version);
-    })
-    .catch((error) => {
-        console.error("Keeta connection error:", error);
-    });
-
-function updateNetworkStatus() {
-    client.getNetworkStatus()
-        .then((status) => {
-            console.log("NETWORK STATUS FOR ASSETS:", status);
-
-        const onlineRepresentatives = status.filter((representative) => {
-            return representative.online === true;
-        });
-
-        const bestRepresentative = onlineRepresentatives.reduce(
-            (currentBest, representative) => {
-
-                if (
-                    !currentBest ||
-                    representative.ledger.blockCount >
-                    currentBest.ledger.blockCount
-                ) {
-                    return representative;
-                }
-
-                return currentBest;
-            },
-            null
-        );
-
-        const ledger = bestRepresentative.ledger;
-const currentTransactionCount =
-    Number(ledger.transactionCount);
-const currentTransactionTime =
-    Date.now();
-
-if (
-    previousTransactionCount !== null &&
-    previousTransactionTime !== null
-) {
-    const transactionDifference =
-        currentTransactionCount -
-        previousTransactionCount;
-
-    const secondsDifference =
-        (currentTransactionTime -
-            previousTransactionTime) / 1000;
-
-    const tps =
-        secondsDifference > 0
-            ? transactionDifference /
-              secondsDifference
-            : 0;
-
-    document.getElementById(
-        "networkTPS"
-    ).textContent =
-        tps.toFixed(2);
-}
-
-previousTransactionCount =
-    currentTransactionCount;
-
-previousTransactionTime =
-    currentTransactionTime;
-
-        console.log("Best Representative:", bestRepresentative);
-
-        document.getElementById("latestBlock").textContent =
-            ledger.blockCount.toLocaleString();
-
-        document.getElementById("totalTransactions").textContent =
-            ledger.transactionCount.toLocaleString();
-    })
-    .catch((error) => {
-        console.error("Status Error:", error);
-    });
-}
-async function discoverMoreAssets() {
+async function rememberRecentAssets() {
     try {
         const history =
             await client.getHistory(
                 null,
-                { depth: 50 }
+                {
+                    depth: 20
+                }
             );
 
         const knownAssets =
@@ -191,314 +397,39 @@ async function discoverMoreAssets() {
                 loadKnownAssets()
             );
 
-        const discoveryBlocks =
-    history
-        .flatMap(
-            (entry) =>
-                entry.voteStaple.blocks
-        )
-        .sort(
-            (a, b) =>
-                b.date - a.date
-        );
+        history
+            .flatMap(
+                (entry) =>
+                    entry.voteStaple.blocks
+            )
+            .forEach((block) => {
+                block.operations.forEach(
+                    (operation) => {
+                        const token =
+                            operation.token
+                                ?.publicKeyString
+                                ?.toString?.();
 
-const lastAssetScan =
-    loadLastAssetScan();
-
-for (const block of discoveryBlocks) {
-    const blockHash =
-        block.hash.toString();
-
-    if (
-        lastAssetScan &&
-        blockHash === lastAssetScan
-    ) {
-        break;
-    }
-
-    block.operations.forEach(
-        (operation) => {
-            if (operation.token) {
-                knownAssets.add(
-                    operation.token
-                        .publicKeyString
-                        .toString()
+                        if (token) {
+                            knownAssets.add(token);
+                        }
+                    }
                 );
-            }
-        }
-    );
-}
+            });
 
-if (discoveryBlocks.length > 0) {
-    saveLastAssetScan(
-        discoveryBlocks[0]
-            .hash
-            .toString()
-    );
-}
-        const knownAssetList =
-            [...knownAssets];
-
-        saveKnownAssets(
-            knownAssetList
-        );
-
-        document.getElementById(
-            "totalAssets"
-        ).textContent =
-            knownAssetList.length
-                .toLocaleString();
-
-        console.log(
-            "Known assets discovered:",
-            knownAssetList.length
+        localStorage.setItem(
+            "keetascan_known_assets",
+            JSON.stringify(
+                [...knownAssets]
+            )
         );
     } catch (error) {
         console.warn(
-            "Asset discovery failed:",
+            "Recent asset discovery failed:",
             error
         );
     }
 }
-async function updateLatestBlocks() {
-    try {
-        const history = await client.getHistory(null, { depth: 3 });
-       
-        const latestBlocks = history
-            .flatMap((entry) => entry.voteStaple.blocks)
-            .sort((a, b) => b.date - a.date)
-            .slice(0, 3);
-            const knownAssets =
-    new Set(
-        loadKnownAssets()
-    );
 
-latestBlocks.forEach((block) => {
-    block.operations.forEach((operation) => {
-        if (operation.token) {
-            knownAssets.add(
-                operation.token.publicKeyString.toString()
-            );
-        }
-    });
-});
-
-const knownAssetList =
-    [...knownAssets];
-
-saveKnownAssets(
-    knownAssetList
-);
-
-document.getElementById(
-    "totalAssets"
-).textContent =
-    knownAssetList.length.toLocaleString();
-
-if (latestBlocks.length >= 2) {
-    const newestBlock =
-        latestBlocks[0];
-
-    const oldestBlock =
-        latestBlocks[latestBlocks.length - 1];
-
-    const totalOperations =
-        latestBlocks.reduce(
-            (total, block) =>
-                total + block.operations.length,
-            0
-        );
-
-    const elapsedSeconds =
-        (
-            new Date(newestBlock.date).getTime() -
-            new Date(oldestBlock.date).getTime()
-        ) / 1000;
-
-    const recentTPS =
-        elapsedSeconds > 0
-            ? totalOperations / elapsedSeconds
-            : 0;
-
-    document.getElementById(
-        "networkTPS"
-    ).textContent =
-        recentTPS.toFixed(2);
-}
-
-const activitySignature =
-    latestBlocks
-        .map((block) => block.hash.toString())
-        .join("|");
-
-if (activitySignature === lastActivitySignature) {
-    return;
-}
-
-lastActivitySignature = activitySignature;
-
-       const latestActivityList =
-   document.getElementById("latestActivityList");
-
-latestActivityList.innerHTML = "";
-
-        latestBlocks.forEach((block) => {
-            
-
-           
-     block.operations.forEach(async (operation, operationIndex) => {
-    let tokenInfo = null;
-    let formattedAmount =
-        operation.amount?.toString() || "Not available";
-    let tokenName = "";
-
-  if (operation.token) {
-    tokenInfo =
-        await client.getAccountInfo(operation.token);
-
-    if (tokenInfo?.info?.metadata) {
-        const metadata =
-            JSON.parse(atob(tokenInfo.info.metadata));
-
-        formattedAmount =
-            formatTokenAmount(
-                operation.amount,
-                metadata.decimalPlaces ?? 18
-            );
-    }
-
-    tokenName =
-        tokenInfo?.info?.name || "";
-
-    if (
-        operation.amount &&
-        formattedAmount === operation.amount.toString()
-    ) {
-        formattedAmount =
-            formatTokenAmount(
-                operation.amount,
-                18
-            );
-    }
-}
-if (
-    formattedAmount !== "Not available" &&
-    formattedAmount.includes(".")
-) {
-    const numericAmount =
-        Number(formattedAmount);
-
-    if (!Number.isNaN(numericAmount)) {
-        formattedAmount =
-            numericAmount.toLocaleString(undefined, {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 6
-            });
-    }
-}
-    const transactionRow =
-        document.createElement("div");
-
-transactionRow.className =
-    "activity-row transaction-row";
-
-    const operationType =
-        operation.constructor.name
-            .replace("src_client_BlockOperation", "");
-
-    const recipient =
-        operation.to?.publicKeyString?.toString?.() ||
-        "Not available";
-
-const shortRecipient =
-    recipient === "Not available"
-        ? recipient
-        : `${recipient.slice(0, 14)}...${recipient.slice(-6)}`;
-    transactionRow.innerHTML = `
-    <span>
-    <a href="block.html?hash=${encodeURIComponent(block.hash.toString())}">
-        ${block.hash.toString().slice(0, 8)}...
-    </a>
-</span>
-
-    <span>${timeAgo(block.date)}</span>
-
-    <span>${operationType}</span>
-
-    <span>
-    ${
-        block.account?.publicKeyString?.toString?.()
-            ? `<a href="address.html?address=${encodeURIComponent(
-                  block.account.publicKeyString.toString()
-              )}">
-                  ${block.account.publicKeyString.toString().slice(0, 12)}...
-               </a>`
-            : "Not available"
-    }
-</span>
-   <span>
-${
-    recipient !== "Not available"
-        ? `<a href="address.html?address=${encodeURIComponent(recipient)}">
-                ${shortRecipient}
-           </a>`
-        : "Not available"
-}
-</span>
-
-    <span>${formattedAmount} ${tokenName}</span>
-`;
-    transactionRow.addEventListener("click", () => {
-        window.location.href =
-            `transaction.html?block=${encodeURIComponent(block.hash.toString())}&operation=${operationIndex}`;
-    });
-
-   latestActivityList.appendChild(transactionRow);
-});
-        });
-    } catch (error) {
-        console.error("History Error:", error);
-    }
-}
-
-updateNetworkStatus();
-
-setInterval(updateNetworkStatus, 5000);
-
-updateLatestBlocks();
-
-discoverMoreAssets();
-setInterval(
-    discoverMoreAssets,
-    60 * 1000
-);
-setInterval(updateLatestBlocks, 1000);
-
-function timeAgo(timestamp) {
-
-    const seconds =
-        Math.floor((Date.now() - new Date(timestamp).getTime()) / 1000);
-
-    if (seconds < 60) {
-        return `${seconds} sec ago`;
-    }
-
-    const minutes =
-        Math.floor(seconds / 60);
-
-    if (minutes < 60) {
-        return `${minutes} min ago`;
-    }
-
-    const hours =
-        Math.floor(minutes / 60);
-
-    if (hours < 24) {
-        return `${hours} hour${hours === 1 ? "" : "s"} ago`;
-    }
-
-    const days =
-        Math.floor(hours / 24);
-
-    return `${days} day${days === 1 ? "" : "s"} ago`;
-}
+loadHomepage();
+rememberRecentAssets();
