@@ -1665,6 +1665,26 @@ html[data-theme="clean"] {
     --panel-shadow: none;
 }
 
+html[data-theme="dim"] {
+    color-scheme: dark;
+
+    --page-background: #2d323a;
+    --surface-background: #383f49;
+    --surface-secondary: #424a56;
+    --border-color: #596371;
+
+    --primary-text: #f0f3f7;
+    --secondary-text: #c3cbd5;
+    --link-color: #82bdf5;
+
+    --row-hover: #47515f;
+    --positive-color: #48d6b5;
+    --negative-color: #ff7b8f;
+    --warning-color: #f0c36f;
+
+    --panel-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
+}
+
 html[data-theme="dark"] {
     color-scheme: dark;
 
@@ -1842,6 +1862,12 @@ button,
 
 html[data-theme="clean"] .home-panel {
     box-shadow: none;
+}
+
+html[data-theme="dim"] .home-search button {
+    color: #172033;
+    background: #82bdf5;
+    border-color: #82bdf5;
 }
 
 html[data-theme="dark"] .home-search button {
