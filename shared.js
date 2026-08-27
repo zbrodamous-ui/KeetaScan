@@ -75,70 +75,136 @@ function formatTokenAmount(amount, decimals, symbol = "") {
         ? `${display} ${symbol}`
         : display;
 }
+const keetaScanThemes = [
+    "light",
+    "clean",
+    "dark"
+];
+
+const keetaScanThemeNames = {
+    light: "Soft Light",
+    clean: "Clean White",
+    dark: "Dark Navy"
+};
+
 function initializeThemeToggle() {
     const themeToggle =
         document.getElementById("themeToggle");
 
     const savedTheme =
-        localStorage.getItem("keetaScanTheme");
-
-    const preferredTheme =
-        savedTheme ||
-        (
-            window.matchMedia("(prefers-color-scheme: light)").matches
-                ? "light"
-                : "dark"
+        localStorage.getItem(
+            "keetaScanTheme"
         );
 
-    applyTheme(preferredTheme);
+    const normalizedTheme =
+        savedTheme === "soft"
+            ? "light"
+            : savedTheme;
+
+    const preferredTheme =
+        keetaScanThemes.includes(
+            normalizedTheme
+        )
+            ? normalizedTheme
+            : "light";
+
+    applyTheme(
+        preferredTheme
+    );
 
     if (!themeToggle) {
         return;
     }
 
-    themeToggle.addEventListener("click", () => {
-        const currentTheme =
-            document.documentElement.dataset.theme || "dark";
+    themeToggle.addEventListener(
+        "click",
+        () => {
+            const currentTheme =
+                document.documentElement
+                    .dataset.theme ||
+                "light";
 
-        const nextTheme =
-            currentTheme === "dark"
-                ? "light"
-                : "dark";
+            const currentIndex =
+                keetaScanThemes.indexOf(
+                    currentTheme
+                );
 
-        applyTheme(nextTheme);
+            const nextTheme =
+                keetaScanThemes[
+                    (
+                        currentIndex + 1
+                    ) %
+                    keetaScanThemes.length
+                ];
 
-        localStorage.setItem(
-            "keetaScanTheme",
-            nextTheme
-        );
-    });
+            applyTheme(
+                nextTheme
+            );
+
+            localStorage.setItem(
+                "keetaScanTheme",
+                nextTheme
+            );
+        }
+    );
 }
 
 function applyTheme(theme) {
-    document.documentElement.dataset.theme =
-        theme;
+    const safeTheme =
+        keetaScanThemes.includes(theme)
+            ? theme
+            : "light";
+
+    document.documentElement
+        .dataset.theme =
+        safeTheme;
 
     const themeToggle =
-        document.getElementById("themeToggle");
+        document.getElementById(
+            "themeToggle"
+        );
 
     if (!themeToggle) {
         return;
     }
 
-    const lightModeActive =
-        theme === "light";
+    const currentIndex =
+        keetaScanThemes.indexOf(
+            safeTheme
+        );
+
+    const nextTheme =
+        keetaScanThemes[
+            (
+                currentIndex + 1
+            ) %
+            keetaScanThemes.length
+        ];
 
     themeToggle.textContent =
-        lightModeActive
-            ? "Dark Mode"
-            : "Light Mode";
+        keetaScanThemeNames[
+            safeTheme
+        ];
 
     themeToggle.setAttribute(
         "aria-label",
-        lightModeActive
-            ? "Switch to dark mode"
-            : "Switch to light mode"
+        `Current appearance: ${
+            keetaScanThemeNames[
+                safeTheme
+            ]
+        }. Switch to ${
+            keetaScanThemeNames[
+                nextTheme
+            ]
+        }.`
     );
+
+    themeToggle.title =
+        `Switch to ${
+            keetaScanThemeNames[
+                nextTheme
+            ]
+        }`;
 }
 
 initializeThemeToggle();
