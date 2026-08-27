@@ -14,166 +14,255 @@ const pageNumber =
 const rowsPerPage = 20;
 
 let currentPage = 1;
-let allTransactions = [];
 
+const tokenInfoCache =
+    new Map();
+
+    async function getTokenDisplay(
+    tokenAddress,
+    rawAmount
+) {
+    let tokenInfo =
+        tokenInfoCache.get(
+            tokenAddress
+        );
+
+    if (!tokenInfo) {
+        const tokenAccount =
+            KeetaNet.lib.Account
+                .fromPublicKeyString(
+                    tokenAddress
+                );
+
+        tokenInfo =
+            await client.getAccountInfo(
+                tokenAccount
+            );
+
+        tokenInfoCache.set(
+            tokenAddress,
+            tokenInfo
+        );
+    }
+
+    let decimalPlaces = 0;
+
+    if (tokenInfo?.info?.metadata) {
+        const metadata =
+            JSON.parse(
+                atob(
+                    tokenInfo.info.metadata
+                )
+            );
+
+        decimalPlaces =
+            Number(
+                metadata.decimalPlaces ||
+                0
+            );
+    }
+
+    return {
+        amount:
+            formatTokenAmount(
+                rawAmount,
+                decimalPlaces
+            ),
+        name:
+            tokenInfo?.info?.name ||
+            `${tokenAddress.slice(0, 8)}...`
+    };
+}
 
 async function loadTransactionsPage() {
     try {
         transactionsPageList.textContent =
             "Loading transactions...";
 
-const history =
-    await client.getHistory(null, { depth: 250 });
-
-const latestBlocks =
-    history
-        .flatMap((entry) => entry.voteStaple.blocks)
-        .sort((a, b) => b.date - a.date);
-const tokenInfoCache = new Map();
-
-transactionsPageList.innerHTML = "";
-allTransactions = [];
-
-for (const block of latestBlocks) {
-    for (
-        let operationIndex = 0;
-        operationIndex < block.operations.length;
-        operationIndex++
-    ) {
-        const operation =
-            block.operations[operationIndex];
-
-        let tokenInfo = null;
-
-        let formattedAmount =
-            operation.amount?.toString() || "Not available";
-
-        let tokenName = "";
-
-       if (operation.token) {
-    const tokenKey =
-        operation.token.publicKeyString.toString();
-
-    tokenInfo =
-        tokenInfoCache.get(tokenKey);
-
-    if (!tokenInfo) {
-        tokenInfo =
-            await client.getAccountInfo(
-                operation.token
+        const response =
+            await fetch(
+                "http://localhost:3000/api/transfers?limit=100"
             );
 
-        tokenInfoCache.set(
-            tokenKey,
-            tokenInfo
-        );
-    }
-
-            if (tokenInfo?.info?.metadata) {
-                const metadata =
-                    JSON.parse(atob(tokenInfo.info.metadata));
-
-                formattedAmount =
-                    formatTokenAmount(
-                        operation.amount,
-                        metadata.decimalPlaces
-                    );
-
-                tokenName =
-                    tokenInfo.info.name || "";
-            }
+        if (!response.ok) {
+            throw new Error(
+                `API request failed: ${response.status}`
+            );
         }
 
-        const operationType =
-            operation.constructor.name.replace(
-                "src_client_BlockOperation",
-                ""
-            );
+        const transfers =
+            await response.json();
 
-        const sender =
-            block.account?.publicKeyString?.toString?.() ||
-            "Not available";
+            const displayTransfers =
+    await Promise.all(
+        transfers.map(
+            async (transfer) => {
+                try {
+                    const tokenDisplay =
+                        await getTokenDisplay(
+                            transfer.token,
+                            transfer.amount
+                        );
 
-        const recipient =
-            operation.to?.publicKeyString?.toString?.() ||
-            "Not available";
+                    return {
+                        ...transfer,
+                        displayAmount:
+                            tokenDisplay.amount,
+                        tokenName:
+                            tokenDisplay.name
+                    };
+                } catch (error) {
+                    console.warn(
+                        "Unable to format token:",
+                        transfer.token,
+                        error
+                    );
 
-        const shortSender =
-            sender === "Not available"
-                ? sender
-                : `${sender.slice(0, 12)}...${sender.slice(-6)}`;
-
-        const shortRecipient =
-            recipient === "Not available"
-                ? recipient
-                : `${recipient.slice(0, 12)}...${recipient.slice(-6)}`;
-
-        const transactionRow =
-            document.createElement("div");
-
-        transactionRow.className =
-            "activity-row transaction-row";
-
-        transactionRow.innerHTML = `
-            <span>
-                <a href="block.html?hash=${encodeURIComponent(
-                    block.hash.toString()
-                )}">
-                    ${block.hash.toString().slice(0, 8)}...
-                </a>
-            </span>
-
-            <span>${timeAgo(block.date)}</span>
-
-            <span>${operationType}</span>
-
-            <span>
-                ${
-                    sender !== "Not available"
-                        ? `<a href="address.html?address=${encodeURIComponent(sender)}">
-                               ${shortSender}
-                           </a>`
-                        : "Not available"
+                    return {
+                        ...transfer,
+                        displayAmount:
+                            BigInt(
+                                transfer.amount
+                            ).toLocaleString(),
+                        tokenName:
+                            `${transfer.token.slice(0, 8)}...`
+                    };
                 }
-            </span>
-
-            <span>
-                ${
-                    recipient !== "Not available"
-                        ? `<a href="address.html?address=${encodeURIComponent(recipient)}">
-                               ${shortRecipient}
-                           </a>`
-                        : "Not available"
-                }
-            </span>
-
-            <span>${formattedAmount} ${tokenName}</span>
-        `;
-
-        transactionRow.addEventListener("click", () => {
-            window.location.href =
-                `transaction.html?block=${encodeURIComponent(
-                    block.hash.toString()
-                )}&operation=${operationIndex}`;
-        });
-allTransactions.push({
-    date: new Date(block.date).getTime(),
-    row: transactionRow
-});
-renderCurrentPage();
-allTransactions.sort((a, b) => b.date - a.date);
-
-    }
-}
-
-} catch (error) {
-    console.error(
-        "Error loading transactions page:",
-        error
+            }
+        )
     );
 
+       allTransactions =
+         displayTransfers.map(
+                (transfer) => {
+                    const sender =
+                        transfer.sender ||
+                        "Not available";
+
+                    const recipient =
+                        transfer.recipient ||
+                        "Not available";
+
+                    const token =
+                        transfer.token ||
+                        "Not available";
+
+                    const shortSender =
+                        sender === "Not available"
+                            ? sender
+                            : `${sender.slice(0, 12)}...${sender.slice(-6)}`;
+
+                    const shortRecipient =
+                        recipient === "Not available"
+                            ? recipient
+                            : `${recipient.slice(0, 12)}...${recipient.slice(-6)}`;
+
+                    const shortToken =
+                        token === "Not available"
+                            ? token
+                            : `${token.slice(0, 8)}...`;
+
+                    const transactionRow =
+                        document.createElement(
+                            "div"
+                        );
+
+                    transactionRow.className =
+                        "activity-row transaction-row";
+
+                    transactionRow.innerHTML = `
+                        <span>
+                            <a href="block.html?block=${encodeURIComponent(
+                                transfer.block_hash
+                            )}">
+                                ${transfer.block_hash.slice(0, 8)}...
+                            </a>
+                        </span>
+
+                        <span>
+                            ${timeAgo(
+                                new Date(
+                                    transfer.timestamp
+                                )
+                            )}
+                        </span>
+
+                        <span>Transfer</span>
+
+                        <span>
+                            ${
+                                sender !== "Not available"
+                                    ? `<a href="address.html?address=${encodeURIComponent(sender)}">
+                                           ${shortSender}
+                                       </a>`
+                                    : "Not available"
+                            }
+                        </span>
+
+                        <span>
+                            ${
+                                recipient !== "Not available"
+                                    ? `<a href="address.html?address=${encodeURIComponent(recipient)}">
+                                           ${shortRecipient}
+                                       </a>`
+                                    : "Not available"
+                            }
+                        </span>
+
+                        <span>
+                           ${transfer.displayAmount} ${transfer.tokenName}
+                        </span>
+                    `;
+
+                    transactionRow
+                        .querySelectorAll("a")
+                        .forEach(
+                            (link) => {
+                                link.addEventListener(
+                                    "click",
+                                    (event) => {
+                                        event.stopPropagation();
+                                    }
+                                );
+                            }
+                        );
+
+                    transactionRow.addEventListener(
+                        "click",
+                        () => {
+                            window.location.href =
+                                `transaction.html?block=${encodeURIComponent(
+                                    transfer.block_hash
+                                )}&operation=${transfer.operation_index}`;
+                        }
+                    );
+
+                    return {
+                        date:
+                            new Date(
+                                transfer.timestamp
+                            ).getTime(),
+                        row:
+                            transactionRow
+                    };
+                }
+            );
+
+        allTransactions.sort(
+            (a, b) =>
+                b.date - a.date
+        );
+
+        currentPage = 1;
+        renderCurrentPage();
+    } catch (error) {
+        console.error(
+            "Error loading transactions page:",
+            error
+        );
+
         transactionsPageList.textContent =
-        "Unable to load transactions.";
+            "Unable to load transactions.";
     }
 }
 
