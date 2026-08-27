@@ -78,12 +78,14 @@ function formatTokenAmount(amount, decimals, symbol = "") {
 const keetaScanThemes = [
     "light",
     "clean",
+    "dim",
     "dark"
 ];
 
 const keetaScanThemeNames = {
     light: "Soft Light",
     clean: "Clean White",
+    dim: "Dim Gray",
     dark: "Dark Navy"
 };
 
