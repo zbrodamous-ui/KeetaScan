@@ -11,6 +11,9 @@ const stateFile =
     const databaseFile =
     "./indexer/keetascan.db";
 
+    const databaseAlreadyExisted =
+    fs.existsSync(databaseFile);
+
 const database =
     new DatabaseSync(databaseFile);
 
@@ -21,7 +24,12 @@ const database =
         operation_count INTEGER
     )
 `);
-
+database.exec(`
+    CREATE TABLE IF NOT EXISTS accounts (
+        address TEXT PRIMARY KEY,
+        first_seen_timestamp TEXT NOT NULL
+    )
+`);
 database.exec(`
     CREATE TABLE IF NOT EXISTS transfers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,6 +43,29 @@ database.exec(`
         UNIQUE(block_hash, operation_index)
     )
 `);
+
+database.exec(`
+    CREATE INDEX IF NOT EXISTS
+        blocks_by_timestamp
+    ON blocks(timestamp);
+
+    CREATE INDEX IF NOT EXISTS
+        transfers_by_timestamp
+    ON transfers(timestamp);
+
+    CREATE INDEX IF NOT EXISTS
+        transfers_by_sender
+    ON transfers(sender);
+
+    CREATE INDEX IF NOT EXISTS
+        transfers_by_recipient
+    ON transfers(recipient);
+
+    CREATE INDEX IF NOT EXISTS
+        transfers_by_token
+    ON transfers(token);
+`);
+
 const insertBlock =
     database.prepare(`
         INSERT OR REPLACE INTO blocks (
@@ -43,6 +74,20 @@ const insertBlock =
             operation_count
         )
         VALUES (?, ?, ?)
+    `);
+
+    const insertAccount =
+    database.prepare(`
+        INSERT INTO accounts (
+    address,
+    first_seen_timestamp
+)
+VALUES (?, ?)
+ON CONFLICT(address) DO UPDATE SET
+    first_seen_timestamp = MIN(
+        accounts.first_seen_timestamp,
+        excluded.first_seen_timestamp
+    )
     `);
 
     const insertTransfer =
@@ -182,6 +227,11 @@ const newestBlock =
 
         if (sender) {
            discoveredAccounts.add(sender);
+
+           insertAccount.run(
+                sender,
+                timestamp
+            );
         }
 
        for (
@@ -200,6 +250,11 @@ const newestBlock =
 
             if (recipient) {
                 discoveredAccounts.add(recipient);
+
+                insertAccount.run(
+                    recipient,
+                    timestamp
+                );
             }
 
            if (
@@ -278,6 +333,23 @@ discoveredAccounts =
 
 discoveredTransfers =
     state.transfersFound || 0;
+
+    if (!databaseAlreadyExisted) {
+    console.log(
+        "New database detected. Resetting index position."
+    );
+
+    state.historyCursor = null;
+    state.lastIndexedBlockHash = null;
+    state.accountsFound = 0;
+    state.discoveredAccounts = [];
+    state.transfersFound = 0;
+
+    discoveredAccounts =
+        new Set();
+
+    discoveredTransfers = 0;
+}
 
 fs.writeFileSync(
     stateFile,
