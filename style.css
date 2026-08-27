@@ -1618,3 +1618,254 @@ html[data-theme="dark"] .preview-value {
         text-align: left;
     }
 }
+
+
+/* ==========================
+   KeetaScan Theme System
+========================== */
+
+:root,
+html[data-theme="light"] {
+    color-scheme: light;
+
+    --page-background: #edf1f5;
+    --surface-background: #ffffff;
+    --surface-secondary: #f6f8fb;
+    --border-color: #cbd4df;
+
+    --primary-text: #172033;
+    --secondary-text: #53647a;
+    --link-color: #1769c2;
+
+    --row-hover: #eef5fc;
+    --positive-color: #078a71;
+    --negative-color: #c94b5f;
+    --warning-color: #a46800;
+
+    --panel-shadow: 0 8px 24px rgba(28, 44, 68, 0.07);
+}
+
+html[data-theme="clean"] {
+    color-scheme: light;
+
+    --page-background: #ffffff;
+    --surface-background: #ffffff;
+    --surface-secondary: #ffffff;
+    --border-color: #d7dde5;
+
+    --primary-text: #111827;
+    --secondary-text: #4f5f73;
+    --link-color: #0b67c2;
+
+    --row-hover: #f5f8fb;
+    --positive-color: #087b67;
+    --negative-color: #bf3f54;
+    --warning-color: #925d00;
+
+    --panel-shadow: none;
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+
+    --page-background: #101827;
+    --surface-background: #182438;
+    --surface-secondary: #202e44;
+    --border-color: #3b4b62;
+
+    --primary-text: #edf3fb;
+    --secondary-text: #b4c2d4;
+    --link-color: #73b8ff;
+
+    --row-hover: #24354f;
+    --positive-color: #35d5b1;
+    --negative-color: #ff7186;
+    --warning-color: #f1bd61;
+
+    --panel-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+body,
+.home-page {
+    background: var(--page-background);
+    color: var(--primary-text);
+}
+
+.main-nav,
+.home-header,
+.home-navigation,
+.home-panel,
+.block-card,
+.details-card,
+.latest-activity-panel,
+.analytics-panel,
+.stat-card,
+.growth-card,
+.operation-card,
+.transaction-card,
+.address-card,
+.asset-detail-card,
+.asset-transfers {
+    background: var(--surface-background);
+    border-color: var(--border-color);
+    color: var(--primary-text);
+    box-shadow: var(--panel-shadow);
+}
+
+.activity-table,
+.activity-table-header,
+.blocks-table,
+.blocks-table-header,
+.transactions-table,
+.transactions-table-header,
+.asset-list-header,
+.asset-list-row,
+.asset-transfer-header,
+.asset-transfer-row,
+.analytics-list,
+.pagination-controls {
+    background: var(--surface-background);
+    border-color: var(--border-color);
+    color: var(--primary-text);
+}
+
+.activity-row,
+.transaction-row,
+.analytics-row,
+.whale-row,
+.largest-transfer-row,
+.recent-kta-trade-row,
+.home-preview-row {
+    border-color: var(--border-color);
+    color: var(--primary-text);
+}
+
+.activity-row:hover,
+.transaction-row:hover,
+.analytics-row:hover,
+.whale-row:hover,
+.largest-transfer-row:hover,
+.recent-kta-trade-row:hover,
+.home-preview-row:hover {
+    background: var(--row-hover);
+}
+
+h1,
+h2,
+h3,
+strong,
+.detail-value,
+.stat-value,
+.preview-value,
+.home-panel-header h1,
+.home-panel-header h2,
+.market-placeholder strong,
+.market-facts strong,
+.snapshot-list strong,
+.home-preview-row {
+    color: var(--primary-text);
+}
+
+p,
+small,
+.stat-label,
+.detail-label,
+.growth-label,
+.home-eyebrow,
+.market-placeholder p,
+.market-facts span,
+.snapshot-list span,
+.snapshot-note,
+.preview-main small,
+.main-nav a:not(.active),
+.home-navigation a:not(.active) {
+    color: var(--secondary-text);
+}
+
+a,
+.main-nav a.active,
+.home-navigation a.active,
+.home-navigation a:hover,
+.preview-main strong,
+.home-panel-link {
+    color: var(--link-color);
+}
+
+input,
+select,
+button,
+.home-search select,
+.home-search input,
+.header-control,
+.theme-toggle,
+.pagination-controls button {
+    background: var(--surface-background);
+    border-color: var(--border-color);
+    color: var(--primary-text);
+}
+
+.home-search button {
+    background: var(--link-color);
+    border-color: var(--link-color);
+    color: #ffffff;
+}
+
+.home-panel,
+.home-header,
+.home-navigation,
+.home-panel-header,
+.home-panel-link,
+.home-preview-row,
+.market-facts,
+.market-facts div,
+.snapshot-list div {
+    border-color: var(--border-color);
+}
+
+.home-panel-link {
+    background: var(--surface-secondary);
+}
+
+.preview-icon,
+.chart-ranges span.active {
+    background: var(--surface-secondary);
+    color: var(--link-color);
+}
+
+.market-placeholder line {
+    stroke: var(--border-color);
+}
+
+.market-placeholder path {
+    stroke: var(--link-color);
+}
+
+html[data-theme="clean"] .home-panel {
+    box-shadow: none;
+}
+
+html[data-theme="dark"] .home-search button {
+    color: #101827;
+    background: #73b8ff;
+    border-color: #73b8ff;
+}
+
+html[data-theme="dark"] .home-search input::placeholder {
+    color: #8798ae;
+}
+
+.status-badge {
+    color: var(--positive-color);
+}
+
+.home-error,
+.text-error {
+    color: var(--negative-color);
+}
+
+@media (max-width: 640px) {
+    .home-search select,
+    .home-search input {
+        border-color: var(--border-color);
+    }
+}
