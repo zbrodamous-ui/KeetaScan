@@ -30,30 +30,30 @@ function runSearch() {
 
     if (searchText.startsWith("keeta_")) {
         window.location.href =
-            \`address.html?address=\${encodeURIComponent(
+            `address.html?address=${encodeURIComponent(
                 searchText
-            )}\`;
+            )}`;
 
         return;
     }
 
     const routes = {
         transaction:
-            \`transaction.html?search=\${encodeURIComponent(
+            `transaction.html?search=${encodeURIComponent(
                 searchText
-            )}\`,
+            )}`,
         address:
-            \`address.html?address=\${encodeURIComponent(
+            `address.html?address=${encodeURIComponent(
                 searchText
-            )}\`,
+            )}`,
         block:
-            \`block.html?hash=\${encodeURIComponent(
+            `block.html?hash=${encodeURIComponent(
                 searchText
-            )}\`,
+            )}`,
         asset:
-            \`asset.html?asset=\${encodeURIComponent(
+            `asset.html?asset=${encodeURIComponent(
                 searchText
-            )}\`
+            )}`
     };
 
     window.location.href =
@@ -83,7 +83,7 @@ function shortValue(
         return "Not available";
     }
 
-    return \`\${value.slice(0, start)}...\${value.slice(-end)}\`;
+    return `${value.slice(0, start)}...${value.slice(-end)}`;
 }
 
 async function getTokenDisplay(
@@ -154,33 +154,33 @@ function createBlockRow(block) {
         "home-preview-row";
 
     row.href =
-        \`block.html?hash=\${encodeURIComponent(
+        `block.html?hash=${encodeURIComponent(
             block.hash
-        )}\`;
+        )}`;
 
     const operationCount =
         Number(
             block.operation_count
         );
 
-    row.innerHTML = \`
+    row.innerHTML = `
         <span class="preview-icon">□</span>
 
         <span class="preview-main">
             <strong>
-                \${shortValue(block.hash, 10, 6)}
+                ${shortValue(block.hash, 10, 6)}
             </strong>
 
             <small>
-                \${timeAgo(block.timestamp)}
+                ${timeAgo(block.timestamp)}
             </small>
         </span>
 
         <span class="preview-value">
-            \${operationCount.toLocaleString()}
-            operation\${operationCount === 1 ? "" : "s"}
+            ${operationCount.toLocaleString()}
+            operation${operationCount === 1 ? "" : "s"}
         </span>
-    \`;
+    `;
 
     return row;
 }
@@ -195,9 +195,9 @@ async function createTransferRow(
         "home-preview-row";
 
     row.href =
-        \`transaction.html?block=\${encodeURIComponent(
+        `transaction.html?block=${encodeURIComponent(
             transfer.block_hash
-        )}&operation=\${transfer.operation_index}\`;
+        )}&operation=${transfer.operation_index}`;
 
     let amountText =
         BigInt(
@@ -231,26 +231,26 @@ async function createTransferRow(
         );
     }
 
-    row.innerHTML = \`
+    row.innerHTML = `
         <span class="preview-icon">⇄</span>
 
         <span class="preview-main">
             <strong>
-                \${shortValue(transfer.sender, 9, 5)}
+                ${shortValue(transfer.sender, 9, 5)}
                 →
-                \${shortValue(transfer.recipient, 9, 5)}
+                ${shortValue(transfer.recipient, 9, 5)}
             </strong>
 
             <small>
-                \${timeAgo(transfer.timestamp)}
+                ${timeAgo(transfer.timestamp)}
             </small>
         </span>
 
         <span class="preview-value">
-            \${amountText}
-            \${tokenText}
+            ${amountText}
+            ${tokenText}
         </span>
-    \`;
+    `;
 
     return row;
 }
