@@ -14,34 +14,49 @@ let currentPage = 1;
 
 const blocksPerPage = 15;
 
-let allBlocks = [];
+let totalBlocks = 0;
 
 async function loadBlocksPage() {
     try {
         blocksPageList.textContent =
             "Loading blocks...";
 
-        const response =
-            await fetch(
-                "http://localhost:3000/api/blocks?limit=100"
-            );
+        const offset =
+            (currentPage - 1) *
+            blocksPerPage;
 
-        if (!response.ok) {
+        const [
+            blocksResponse,
+            statusResponse
+        ] =
+            await Promise.all([
+                fetch(
+                    `http://localhost:3000/api/blocks?limit=${blocksPerPage}&offset=${offset}`
+                ),
+                fetch(
+                    "http://localhost:3000/api/status"
+                )
+            ]);
+
+        if (
+            !blocksResponse.ok ||
+            !statusResponse.ok
+        ) {
             throw new Error(
-                `API returned ${response.status}`
+                "Unable to load indexed blocks"
             );
         }
 
-        allBlocks =
-            await response.json();
+        const blocks =
+            await blocksResponse.json();
 
-        allBlocks.sort(
-            (a, b) =>
-                new Date(b.timestamp) -
-                new Date(a.timestamp)
-        );
+        const status =
+            await statusResponse.json();
 
-        renderBlocksPage();
+        totalBlocks =
+            Number(status.blocks);
+
+        renderBlocksPage(blocks);
     } catch (error) {
         console.error(
             "Error loading blocks page:",
@@ -53,24 +68,10 @@ async function loadBlocksPage() {
     }
 }
 
-function renderBlocksPage() {
+function renderBlocksPage(blocks) {
     blocksPageList.textContent = "";
 
-    const startIndex =
-        (currentPage - 1) *
-        blocksPerPage;
-
-    const endIndex =
-        startIndex +
-        blocksPerPage;
-
-    const blocksForPage =
-        allBlocks.slice(
-            startIndex,
-            endIndex
-        );
-
-    blocksForPage.forEach((block) => {
+    blocks.forEach((block) => {
         const row =
             document.createElement("div");
 
@@ -112,19 +113,17 @@ function renderBlocksPage() {
             <span>Mainnet</span>
         `;
 
-        blocksPageList.appendChild(
-            row
-        );
+        blocksPageList.appendChild(row);
     });
 
     const totalPages =
         Math.ceil(
-            allBlocks.length /
+            totalBlocks /
             blocksPerPage
         );
 
     pageNumber.textContent =
-        `Page ${currentPage}`;
+        `Page ${currentPage} of ${totalPages}`;
 
     previousButton.disabled =
         currentPage === 1;
@@ -138,7 +137,7 @@ previousButton.addEventListener(
     () => {
         if (currentPage > 1) {
             currentPage -= 1;
-            renderBlocksPage();
+            loadBlocksPage();
         }
     }
 );
@@ -148,7 +147,7 @@ nextButton.addEventListener(
     () => {
         const totalPages =
             Math.ceil(
-                allBlocks.length /
+                totalBlocks /
                 blocksPerPage
             );
 
@@ -157,7 +156,7 @@ nextButton.addEventListener(
             totalPages
         ) {
             currentPage += 1;
-            renderBlocksPage();
+            loadBlocksPage();
         }
     }
 );

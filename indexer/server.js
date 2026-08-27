@@ -62,6 +62,21 @@ const server =
                         )
                         : 10;
 
+                        const requestedOffset =
+    Number(
+        url.searchParams.get(
+            "offset"
+        )
+    );
+
+const offset =
+    Number.isInteger(
+        requestedOffset
+    ) &&
+    requestedOffset >= 0
+        ? requestedOffset
+        : 0;
+
                 const blocks =
                     database.prepare(`
                         SELECT
@@ -69,9 +84,13 @@ const server =
                             timestamp,
                             operation_count
                         FROM blocks
-                        ORDER BY timestamp DESC
-                        LIMIT ?
-                    `).all(limit);
+                       ORDER BY timestamp DESC
+                            LIMIT ?
+                            OFFSET ?
+                            `).all(
+                                limit,
+                                offset
+                            );
 
                 sendJson(
                     response,
