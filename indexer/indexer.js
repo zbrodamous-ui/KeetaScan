@@ -103,6 +103,19 @@ ON CONFLICT(address) DO UPDATE SET
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
     `);
+
+    const countAccounts =
+    database.prepare(`
+        SELECT COUNT(*) AS total
+        FROM accounts
+    `);
+
+const countTransfers =
+    database.prepare(`
+        SELECT COUNT(*) AS total
+        FROM transfers
+    `);
+
 console.log("KeetaView Indexer starting...");
 
 async function testConnection() {
@@ -197,9 +210,6 @@ console.log(
 return true;
 }
 
-let discoveredAccounts;
-
-let discoveredTransfers;
 
 async function processHistoryEntry(entry) {
     const blocks =
@@ -226,7 +236,7 @@ const newestBlock =
                 ?.toString?.();
 
         if (sender) {
-           discoveredAccounts.add(sender);
+           
 
            insertAccount.run(
                 sender,
@@ -249,7 +259,7 @@ const newestBlock =
         ?.toString?.();
 
             if (recipient) {
-                discoveredAccounts.add(recipient);
+                
 
                 insertAccount.run(
                     recipient,
@@ -272,19 +282,21 @@ const newestBlock =
         timestamp
     );
 
-    discoveredTransfers++;
 }
         }
     }
 
 state.accountsFound =
-    discoveredAccounts.size;
+    Number(
+        countAccounts.get().total
+    );
 
-state.discoveredAccounts =
-    [...discoveredAccounts];
+delete state.discoveredAccounts;
 
 state.transfersFound =
-    discoveredTransfers;
+    Number(
+        countTransfers.get().total
+    );
 
     if (newestBlock?.hash) {
     state.lastIndexedBlockHash =
@@ -311,7 +323,6 @@ if (fs.existsSync(stateFile)) {
         historyCursor: null,
         lastIndexedBlockHash: null,
         accountsFound: 0,
-        discoveredAccounts: [],
         transfersFound: 0
     };
 
@@ -326,13 +337,6 @@ if (fs.existsSync(stateFile)) {
 );
 
 }
-discoveredAccounts =
-    new Set(
-        state.discoveredAccounts || []
-    );
-
-discoveredTransfers =
-    state.transfersFound || 0;
 
     if (!databaseAlreadyExisted) {
     console.log(
@@ -342,13 +346,8 @@ discoveredTransfers =
     state.historyCursor = null;
     state.lastIndexedBlockHash = null;
     state.accountsFound = 0;
-    state.discoveredAccounts = [];
     state.transfersFound = 0;
 
-    discoveredAccounts =
-        new Set();
-
-    discoveredTransfers = 0;
 }
 
 fs.writeFileSync(
