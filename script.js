@@ -364,10 +364,10 @@ async function loadHomepage() {
         );
 
         homeBlocksList.innerHTML =
-            "<p class=\\"home-error\\">Start the KeetaScan API to load indexed blocks.</p>";
+            "<p class=\"home-error\">Start the KeetaScan API to load indexed blocks.</p>";
 
         homeTransactionsList.innerHTML =
-            "<p class=\\"home-error\\">Start the KeetaScan API to load indexed transactions.</p>";
+            "<p class=\"home-error\">Start the KeetaScan API to load indexed transactions.</p>";
     }
 }
 
