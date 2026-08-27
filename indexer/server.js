@@ -123,20 +123,45 @@ const offset =
             )
             : 10;
 
+    const address =
+        url.searchParams.get(
+            "address"
+        );
+
     const transfers =
-        database.prepare(`
-            SELECT
-                block_hash,
-                operation_index,
-                sender,
-                recipient,
-                token,
-                amount,
-                timestamp
-            FROM transfers
-            ORDER BY timestamp DESC
-            LIMIT ?
-        `).all(limit);
+        address
+            ? database.prepare(`
+                SELECT
+                    block_hash,
+                    operation_index,
+                    sender,
+                    recipient,
+                    token,
+                    amount,
+                    timestamp
+                FROM transfers
+                WHERE sender = ?
+                   OR recipient = ?
+                ORDER BY timestamp DESC
+                LIMIT ?
+            `).all(
+                address,
+                address,
+                limit
+            )
+            : database.prepare(`
+                SELECT
+                    block_hash,
+                    operation_index,
+                    sender,
+                    recipient,
+                    token,
+                    amount,
+                    timestamp
+                FROM transfers
+                ORDER BY timestamp DESC
+                LIMIT ?
+            `).all(limit);
 
     sendJson(
         response,
