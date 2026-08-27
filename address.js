@@ -6,6 +6,66 @@ const address = params.get("address");
 
 console.log("Selected address:", address);
 
+
+const addressTokenInfoCache =
+    new Map();
+
+async function getAddressTokenDisplay(
+    tokenAddress,
+    rawAmount
+) {
+    let tokenInfo =
+        addressTokenInfoCache.get(
+            tokenAddress
+        );
+
+    if (!tokenInfo) {
+        const tokenAccount =
+            KeetaNet.lib.Account
+                .fromPublicKeyString(
+                    tokenAddress
+                );
+
+        tokenInfo =
+            await client.getAccountInfo(
+                tokenAccount
+            );
+
+        addressTokenInfoCache.set(
+            tokenAddress,
+            tokenInfo
+        );
+    }
+
+    let decimalPlaces = 0;
+
+    if (tokenInfo?.info?.metadata) {
+        const metadata =
+            JSON.parse(
+                atob(
+                    tokenInfo.info.metadata
+                )
+            );
+
+        decimalPlaces =
+            Number(
+                metadata.decimalPlaces ||
+                0
+            );
+    }
+
+    return {
+        amount:
+            formatTokenAmount(
+                rawAmount,
+                decimalPlaces
+            ),
+        name:
+            tokenInfo?.info?.name ||
+            `${tokenAddress.slice(0, 8)}...`
+    };
+}
+
 async function loadAddress() {
     try {
         const accountInfo =
@@ -111,37 +171,34 @@ const addressActivityList =
 
 addressActivityList.innerHTML = "";
 
-const history =
-    await client.getHistory(null, { depth: 20 });
+const response =
+    await fetch(
+        `http://localhost:3000/api/transfers?limit=100&address=${encodeURIComponent(
+            address
+        )}`
+    );
 
-const recentBlocks =
-    history
-        .flatMap((entry) => entry.voteStaple.blocks)
-        .sort((a, b) => b.date - a.date);
+if (!response.ok) {
+    throw new Error(
+        `API request failed: ${response.status}`
+    );
+}
 
-        let matchingActivityCount = 0;
+const transfers =
+    await response.json();
 
-recentBlocks.forEach((block) => {
-    block.operations.forEach((operation, operationIndex) => {
+if (transfers.length === 0) {
+    addressActivityList.textContent =
+        "No indexed activity found for this address.";
+} else {
+    for (const transfer of transfers) {
         const sender =
-            block.account?.publicKeyString?.toString?.() ||
+            transfer.sender ||
             "Not available";
 
         const recipient =
-            operation.to?.publicKeyString?.toString?.() ||
+            transfer.recipient ||
             "Not available";
-
-        if (sender !== address && recipient !== address) {
-            return;
-        }
-
-        matchingActivityCount += 1;
-
-        const operationType =
-            operation.constructor.name.replace(
-                "src_client_BlockOperation",
-                ""
-            );
 
         const shortSender =
             sender === "Not available"
@@ -153,6 +210,31 @@ recentBlocks.forEach((block) => {
                 ? recipient
                 : `${recipient.slice(0, 12)}...${recipient.slice(-6)}`;
 
+        let tokenDisplay;
+
+        try {
+            tokenDisplay =
+                await getAddressTokenDisplay(
+                    transfer.token,
+                    transfer.amount
+                );
+        } catch (error) {
+            console.warn(
+                "Unable to format address activity token:",
+                transfer.token,
+                error
+            );
+
+            tokenDisplay = {
+                amount:
+                    BigInt(
+                        transfer.amount
+                    ).toLocaleString(),
+                name:
+                    `${transfer.token.slice(0, 8)}...`
+            };
+        }
+
         const activityRow =
             document.createElement("div");
 
@@ -162,42 +244,59 @@ recentBlocks.forEach((block) => {
         activityRow.innerHTML = `
             <span>
                 <a href="block.html?hash=${encodeURIComponent(
-                    block.hash.toString()
+                    transfer.block_hash
                 )}">
-                    ${block.hash.toString().slice(0, 8)}...
+                    ${transfer.block_hash.slice(0, 8)}...
                 </a>
             </span>
 
-            <span>${timeAgo(block.date)}</span>
+            <span>
+                ${timeAgo(
+                    new Date(
+                        transfer.timestamp
+                    )
+                )}
+            </span>
 
-            <span>${operationType}</span>
+            <span>Transfer</span>
 
             <span>${shortSender}</span>
 
             <span>${shortRecipient}</span>
-<span>
-    ${
-        operation.amount
-            ? `${formatTokenAmount(operation.amount, 18)} KTA`
-            : "Not available"
+
+            <span>
+                ${tokenDisplay.amount}
+                ${tokenDisplay.name}
+            </span>
+        `;
+
+        activityRow
+            .querySelectorAll("a")
+            .forEach((link) => {
+                link.addEventListener(
+                    "click",
+                    (event) => {
+                        event.stopPropagation();
+                    }
+                );
+            });
+
+        activityRow.addEventListener(
+            "click",
+            () => {
+                window.location.href =
+                    `transaction.html?block=${encodeURIComponent(
+                        transfer.block_hash
+                    )}&operation=${transfer.operation_index}`;
+            }
+        );
+
+        addressActivityList.appendChild(
+            activityRow
+        );
     }
-</span>
-`;
-       activityRow.addEventListener("click", () => {
-    window.location.href =
-        `transaction.html?block=${encodeURIComponent(
-            block.hash.toString()
-        )}&operation=${operationIndex}`;
-});
+}
 
-        addressActivityList.appendChild(activityRow);
-    });
-});
-
-if (matchingActivityCount === 0) {
-    addressActivityList.textContent =
-        "No recent activity found for this address.";
-}  
     } catch (error) {
         console.error("Address loading error:", error);
     }
