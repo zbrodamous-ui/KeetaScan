@@ -3,131 +3,218 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KeetaScan</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>KeetaScan | Explore the Keeta Network</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-<nav class="main-nav">
+<body class="home-page">
 
+<header class="home-header">
+    <a class="home-brand" href="index.html">
+        Keeta<span>Scan</span>
+    </a>
+
+    <div class="home-search">
+        <select
+            id="searchType"
+            aria-label="Search type"
+        >
+            <option value="transaction">Transaction</option>
+            <option value="address">Address</option>
+            <option value="block">Block</option>
+            <option value="asset">Asset</option>
+        </select>
+
+        <input
+            id="searchInput"
+            type="search"
+            placeholder="Search address, transaction, block, or asset"
+            aria-label="Search value"
+        >
+
+        <button id="searchButton" type="button">
+            Search
+        </button>
+    </div>
+
+    <div class="home-header-actions">
+        <button
+            id="settingsButton"
+            class="header-control"
+            type="button"
+            aria-label="Settings are coming in the next milestone"
+            title="Settings are coming next"
+        >
+            ⚙
+        </button>
+
+        <button
+            id="themeToggle"
+            class="header-control"
+            type="button"
+            aria-label="Switch appearance"
+        >
+            Theme
+        </button>
+    </div>
+</header>
+
+<nav class="home-navigation" aria-label="Main navigation">
     <a href="index.html" class="active">Home</a>
-
     <a href="blocks.html">Blocks</a>
-
     <a href="transactions.html">Transactions</a>
-
     <a href="addresses.html">Addresses</a>
-
     <a href="assets.html">Assets</a>
-
+    <a href="analytics.html">Analytics</a>
     <a href="status.html">Status</a>
-
-
-    <button
-    id="themeToggle"
-    class="theme-toggle"
-    type="button"
-    aria-label="Switch to light mode"
->
-    Light Mode
-</button>
-
 </nav>
-    <main class="hero">
 
-        <div class="network-visual">
-            <div class="orbit orbit-one"></div>
-            <div class="orbit orbit-two"></div>
-            <div class="orbit orbit-three"></div>
+<main class="home-shell">
 
-            <div class="brand">
+    <section class="home-top-grid">
 
-    <img
-       
-    >
+        <article class="home-panel market-panel">
+            <div class="home-panel-header">
+                <div>
+                    <p class="home-eyebrow">KTA MARKET</p>
+                    <h1>Live market chart</h1>
+                </div>
 
-    <h1>KeetaScan</h1>
+                <div class="chart-ranges" aria-label="Future chart ranges">
+                    <span>1H</span>
+                    <span class="active">1D</span>
+                    <span>1W</span>
+                    <span>1M</span>
+                </div>
+            </div>
 
-    <p>Explore the Keeta Network</p>
+            <div class="market-placeholder">
+                <div>
+                    <strong>Verified market feed coming next</strong>
+                    <p>
+                        Price and historical data will appear here
+                        once its source is connected and attributed.
+                    </p>
+                </div>
 
-</div>
-            
-            <div class="search-area">
+                <svg
+                    viewBox="0 0 700 210"
+                    role="img"
+                    aria-label="Placeholder for the future KTA market chart"
+                >
+                    <line x1="15" y1="45" x2="685" y2="45"></line>
+                    <line x1="15" y1="105" x2="685" y2="105"></line>
+                    <line x1="15" y1="165" x2="685" y2="165"></line>
+                    <path d="M15 152 L75 145 L135 154 L195 126 L255 136 L315 92 L375 111 L435 82 L495 98 L555 59 L615 71 L685 48"></path>
+                </svg>
+            </div>
 
-    <select id="searchType">
-        <option value="transaction">Transaction</option>
-        <option value="address">Address</option>
-        <option value="block">Block</option>
-        <option value="asset">Asset</option>
-    </select>
+            <div class="market-facts">
+                <div>
+                    <span>Market Cap</span>
+                    <strong>—</strong>
+                </div>
+                <div>
+                    <span>24h Volume</span>
+                    <strong>—</strong>
+                </div>
+                <div>
+                    <span>Circulating Supply</span>
+                    <strong>—</strong>
+                </div>
+                <div>
+                    <span>All-Time High</span>
+                    <strong>—</strong>
+                </div>
+            </div>
+        </article>
 
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="Search the Keeta Network">
+        <article class="home-panel snapshot-panel">
+            <div class="home-panel-header">
+                <div>
+                    <p class="home-eyebrow">KEETASCAN INDEX</p>
+                    <h2>Network Snapshot</h2>
+                </div>
+            </div>
 
-    <button id="searchButton">
-        Search
-    </button>
- 
-</div>
+            <div class="snapshot-list">
+                <div>
+                    <span>Indexed Blocks</span>
+                    <strong id="snapshotBlocks">—</strong>
+                </div>
+                <div>
+                    <span>Indexed Transfers</span>
+                    <strong id="snapshotTransfers">—</strong>
+                </div>
+                <div>
+                    <span>Indexed Accounts</span>
+                    <strong id="snapshotAccounts">—</strong>
+                </div>
+                <div>
+                    <span>Recent Avg. Operations</span>
+                    <strong id="snapshotAverage">—</strong>
+                </div>
+            </div>
+
+            <p class="snapshot-note">
+                These totals reflect the blocks currently indexed
+                by this KeetaScan database.
+            </p>
+
+            <a class="home-panel-link" href="analytics.html">
+                View Analytics →
+            </a>
+        </article>
+
+    </section>
+
+    <section class="home-activity-grid">
+
+        <article class="home-panel activity-preview">
+            <div class="home-panel-header">
+                <div>
+                    <p class="home-eyebrow">MAINNET</p>
+                    <h2>Latest Blocks</h2>
+                </div>
+            </div>
+
+            <div id="homeBlocksList" class="home-preview-list">
+                <p class="home-loading">Loading indexed blocks...</p>
+            </div>
+
+            <a class="home-panel-link" href="blocks.html">
+                View all Blocks →
+            </a>
+        </article>
+
+        <article class="home-panel activity-preview">
+            <div class="home-panel-header">
+                <div>
+                    <p class="home-eyebrow">INDEXED</p>
+                    <h2>Latest Transactions</h2>
+                </div>
+            </div>
+
+            <div id="homeTransactionsList" class="home-preview-list">
+                <p class="home-loading">Loading indexed transactions...</p>
+            </div>
+
+            <a class="home-panel-link" href="transactions.html">
+                View all Transactions →
+            </a>
+        </article>
+
+    </section>
 
 </main>
-
-<section class="home-dashboard">
-
-    <div class="stat-card">
-        <span class="stat-label">Total Transactions</span>
-        <strong class="stat-value" id="totalTransactions">—</strong>
-    </div>
-
-    <div class="stat-card">
-        <span class="stat-label">Latest Block</span>
-        <strong class="stat-value" id="latestBlock">—</strong>
-    </div>
-
-    <div class="stat-card">
-    <span class="stat-label">Recent TPS</span>
-    <strong class="stat-value" id="networkTPS">—</strong>
-</div>
-
-<div class="stat-card">
-    <span class="stat-label">Known Assets</span>
-    <strong class="stat-value" id="totalAssets">—</strong>
-</div>
-<section class="network-overview">
-
-
-</section>
-<section class="latest-activity-panel">
-
-    <div class="panel-header">
-        <h2>Latest Activity</h2>
-        <a href="transactions.html">View All</a>
-    </div>
-
-    <div class="activity-table">
-
-        <div class="activity-table-header">
-            <span>Block</span>
-            <span>Age</span>
-            <span>Type</span>
-            <span>From</span>
-            <span>To</span>
-            <span>Amount</span>
-        </div>
-
-        <div id="latestActivityList">
-            Loading activity...
-        </div>
-
-    </div>
-
-</section>
 
 <script src="https://static.test.keeta.com/keetanet-browser.js"></script>
 <script src="shared.js"></script>
 <script src="script.js"></script>
+
 </body>
 </html>
