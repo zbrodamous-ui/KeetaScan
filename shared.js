@@ -85,59 +85,248 @@ const keetaScanThemeNames = {
     clean: "Clean White"
 };
 
+function getSavedTheme() {
+    return localStorage.getItem("keetaScanTheme") === "clean"
+        ? "clean"
+        : "soft";
+}
+
+function saveAndApplyTheme(theme) {
+    const safeTheme =
+        keetaScanThemes.includes(theme)
+            ? theme
+            : "soft";
+
+    localStorage.setItem(
+        "keetaScanTheme",
+        safeTheme
+    );
+
+    applyTheme(safeTheme);
+}
+
+function createSettingsPanel() {
+    const existingPanel =
+        document.getElementById("settingsPanel");
+
+    if (existingPanel) {
+        return existingPanel;
+    }
+
+    const panel = document.createElement("section");
+    panel.id = "settingsPanel";
+    panel.className = "settings-panel";
+    panel.hidden = true;
+    panel.setAttribute("aria-label", "KeetaView settings");
+
+    panel.innerHTML = `
+        <header class="settings-panel-header">
+            <div>
+                <p class="home-eyebrow">KEETAVIEW</p>
+                <h2>Settings</h2>
+            </div>
+
+            <button
+                id="closeSettings"
+                type="button"
+                aria-label="Close settings"
+            >
+                ×
+            </button>
+        </header>
+
+        <div class="settings-section">
+            <div class="settings-section-heading">
+                <strong>Appearance</strong>
+                <span>Choose how KeetaView looks on this browser.</span>
+            </div>
+
+            <div
+                class="appearance-options"
+                role="radiogroup"
+                aria-label="Appearance"
+            >
+                <button
+                    class="appearance-option"
+                    type="button"
+                    data-theme-choice="soft"
+                    role="radio"
+                >
+                    <span class="appearance-preview soft-preview">
+                        <i></i><i></i>
+                    </span>
+
+                    <span>
+                        <strong>Soft Gray</strong>
+                        <small>Graphite canvas with white data cards</small>
+                    </span>
+
+                    <b aria-hidden="true">✓</b>
+                </button>
+
+                <button
+                    class="appearance-option"
+                    type="button"
+                    data-theme-choice="clean"
+                    role="radio"
+                >
+                    <span class="appearance-preview clean-preview">
+                        <i></i><i></i>
+                    </span>
+
+                    <span>
+                        <strong>Clean White</strong>
+                        <small>Bright canvas with subtle borders</small>
+                    </span>
+
+                    <b aria-hidden="true">✓</b>
+                </button>
+            </div>
+        </div>
+
+        <footer class="settings-panel-footer">
+            Settings are saved on this browser.
+        </footer>
+    `;
+
+    document.body.appendChild(panel);
+
+    panel
+        .querySelectorAll("[data-theme-choice]")
+        .forEach((option) => {
+            option.addEventListener("click", () => {
+                saveAndApplyTheme(
+                    option.dataset.themeChoice
+                );
+            });
+        });
+
+    panel
+        .querySelector("#closeSettings")
+        .addEventListener("click", closeSettingsPanel);
+
+    return panel;
+}
+
+function updateSettingsSelection(theme) {
+    document
+        .querySelectorAll("[data-theme-choice]")
+        .forEach((option) => {
+            const selected =
+                option.dataset.themeChoice === theme;
+
+            option.classList.toggle("selected", selected);
+            option.setAttribute(
+                "aria-checked",
+                String(selected)
+            );
+        });
+}
+
+function openSettingsPanel() {
+    const panel = createSettingsPanel();
+    const settingsButton =
+        document.getElementById("settingsButton") ||
+        document.querySelector(
+            ".home-header-actions .header-control:not(#themeToggle)"
+        );
+
+    panel.hidden = false;
+    document.body.classList.add("settings-open");
+
+    if (settingsButton) {
+        settingsButton.setAttribute("aria-expanded", "true");
+    }
+
+    panel
+        .querySelector(".appearance-option.selected")
+        ?.focus();
+}
+
+function closeSettingsPanel() {
+    const panel = document.getElementById("settingsPanel");
+    const settingsButton =
+        document.getElementById("settingsButton") ||
+        document.querySelector(
+            ".home-header-actions .header-control:not(#themeToggle)"
+        );
+
+    if (!panel) {
+        return;
+    }
+
+    panel.hidden = true;
+    document.body.classList.remove("settings-open");
+
+    if (settingsButton) {
+        settingsButton.setAttribute("aria-expanded", "false");
+        settingsButton.focus();
+    }
+}
+
+function initializeSettings() {
+    const settingsButton =
+        document.getElementById("settingsButton") ||
+        document.querySelector(
+            ".home-header-actions .header-control:not(#themeToggle)"
+        );
+
+    if (!settingsButton) {
+        return;
+    }
+
+    settingsButton.id = "settingsButton";
+    settingsButton.setAttribute("aria-label", "Open settings");
+    settingsButton.setAttribute("aria-controls", "settingsPanel");
+    settingsButton.setAttribute("aria-expanded", "false");
+    settingsButton.title = "Settings";
+
+    createSettingsPanel();
+
+    settingsButton.addEventListener("click", () => {
+        const panel = document.getElementById("settingsPanel");
+
+        if (panel?.hidden) {
+            openSettingsPanel();
+        } else {
+            closeSettingsPanel();
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (
+            event.key === "Escape" &&
+            !document.getElementById("settingsPanel")?.hidden
+        ) {
+            closeSettingsPanel();
+        }
+    });
+}
+
 function initializeThemeToggle() {
     const themeToggle =
         document.getElementById("themeToggle");
 
-    const savedTheme =
-        localStorage.getItem(
-            "keetaScanTheme"
-        );
-
-    const preferredTheme =
-        savedTheme === "clean"
-            ? "clean"
-            : "soft";
-
-    applyTheme(
-        preferredTheme
-    );
+    applyTheme(getSavedTheme());
 
     if (!themeToggle) {
         return;
     }
 
-    themeToggle.addEventListener(
-        "click",
-        () => {
-            const currentTheme =
-                document.documentElement
-                    .dataset.theme ||
-                "soft";
+    themeToggle.addEventListener("click", () => {
+        const currentTheme =
+            document.documentElement.dataset.theme ||
+            "soft";
+        const currentIndex =
+            keetaScanThemes.indexOf(currentTheme);
+        const nextTheme =
+            keetaScanThemes[
+                (currentIndex + 1) %
+                keetaScanThemes.length
+            ];
 
-            const currentIndex =
-                keetaScanThemes.indexOf(
-                    currentTheme
-                );
-
-            const nextTheme =
-                keetaScanThemes[
-                    (
-                        currentIndex + 1
-                    ) %
-                    keetaScanThemes.length
-                ];
-
-            applyTheme(
-                nextTheme
-            );
-
-            localStorage.setItem(
-                "keetaScanTheme",
-                nextTheme
-            );
-        }
-    );
+        saveAndApplyTheme(nextTheme);
+    });
 }
 
 function applyTheme(theme) {
@@ -146,56 +335,37 @@ function applyTheme(theme) {
             ? theme
             : "soft";
 
-    document.documentElement
-        .dataset.theme =
-        safeTheme;
+    document.documentElement.dataset.theme = safeTheme;
 
     const themeToggle =
-        document.getElementById(
-            "themeToggle"
-        );
+        document.getElementById("themeToggle");
 
-    if (!themeToggle) {
-        return;
+    if (themeToggle) {
+        const currentIndex =
+            keetaScanThemes.indexOf(safeTheme);
+        const nextTheme =
+            keetaScanThemes[
+                (currentIndex + 1) %
+                keetaScanThemes.length
+            ];
+
+        themeToggle.textContent = "◐";
+        themeToggle.classList.add("appearance-symbol");
+        themeToggle.setAttribute(
+            "aria-label",
+            `Current appearance: ${
+                keetaScanThemeNames[safeTheme]
+            }. Switch to ${
+                keetaScanThemeNames[nextTheme]
+            }.`
+        );
+        themeToggle.title =
+            `Switch to ${
+                keetaScanThemeNames[nextTheme]
+            }`;
     }
 
-    const currentIndex =
-        keetaScanThemes.indexOf(
-            safeTheme
-        );
-
-    const nextTheme =
-        keetaScanThemes[
-            (
-                currentIndex + 1
-            ) %
-            keetaScanThemes.length
-        ];
-
-    themeToggle.textContent =
-        keetaScanThemeNames[
-            safeTheme
-        ];
-
-    themeToggle.setAttribute(
-        "aria-label",
-        `Current appearance: ${
-            keetaScanThemeNames[
-                safeTheme
-            ]
-        }. Switch to ${
-            keetaScanThemeNames[
-                nextTheme
-            ]
-        }.`
-    );
-
-    themeToggle.title =
-        `Switch to ${
-            keetaScanThemeNames[
-                nextTheme
-            ]
-        }`;
+    updateSettingsSelection(safeTheme);
 }
 
 function initializeDetailSearch() {
@@ -271,4 +441,5 @@ function initializeDetailSearch() {
 }
 
 initializeThemeToggle();
+initializeSettings();
 initializeDetailSearch();
