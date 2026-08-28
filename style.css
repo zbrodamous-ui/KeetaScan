@@ -2319,3 +2319,24 @@ html[data-theme="clean"] .detail-shell .block-card {
 html[data-theme="clean"] .detail-shell .operation-card {
     background: #ffffff;
 }
+
+
+/* Final Soft Gray canvas selection */
+
+html[data-theme="soft"] {
+    --page-background: #5a5a5a;
+}
+
+html[data-theme="soft"] body,
+html[data-theme="soft"] .home-page,
+html[data-theme="soft"] .detail-page-body {
+    background: #5a5a5a;
+}
+
+html[data-theme="soft"] .detail-back-link {
+    color: #f3f4f6;
+}
+
+html[data-theme="soft"] .detail-back-link:hover {
+    color: #ffffff;
+}
