@@ -198,4 +198,77 @@ function applyTheme(theme) {
         }`;
 }
 
+function initializeDetailSearch() {
+    const form =
+        document.getElementById("detailSearchForm");
+
+    if (!form) {
+        return;
+    }
+
+    const type =
+        document.getElementById("detailSearchType");
+
+    const input =
+        document.getElementById("detailSearchInput");
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const value = input.value.trim();
+
+        if (!value) {
+            input.focus();
+            return;
+        }
+
+        if (value.startsWith("keeta_")) {
+            window.location.assign(
+                `address.html?address=${encodeURIComponent(value)}`
+            );
+            return;
+        }
+
+        const transactionMatch =
+            value.match(/^([0-9a-f]{64}):(\d+)$/i);
+
+        if (transactionMatch) {
+            window.location.assign(
+                `transaction.html?block=${encodeURIComponent(
+                    transactionMatch[1]
+                )}&operation=${encodeURIComponent(
+                    transactionMatch[2]
+                )}`
+            );
+            return;
+        }
+
+        if (/^[0-9a-f]{64}$/i.test(value)) {
+            window.location.assign(
+                `block.html?hash=${encodeURIComponent(value)}`
+            );
+            return;
+        }
+
+        const routes = {
+            transaction:
+                `transaction.html?search=${encodeURIComponent(value)}`,
+            address:
+                `address.html?address=${encodeURIComponent(value)}`,
+            block:
+                `block.html?hash=${encodeURIComponent(value)}`,
+            asset:
+                `asset.html?asset=${encodeURIComponent(value)}`
+        };
+
+        const destination =
+            routes[type.value.toLowerCase()];
+
+        if (destination) {
+            window.location.assign(destination);
+        }
+    });
+}
+
 initializeThemeToggle();
+initializeDetailSearch();
