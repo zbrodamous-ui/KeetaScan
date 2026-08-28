@@ -170,7 +170,7 @@ fee.textContent =
     "—";
 
 blockElement.innerHTML =
-    `<a href="block.html?block=${encodeURIComponent(blockHash)}">${blockHash.slice(0, 12)}...${blockHash.slice(-6)}</a>`;
+    `<a href="block.html?hash=${encodeURIComponent(blockHash)}">${blockHash.slice(0, 12)}...${blockHash.slice(-6)}</a>`;
 
 }
 
