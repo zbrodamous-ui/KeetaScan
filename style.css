@@ -2172,3 +2172,34 @@ html[data-theme="clean"] .home-page,
 html[data-theme="clean"] body {
     background: #ffffff;
 }
+
+
+/* Monochrome homepage controls */
+
+html[data-theme="soft"] .home-brand span,
+html[data-theme="clean"] .home-brand span {
+    color: var(--primary-text);
+}
+
+html[data-theme="soft"] .home-navigation a.active,
+html[data-theme="soft"] .home-navigation a:hover,
+html[data-theme="clean"] .home-navigation a.active,
+html[data-theme="clean"] .home-navigation a:hover {
+    color: var(--primary-text);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 6px;
+}
+
+html[data-theme="soft"] .home-search button,
+html[data-theme="clean"] .home-search button {
+    background: #1b2433;
+    border-color: #1b2433;
+    color: #ffffff;
+}
+
+html[data-theme="soft"] .home-search button:hover,
+html[data-theme="clean"] .home-search button:hover {
+    background: #000000;
+    border-color: #000000;
+}
