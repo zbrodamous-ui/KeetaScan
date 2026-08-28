@@ -74,6 +74,46 @@ function loadAssetsPage() {
             row.className =
                 "asset-list-row";
 
+            row.tabIndex = 0;
+            row.setAttribute(
+                "role",
+                "link"
+            );
+
+            const openAsset = () => {
+                window.location.assign(
+                    `asset.html?asset=${encodeURIComponent(
+                        assetAddress
+                    )}`
+                );
+            };
+
+            row.addEventListener(
+                "click",
+                (event) => {
+                    if (
+                        event.target.closest("a")
+                    ) {
+                        return;
+                    }
+
+                    openAsset();
+                }
+            );
+
+            row.addEventListener(
+                "keydown",
+                (event) => {
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+                        event.preventDefault();
+                        openAsset();
+                    }
+                }
+            );
+
             row.innerHTML = `
                 <span>
                     #${index + 1}
