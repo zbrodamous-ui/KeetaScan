@@ -2396,3 +2396,12 @@ html[data-theme="soft"] .home-search button:hover {
     background: #4b4b4b;
     border-color: #4b4b4b;
 }
+
+
+/* Remove soft header divider lines */
+
+html[data-theme="soft"] .home-header,
+html[data-theme="soft"] .home-navigation {
+    border-top: 0;
+    border-bottom: 0;
+}
