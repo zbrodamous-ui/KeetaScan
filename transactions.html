@@ -3,70 +3,141 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Transactions | KeetaScan</title>
-
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Transactions | KeetaView</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="transactions-page-body">
 
-    <nav class="main-nav">
+<header class="home-header">
+    <a class="home-brand" href="index.html">
+        Keeta<span>View</span>
+    </a>
+
+    <form id="detailSearchForm" class="home-search">
+        <select id="detailSearchType" aria-label="Search type">
+            <option value="transaction" selected>Transaction</option>
+            <option value="address">Address</option>
+            <option value="block">Block</option>
+            <option value="asset">Asset</option>
+        </select>
+
+        <input
+            id="detailSearchInput"
+            type="search"
+            placeholder="Search address, transaction, block, or asset"
+            aria-label="Search value"
+        >
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="home-header-actions">
+        <button
+            class="header-control"
+            type="button"
+            aria-label="Settings are coming in the next milestone"
+            title="Settings are coming next"
+        >
+            ⚙
+        </button>
+
+        <button
+            id="themeToggle"
+            class="header-control"
+            type="button"
+            aria-label="Switch appearance"
+        >
+            Theme
+        </button>
+    </div>
+</header>
+
+<nav class="home-navigation" aria-label="Main navigation">
     <a href="index.html">Home</a>
     <a href="blocks.html">Blocks</a>
     <a href="transactions.html" class="active">Transactions</a>
     <a href="addresses.html">Addresses</a>
     <a href="assets.html">Assets</a>
+    <a href="analytics.html">Analytics</a>
     <a href="status.html">Status</a>
 </nav>
 
-<button
-    id="themeToggle"
-    class="theme-toggle"
-    type="button"
-    aria-label="Switch to light mode">
-    Light Mode
-</button>
+<main class="transactions-dashboard">
+    <header class="transactions-title-card">
+        <div>
+            <p class="home-eyebrow">KEETAVIEW INDEX</p>
+            <h1>Transactions</h1>
+            <p>
+                Browse the latest token movements stored by KeetaView.
+            </p>
+        </div>
 
-    <main class="transactions-page">
+        <label class="transaction-filter">
+            <span>Filter loaded transactions</span>
+            <input
+                id="transactionFilter"
+                type="search"
+                placeholder="Block, address, or asset"
+                autocomplete="off"
+            >
+        </label>
+    </header>
 
-        <section class="latest-activity-panel">
-
-            <div class="panel-header">
-                <h1>Transactions</h1>
+    <section
+        class="transactions-list-card"
+        aria-labelledby="transactionsListTitle"
+    >
+        <header class="transactions-card-header">
+            <div>
+                <p class="home-eyebrow">LATEST INDEXED</p>
+                <h2 id="transactionsListTitle">Token Transfers</h2>
             </div>
 
-            <div class="activity-table">
+            <span
+                id="transactionResultCount"
+                class="transaction-result-count"
+            >
+                Loading transactions…
+            </span>
+        </header>
 
-                <div class="activity-table-header">
+        <div class="transaction-table-scroll">
+            <div class="transaction-directory-table">
+                <div class="transaction-directory-header" aria-hidden="true">
                     <span>Block</span>
                     <span>Age</span>
-                    <span>Type</span>
                     <span>From</span>
                     <span>To</span>
                     <span>Amount</span>
                 </div>
 
-                <div id="transactionsPageList">
-                    Loading transactions...
+                <div
+                    id="transactionsPageList"
+                    class="transaction-directory-list"
+                    aria-live="polite"
+                >
+                    <p class="transactions-empty">
+                        Loading transactions…
+                    </p>
                 </div>
-
             </div>
+        </div>
 
-            <div class="pagination-controls">
-                <button id="previousPage">← Previous</button>
-                <span id="pageNumber">Page 1</span>
-                <button id="nextPage">Next →</button>
-            </div>
+        <footer class="transaction-pagination">
+            <button id="previousPage" type="button">← Previous</button>
+            <span id="pageNumber">Page 1</span>
+            <button id="nextPage" type="button">Next →</button>
+        </footer>
+    </section>
+</main>
 
-        </section>
-
-    </main>
-
- <script src="https://static.test.keeta.com/keetanet-browser.js"></script>
+<script src="https://static.test.keeta.com/keetanet-browser.js"></script>
 <script src="shared.js"></script>
 <script src="transactions.js"></script>
-
 </body>
 </html>
