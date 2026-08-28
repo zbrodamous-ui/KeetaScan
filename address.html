@@ -3,66 +3,105 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Address Details</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Address Details | KeetaView</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-    <nav class="main-nav">
+<body class="detail-page-body">
+
+<header class="home-header">
+    <a class="home-brand" href="index.html">
+        Keeta<span>View</span>
+    </a>
+
+    <form id="detailSearchForm" class="home-search">
+        <select id="detailSearchType" aria-label="Search type">
+            <option value="transaction">Transaction</option>
+            <option value="address" selected>Address</option>
+            <option value="block">Block</option>
+            <option value="asset">Asset</option>
+        </select>
+
+        <input
+            id="detailSearchInput"
+            type="search"
+            placeholder="Search address, transaction, block, or asset"
+            aria-label="Search value"
+        >
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="home-header-actions">
+        <button
+            class="header-control"
+            type="button"
+            aria-label="Settings are coming in the next milestone"
+            title="Settings are coming next"
+        >
+            ⚙
+        </button>
+
+        <button
+            id="themeToggle"
+            class="header-control"
+            type="button"
+            aria-label="Switch appearance"
+        >
+            Theme
+        </button>
+    </div>
+</header>
+
+<nav class="home-navigation" aria-label="Main navigation">
     <a href="index.html">Home</a>
     <a href="blocks.html">Blocks</a>
     <a href="transactions.html">Transactions</a>
     <a href="addresses.html" class="active">Addresses</a>
     <a href="assets.html">Assets</a>
+    <a href="analytics.html">Analytics</a>
     <a href="status.html">Status</a>
-
-    <button
-    id="themeToggle"
-    class="theme-toggle"
-    type="button"
-    aria-label="Switch to light mode"
->
-    Light Mode
-</button>
 </nav>
 
-    <main class="address-page">
+<main class="address-page detail-shell address-detail-shell">
+    <a class="detail-back-link" href="index.html">← Back to Search</a>
 
-        <div class="block-card">
+    <article class="block-card address-card">
+        <h1 id="addressTitle">Address Details</h1>
 
-            <h1 id="addressTitle">Address Details</h1>
-
-            <div class="details-grid" id="addressDetails">
-                Loading address...
-            </div>
-
-            <h2 class="section-title" id="balancesTitle">Balances</h2>
-
-            <div id="balancesList">
-                Loading balances...
-            </div>
-<h2 class="section-title">Recent Activity</h2>
-
-<div class="activity-table">
-
-    <div class="activity-table-header">
-        <span>Block</span>
-        <span>Age</span>
-        <span>Type</span>
-        <span>From</span>
-        <span>To</span>
-        <span>Amount</span>
-    </div>
-
-    <div id="addressActivityList">
-        Loading activity...
-    </div>
-
+        <div class="details-grid" id="addressDetails">
+            Loading address...
         </div>
-        
-    </div>
 
+        <h2 class="section-title" id="balancesTitle">Balances</h2>
+
+        <div id="balancesList">
+            Loading balances...
+        </div>
+
+        <h2 class="section-title">Recent Activity</h2>
+
+        <div class="address-activity-scroll">
+            <div class="activity-table">
+                <div class="activity-table-header">
+                    <span>Block</span>
+                    <span>Age</span>
+                    <span>Type</span>
+                    <span>From</span>
+                    <span>To</span>
+                    <span>Amount</span>
+                </div>
+
+                <div id="addressActivityList">
+                    Loading activity...
+                </div>
+            </div>
+        </div>
+    </article>
 </main>
 
 <script src="https://static.test.keeta.com/keetanet-browser.js"></script>
