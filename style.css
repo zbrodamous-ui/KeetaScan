@@ -2575,3 +2575,41 @@ html[data-theme="clean"] .address-detail-shell #balancesList .operation-card {
         margin-bottom: 12px;
     }
 }
+
+
+/* Address detail readability refinement */
+
+.address-detail-shell #balancesList {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.address-detail-shell #balancesList .operation-card {
+    width: min(100%, 360px);
+    padding: 22px;
+    background: #f4f6f8;
+    border: 1px solid #cbd2da;
+}
+
+.address-detail-shell .activity-table-header span {
+    color: #53647a;
+    font-weight: 600;
+}
+
+.address-detail-shell #addressActivityList .activity-row span {
+    color: #273447;
+}
+
+.address-detail-shell #addressActivityList .activity-row span:nth-child(2) {
+    color: #66768a;
+}
+
+.address-detail-shell #addressActivityList .activity-row a {
+    color: #1676cf;
+    font-weight: 600;
+}
+
+html[data-theme="clean"] .address-detail-shell #balancesList .operation-card {
+    background: #ffffff;
+    border-color: #d5d9de;
+}
