@@ -81,7 +81,7 @@ async function getTokenDisplay(tokenAddress, rawAmount) {
 
     return {
         amount: formatTokenAmount(rawAmount, decimalPlaces),
-        name: tokenInfo?.info?.name || shortValue(tokenAddress, 8, 0)
+        name: tokenInfo?.info?.name || shortValue(tokenAddress, 8, 6)
     };
 }
 
@@ -228,7 +228,7 @@ async function prepareTransfer(transfer) {
         return {
             ...transfer,
             displayAmount: BigInt(transfer.amount).toLocaleString(),
-            tokenName: shortValue(transfer.token, 8, 0)
+            tokenName: shortValue(transfer.token, 8, 6)
         };
     }
 }
