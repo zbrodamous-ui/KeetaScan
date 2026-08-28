@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Addresses | KeetaView</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="addresses-page-body">
+
+<header class="home-header">
+    <a class="home-brand" href="index.html">
+        Keeta<span>View</span>
+    </a>
+
+    <form id="detailSearchForm" class="home-search">
+        <select id="detailSearchType" aria-label="Search type">
+            <option value="transaction">Transaction</option>
+            <option value="address" selected>Address</option>
+            <option value="block">Block</option>
+            <option value="asset">Asset</option>
+        </select>
+
+        <input
+            id="detailSearchInput"
+            type="search"
+            placeholder="Search address, transaction, block, or asset"
+            aria-label="Search value"
+        >
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="home-header-actions">
+        <button
+            class="header-control"
+            type="button"
+            aria-label="Settings are coming in the next milestone"
+            title="Settings are coming next"
+        >
+            ⚙
+        </button>
+
+        <button
+            id="themeToggle"
+            class="header-control"
+            type="button"
+            aria-label="Switch appearance"
+        >
+            Theme
+        </button>
+    </div>
+</header>
+
+<nav class="home-navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="blocks.html">Blocks</a>
+    <a href="transactions.html">Transactions</a>
+    <a href="addresses.html" class="active">Addresses</a>
+    <a href="assets.html">Assets</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="status.html">Status</a>
+</nav>
+
+<main class="addresses-dashboard">
+    <header class="addresses-title-card">
+        <div>
+            <p class="home-eyebrow">KEETAVIEW INDEX</p>
+            <h1>Addresses</h1>
+            <p>
+                Browse accounts observed by this local KeetaView index.
+            </p>
+        </div>
+
+        <label class="address-filter">
+            <span>Filter this page</span>
+            <input
+                id="addressFilter"
+                type="search"
+                placeholder="Keeta address"
+                autocomplete="off"
+            >
+        </label>
+    </header>
+
+    <section class="addresses-list-card" aria-labelledby="addressesListTitle">
+        <header class="addresses-card-header">
+            <div>
+                <p class="home-eyebrow">OBSERVED ACCOUNTS</p>
+                <h2 id="addressesListTitle">Address Directory</h2>
+            </div>
+
+            <span id="addressResultCount" class="address-result-count">
+                Loading addresses…
+            </span>
+        </header>
+
+        <div class="address-table-scroll">
+            <div class="address-directory-table">
+                <div class="address-directory-header" aria-hidden="true">
+                    <span>Address</span>
+                    <span>First Observed</span>
+                    <span>Network</span>
+                </div>
+
+                <div
+                    id="addressesPageList"
+                    class="address-directory-list"
+                    aria-live="polite"
+                >
+                    <p class="addresses-empty">Loading addresses…</p>
+                </div>
+            </div>
+        </div>
+
+        <footer class="address-pagination">
+            <button id="previousPage" type="button">← Previous</button>
+            <span id="pageNumber">Page 1</span>
+            <button id="nextPage" type="button">Next →</button>
+        </footer>
+    </section>
+</main>
+
+<script src="https://static.test.keeta.com/keetanet-browser.js"></script>
+<script src="shared.js"></script>
+<script src="addresses.js"></script>
+</body>
+</html>
