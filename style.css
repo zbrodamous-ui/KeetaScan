@@ -3989,3 +3989,250 @@ html[data-theme="clean"] .transactions-list-card {
         justify-content: space-between;
     }
 }
+
+
+
+/* ==========================
+   KeetaView Address Directory
+========================== */
+
+.addresses-page-body {
+    min-height: 100vh;
+    background: var(--page-background);
+    color: var(--primary-text);
+}
+
+.addresses-dashboard {
+    width: min(100% - 40px, 1320px);
+    margin: 0 auto;
+    padding: 34px 0 72px;
+}
+
+.addresses-title-card,
+.addresses-list-card {
+    background: #ffffff;
+    border: 1px solid #c8d0d9;
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(32, 45, 62, 0.09);
+}
+
+.addresses-title-card {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    margin-bottom: 20px;
+    padding: 28px;
+}
+
+.addresses-title-card h1 {
+    margin: 4px 0 8px;
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.addresses-title-card > div > p:last-child {
+    margin: 0;
+    color: var(--secondary-text);
+    line-height: 1.55;
+}
+
+.address-filter {
+    display: grid;
+    gap: 8px;
+    width: min(100%, 380px);
+    color: #53647a;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.address-filter input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #c8d0d9;
+    border-radius: 10px;
+    background: #f8f9fb;
+    color: #1b2433;
+    font: inherit;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.address-filter input:focus {
+    border-color: #5a5a5a;
+    box-shadow: 0 0 0 3px rgba(90, 90, 90, 0.12);
+}
+
+.address-filter input::placeholder {
+    color: #8994a3;
+}
+
+.addresses-list-card {
+    overflow: hidden;
+}
+
+.addresses-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 22px 26px;
+    border-bottom: 1px solid #d9dee4;
+}
+
+.addresses-card-header h2 {
+    margin: 3px 0 0;
+    font-size: 1.25rem;
+}
+
+.address-result-count {
+    color: #66768a;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.address-table-scroll {
+    overflow-x: auto;
+}
+
+.address-directory-table {
+    min-width: 760px;
+}
+
+.address-directory-header,
+.address-directory-row {
+    display: grid;
+    grid-template-columns:
+        minmax(360px, 2fr)
+        minmax(180px, 0.9fr)
+        minmax(120px, 0.6fr);
+    gap: 20px;
+    align-items: center;
+}
+
+.address-directory-header {
+    padding: 14px 24px;
+    background: #f5f7f9;
+    border-bottom: 1px solid #d9dee4;
+    color: #66768a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.address-directory-row {
+    min-height: 66px;
+    padding: 13px 24px;
+    border-bottom: 1px solid #e2e6eb;
+    color: #26364b;
+    text-decoration: none;
+    transition: background 0.18s ease;
+}
+
+.address-directory-row:last-child {
+    border-bottom: 0;
+}
+
+.address-directory-row:hover,
+.address-directory-row:focus-visible {
+    background: #f3f6f9;
+}
+
+.address-directory-row:focus-visible {
+    outline: 2px solid #5a5a5a;
+    outline-offset: -2px;
+}
+
+.address-directory-row > span {
+    min-width: 0;
+}
+
+.address-directory-value {
+    overflow: hidden;
+    color: #1676cf;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.address-directory-age {
+    color: #66768a;
+}
+
+.address-directory-network {
+    color: #53647a;
+}
+
+.addresses-empty {
+    margin: 0;
+    padding: 32px 24px;
+    color: #66768a;
+}
+
+.address-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    padding: 16px 22px;
+    border-top: 1px solid #d9dee4;
+    background: #f8f9fb;
+}
+
+.address-pagination button {
+    padding: 9px 13px;
+    border: 1px solid #c8d0d9;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #26364b;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.86rem;
+}
+
+.address-pagination button:hover:not(:disabled) {
+    background: #eef1f4;
+}
+
+.address-pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.address-pagination span {
+    color: #66768a;
+    font-size: 0.84rem;
+}
+
+html[data-theme="clean"] .addresses-title-card,
+html[data-theme="clean"] .addresses-list-card {
+    border-color: #d5d9de;
+    box-shadow: 0 7px 20px rgba(32, 45, 62, 0.05);
+}
+
+@media (max-width: 700px) {
+    .addresses-dashboard {
+        width: min(100% - 24px, 1320px);
+        padding-top: 18px;
+    }
+
+    .addresses-title-card {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 22px;
+    }
+
+    .address-filter {
+        width: 100%;
+    }
+
+    .addresses-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .address-pagination {
+        justify-content: space-between;
+    }
+}
