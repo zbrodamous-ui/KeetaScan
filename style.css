@@ -2489,3 +2489,89 @@ html[data-theme="clean"] .transaction-detail-shell .transaction-card {
         text-align: left;
     }
 }
+
+
+/* KeetaView address details */
+
+.address-detail-shell.address-page {
+    display: block;
+    width: min(100% - 40px, 1180px);
+    margin: 0 auto;
+    padding: 28px 0 64px;
+}
+
+.address-detail-shell .address-card {
+    width: 100%;
+    max-width: none;
+    padding: 38px;
+    background: #ffffff;
+    border: 1px solid #c8d0d9;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(32, 45, 62, 0.10);
+}
+
+.address-detail-shell .address-card h1 {
+    margin: 0 0 30px;
+}
+
+.address-detail-shell #balancesList {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+}
+
+.address-detail-shell #balancesList .operation-card {
+    margin: 0;
+    background: #f8fafc;
+    border: 1px solid #d2d8e0;
+    box-shadow: none;
+}
+
+.address-activity-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.address-detail-shell .activity-table {
+    min-width: 900px;
+    background: #ffffff;
+}
+
+.address-detail-shell .activity-table-header,
+.address-detail-shell #addressActivityList .activity-row {
+    border-color: var(--border-color);
+}
+
+.address-detail-shell #addressActivityList .activity-row:hover {
+    background: var(--row-hover);
+}
+
+html[data-theme="clean"] .address-detail-shell .address-card {
+    border-color: #d5d9de;
+    box-shadow: 0 8px 24px rgba(32, 45, 62, 0.06);
+}
+
+html[data-theme="clean"] .address-detail-shell #balancesList .operation-card {
+    background: #ffffff;
+}
+
+@media (max-width: 700px) {
+    .address-detail-shell.address-page {
+        width: min(100% - 24px, 1180px);
+        padding-top: 18px;
+    }
+
+    .address-detail-shell .address-card {
+        padding: 24px 20px;
+    }
+
+    .address-detail-shell .details-grid {
+        grid-template-columns: 1fr;
+        gap: 7px;
+    }
+
+    .address-detail-shell .detail-value {
+        margin-bottom: 12px;
+    }
+}
