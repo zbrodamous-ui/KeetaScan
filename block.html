@@ -3,36 +3,90 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block Details</title>
-
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Block Details | KeetaView</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="detail-page-body">
 
-   <main class="block-page">
+<header class="home-header">
+    <a class="home-brand" href="index.html">
+        Keeta<span>View</span>
+    </a>
 
-    <div class="block-card">
+    <form id="detailSearchForm" class="home-search">
+        <select id="detailSearchType" aria-label="Search type">
+            <option value="transaction">Transaction</option>
+            <option value="address">Address</option>
+            <option value="block" selected>Block</option>
+            <option value="asset">Asset</option>
+        </select>
 
-<h1 id="blockTitle">Block Details</h1>
+        <input
+            id="detailSearchInput"
+            type="search"
+            placeholder="Search address, transaction, block, or asset"
+            aria-label="Search value"
+        >
 
-<div class="details-grid" id="blockDetails">
-    Loading block...
-</div>
+        <button type="submit">Search</button>
+    </form>
 
-<h2 class="section-title">Operations</h2>
+    <div class="home-header-actions">
+        <button
+            class="header-control"
+            type="button"
+            aria-label="Settings are coming in the next milestone"
+            title="Settings are coming next"
+        >
+            ⚙
+        </button>
 
-<div id="operationsList">
-    Loading operations...
-</div>
-
+        <button
+            id="themeToggle"
+            class="header-control"
+            type="button"
+            aria-label="Switch appearance"
+        >
+            Theme
+        </button>
     </div>
+</header>
 
+<nav class="home-navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="blocks.html" class="active">Blocks</a>
+    <a href="transactions.html">Transactions</a>
+    <a href="addresses.html">Addresses</a>
+    <a href="assets.html">Assets</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="status.html">Status</a>
+</nav>
+
+<main class="block-page detail-shell">
+    <a class="detail-back-link" href="index.html">← Back to Search</a>
+
+    <article class="block-card">
+        <h1 id="blockTitle">Block Details</h1>
+
+        <div class="details-grid" id="blockDetails">
+            Loading block...
+        </div>
+
+        <h2 class="section-title">Operations</h2>
+
+        <div id="operationsList">
+            Loading operations...
+        </div>
+    </article>
 </main>
 
 <script src="https://static.test.keeta.com/keetanet-browser.js"></script>
 <script src="shared.js"></script>
 <script src="block.js"></script>
 </body>
-</html> 
+</html>
