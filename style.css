@@ -2203,3 +2203,85 @@ html[data-theme="clean"] .home-search button:hover {
     background: #000000;
     border-color: #000000;
 }
+
+
+/* ==========================
+   KeetaView Detail Header
+========================== */
+
+.detail-page-body {
+    min-height: 100vh;
+    background: var(--page-background);
+    color: var(--primary-text);
+}
+
+.detail-shell.block-page {
+    display: block;
+    width: min(100% - 40px, 1120px);
+    margin: 0 auto;
+    padding: 28px 0 64px;
+}
+
+.detail-back-link {
+    display: inline-block;
+    margin: 0 0 18px;
+    color: var(--secondary-text);
+    text-decoration: none;
+}
+
+.detail-back-link:hover {
+    color: var(--primary-text);
+}
+
+.detail-shell .block-card {
+    max-width: none;
+    padding: 38px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--panel-shadow);
+}
+
+.detail-shell .block-card h1 {
+    margin: 0 0 30px;
+}
+
+.detail-shell .details-grid {
+    margin-top: 0;
+}
+
+.detail-shell .operation-card {
+    background: var(--surface-secondary);
+    border-color: var(--border-color);
+    box-shadow: none;
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.detail-shell .operation-card:hover {
+    background: var(--row-hover);
+    border-color: #aeb7c2;
+}
+
+.detail-shell .address-link {
+    color: var(--link-color);
+}
+
+@media (max-width: 700px) {
+    .detail-shell.block-page {
+        width: min(100% - 24px, 1120px);
+        padding-top: 18px;
+    }
+
+    .detail-shell .block-card {
+        padding: 24px 20px;
+    }
+
+    .detail-shell .details-grid {
+        grid-template-columns: 1fr;
+        gap: 7px;
+    }
+
+    .detail-shell .detail-value {
+        margin-bottom: 12px;
+    }
+}
