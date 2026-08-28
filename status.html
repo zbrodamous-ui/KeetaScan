@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Status | KeetaView</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="status-page-body">
+
+<header class="home-header">
+    <a class="home-brand" href="index.html">
+        Keeta<span>View</span>
+    </a>
+
+    <form id="detailSearchForm" class="home-search">
+        <select id="detailSearchType" aria-label="Search type">
+            <option value="transaction">Transaction</option>
+            <option value="address">Address</option>
+            <option value="block">Block</option>
+            <option value="asset">Asset</option>
+        </select>
+
+        <input
+            id="detailSearchInput"
+            type="search"
+            placeholder="Search address, transaction, block, or asset"
+            aria-label="Search value"
+        >
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="home-header-actions">
+        <button
+            class="header-control"
+            type="button"
+            aria-label="Settings are coming in the next milestone"
+            title="Settings are coming next"
+        >
+            ⚙
+        </button>
+
+        <button
+            id="themeToggle"
+            class="header-control"
+            type="button"
+            aria-label="Switch appearance"
+        >
+            Theme
+        </button>
+    </div>
+</header>
+
+<nav class="home-navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="blocks.html">Blocks</a>
+    <a href="transactions.html">Transactions</a>
+    <a href="addresses.html">Addresses</a>
+    <a href="assets.html">Assets</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="status.html" class="active">Status</a>
+</nav>
+
+<main class="status-dashboard">
+    <header class="status-title-card">
+        <div>
+            <p class="home-eyebrow">KEETAVIEW SYSTEM</p>
+            <h1>Status</h1>
+            <p>
+                Check the local API, indexed database, and latest stored activity.
+            </p>
+        </div>
+
+        <div class="status-title-actions">
+            <div id="systemStatus" class="system-status" data-state="checking">
+                <span aria-hidden="true"></span>
+                <strong>Checking API…</strong>
+            </div>
+
+            <button id="refreshStatus" type="button">
+                Refresh
+            </button>
+        </div>
+    </header>
+
+    <section class="status-summary-grid" aria-label="Indexed totals">
+        <article class="status-metric-card">
+            <span>Indexed Blocks</span>
+            <strong id="statusBlocks">—</strong>
+            <small>Blocks stored locally</small>
+        </article>
+
+        <article class="status-metric-card">
+            <span>Indexed Transfers</span>
+            <strong id="statusTransfers">—</strong>
+            <small>Token movements stored</small>
+        </article>
+
+        <article class="status-metric-card">
+            <span>Indexed Accounts</span>
+            <strong id="statusAccounts">—</strong>
+            <small>Observed addresses</small>
+        </article>
+
+        <article class="status-metric-card">
+            <span>Total Operations</span>
+            <strong id="statusOperations">—</strong>
+            <small>Operations across indexed blocks</small>
+        </article>
+    </section>
+
+    <section class="status-two-column">
+        <article class="status-dashboard-card">
+            <header class="status-card-header">
+                <div>
+                    <p class="home-eyebrow">LOCAL SERVICES</p>
+                    <h2>Service Health</h2>
+                </div>
+            </header>
+
+            <div class="service-health-list">
+                <div>
+                    <span class="service-indicator" id="apiIndicator"></span>
+                    <div>
+                        <strong>KeetaView API</strong>
+                        <small>http://localhost:3000</small>
+                    </div>
+                    <span id="apiState">Checking</span>
+                </div>
+
+                <div>
+                    <span class="service-indicator" id="databaseIndicator"></span>
+                    <div>
+                        <strong>SQLite Index</strong>
+                        <small>Local indexed explorer data</small>
+                    </div>
+                    <span id="databaseState">Checking</span>
+                </div>
+
+                <div>
+                    <span class="service-indicator pending"></span>
+                    <div>
+                        <strong>Verified Market Feed</strong>
+                        <small>KTA market data source</small>
+                    </div>
+                    <span>Not connected</span>
+                </div>
+            </div>
+        </article>
+
+        <article class="status-dashboard-card">
+            <header class="status-card-header">
+                <div>
+                    <p class="home-eyebrow">DATABASE COVERAGE</p>
+                    <h2>Indexed Range</h2>
+                </div>
+            </header>
+
+            <dl class="status-coverage-list">
+                <div>
+                    <dt>First Indexed Activity</dt>
+                    <dd id="statusFirstIndexed">—</dd>
+                </div>
+
+                <div>
+                    <dt>Latest Indexed Activity</dt>
+                    <dd id="statusLatestIndexed">—</dd>
+                </div>
+
+                <div>
+                    <dt>Average Operations</dt>
+                    <dd id="statusAverageOperations">—</dd>
+                </div>
+
+                <div>
+                    <dt>Last Status Check</dt>
+                    <dd id="statusLastChecked">—</dd>
+                </div>
+            </dl>
+        </article>
+    </section>
+
+    <article id="statusMessage" class="status-message-card">
+        <strong>Local index disclosure</strong>
+        <p>
+            KeetaView displays information stored by this local index.
+            These totals are not guaranteed to represent the entire network.
+        </p>
+    </article>
+</main>
+
+<script src="https://static.test.keeta.com/keetanet-browser.js"></script>
+<script src="shared.js"></script>
+<script src="status.js"></script>
+</body>
+</html>
