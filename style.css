@@ -2613,3 +2613,138 @@ html[data-theme="clean"] .address-detail-shell #balancesList .operation-card {
     background: #ffffff;
     border-color: #d5d9de;
 }
+
+
+/* KeetaView asset details */
+
+.asset-page-shell.asset-detail-page {
+    width: min(100% - 40px, 1180px);
+    margin: 0 auto;
+    padding: 28px 0 64px;
+}
+
+.asset-page-shell .asset-detail-card {
+    padding: 38px;
+    background: #ffffff;
+    border: 1px solid #c8d0d9;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(32, 45, 62, 0.10);
+}
+
+.asset-page-shell .asset-detail-header {
+    margin-bottom: 24px;
+}
+
+.asset-page-shell .asset-detail-header h1 {
+    margin: 6px 0 8px;
+    color: var(--primary-text);
+}
+
+.asset-page-shell .asset-detail-header > p:last-child {
+    margin: 0;
+    color: var(--secondary-text);
+}
+
+.asset-page-shell .asset-overview-card {
+    overflow: hidden;
+    background: #f8fafc;
+    border: 1px solid #d2d8e0;
+    border-radius: 12px;
+    box-shadow: none;
+}
+
+.asset-page-shell .asset-detail-row {
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr);
+    gap: 24px;
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.asset-page-shell .asset-detail-row:last-child {
+    border-bottom: 0;
+}
+
+.asset-page-shell .asset-detail-row span {
+    color: var(--secondary-text);
+    font-weight: 600;
+}
+
+.asset-page-shell .asset-detail-row strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--primary-text);
+    text-align: right;
+}
+
+.asset-page-shell .asset-transfers {
+    margin-top: 34px;
+    overflow: visible;
+    border: 0;
+    box-shadow: none;
+}
+
+.asset-page-shell .asset-transfers h2 {
+    margin: 0 0 18px;
+}
+
+.asset-transfer-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.asset-transfer-table {
+    min-width: 820px;
+}
+
+.asset-page-shell .asset-transfer-header,
+.asset-page-shell .asset-transfer-row {
+    border-color: var(--border-color);
+}
+
+.asset-page-shell .asset-transfer-header span {
+    color: #53647a;
+    font-weight: 600;
+}
+
+.asset-page-shell .asset-transfer-row a {
+    color: #1676cf;
+}
+
+.asset-page-shell .asset-transfer-row span {
+    color: #66768a;
+}
+
+.asset-page-shell .asset-transfer-row:hover {
+    background: var(--row-hover);
+}
+
+html[data-theme="clean"] .asset-page-shell .asset-detail-card {
+    border-color: #d5d9de;
+    box-shadow: 0 8px 24px rgba(32, 45, 62, 0.06);
+}
+
+html[data-theme="clean"] .asset-page-shell .asset-overview-card {
+    background: #ffffff;
+}
+
+@media (max-width: 700px) {
+    .asset-page-shell.asset-detail-page {
+        width: min(100% - 24px, 1180px);
+        padding-top: 18px;
+    }
+
+    .asset-page-shell .asset-detail-card {
+        padding: 24px 20px;
+    }
+
+    .asset-page-shell .asset-detail-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .asset-page-shell .asset-detail-row strong {
+        text-align: left;
+    }
+}
