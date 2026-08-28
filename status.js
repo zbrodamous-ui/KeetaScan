@@ -87,8 +87,6 @@ function setOfflineState(error) {
 
 function renderStatus(status, analytics) {
     const summary = analytics.summary || {};
-    const coverage = analytics.coverage || {};
-
     fields.blocks.textContent =
         formatNumber(status.blocks ?? summary.blocks);
     fields.transfers.textContent =
@@ -98,9 +96,9 @@ function renderStatus(status, analytics) {
     fields.operations.textContent =
         formatNumber(summary.operations);
     fields.firstIndexed.textContent =
-        formatDate(coverage.firstIndexed);
+        formatDate(summary.firstTimestamp);
     fields.latestIndexed.textContent =
-        formatDate(coverage.latestIndexed);
+        formatDate(summary.latestTimestamp);
 
     const average = Number(summary.averageOperations);
     fields.averageOperations.textContent =
