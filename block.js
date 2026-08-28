@@ -16,23 +16,32 @@ const blockHash = params.get("hash");
 console.log("Selected block hash:", blockHash);
 
 async function loadBlock() {
+    const blockTitle =
+        document.getElementById("blockTitle");
+
+    const blockDetails =
+        document.getElementById("blockDetails");
+
+    const operationsList =
+        document.getElementById("operationsList");
+
+    if (!blockHash) {
+        blockTitle.textContent =
+            "No block selected";
+
+        blockDetails.textContent =
+            "Search for a block or return to the Blocks page.";
+
+        operationsList.textContent =
+            "No operations to display.";
+
+        return;
+    }
+
     try {
 const block = await client.getBlock(blockHash);
 
-// 1. Update the title
-const blockTitle =
-    document.getElementById("blockTitle");
-
-// 2. Fill in the Overview section
-const blockDetails =
-    document.getElementById("blockDetails");
-
-// blockDetails.innerHTML = ...
-
-// 3. Fill in the Operations section
-const operationsList =
-    document.getElementById("operationsList");
-
+// Fill in the block overview and operations.
 operationsList.innerHTML = "";
 
 block.operations.forEach((operation, operationIndex) => {
