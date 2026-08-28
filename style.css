@@ -2285,3 +2285,37 @@ html[data-theme="clean"] .home-search button:hover {
         margin-bottom: 12px;
     }
 }
+
+
+/* Block detail contrast refinement */
+
+html[data-theme="soft"] .detail-page-body {
+    background: #e8ecf0;
+}
+
+.detail-shell.block-page {
+    width: min(100% - 40px, 1000px);
+}
+
+.detail-shell .block-card {
+    background: #ffffff;
+    border: 1px solid #c8d0d9;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(32, 45, 62, 0.10);
+}
+
+.detail-shell .operation-card {
+    background: #f8fafc;
+    border: 1px solid #d2d8e0;
+    border-radius: 12px;
+    padding: 22px;
+}
+
+html[data-theme="clean"] .detail-shell .block-card {
+    border-color: #d5d9de;
+    box-shadow: 0 8px 24px rgba(32, 45, 62, 0.06);
+}
+
+html[data-theme="clean"] .detail-shell .operation-card {
+    background: #ffffff;
+}
