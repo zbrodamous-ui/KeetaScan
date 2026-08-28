@@ -2377,3 +2377,22 @@ html[data-theme="soft"] .home-search button {
     border-color: #1b2433;
     color: #ffffff;
 }
+
+
+/* Unified graphite top area */
+
+html[data-theme="soft"] .home-header,
+html[data-theme="soft"] .home-navigation,
+html[data-theme="soft"] .home-search select,
+html[data-theme="soft"] .home-search input,
+html[data-theme="soft"] .home-search button,
+html[data-theme="soft"] .header-control {
+    background: #5a5a5a;
+    border-color: #737373;
+    color: #ffffff;
+}
+
+html[data-theme="soft"] .home-search button:hover {
+    background: #4b4b4b;
+    border-color: #4b4b4b;
+}
