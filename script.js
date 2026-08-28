@@ -315,7 +315,7 @@ async function loadHomepage() {
             !transfersResponse.ok
         ) {
             throw new Error(
-                "KeetaScan API did not return homepage data."
+                "KeetaView API did not return homepage data."
             );
         }
 
@@ -399,10 +399,10 @@ async function loadHomepage() {
         );
 
         homeBlocksList.innerHTML =
-            "<p class=\"home-error\">Start the KeetaScan API to load indexed blocks.</p>";
+            "<p class=\"home-error\">Start the KeetaView API to load indexed blocks.</p>";
 
         homeTransactionsList.innerHTML =
-            "<p class=\"home-error\">Start the KeetaScan API to load indexed transactions.</p>";
+            "<p class=\"home-error\">Start the KeetaView API to load indexed transactions.</p>";
     }
 }
 
