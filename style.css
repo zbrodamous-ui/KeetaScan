@@ -2060,3 +2060,115 @@ html[data-theme="clean"] .market-panel .market-placeholder path {
 html[data-theme="clean"] .home-panel {
     box-shadow: none;
 }
+
+
+/* ==========================
+   Final Soft Gray Appearance
+========================== */
+
+:root,
+html[data-theme="soft"] {
+    color-scheme: light;
+
+    --page-background: #eceff2;
+    --surface-background: #ffffff;
+    --surface-secondary: #f8f9fb;
+    --border-color: #d4d9df;
+
+    --primary-text: #1b2433;
+    --secondary-text: #58687d;
+    --link-color: #1676cf;
+
+    --row-hover: #f3f7fb;
+    --positive-color: #12836e;
+    --negative-color: #bf4a5e;
+    --warning-color: #986313;
+
+    --panel-shadow: 0 7px 22px rgba(35, 49, 68, 0.07);
+}
+
+html[data-theme="soft"] .home-page,
+html[data-theme="soft"] body {
+    background: var(--page-background);
+}
+
+html[data-theme="soft"] .home-header,
+html[data-theme="soft"] .home-navigation,
+html[data-theme="soft"] .main-nav,
+html[data-theme="soft"] .home-panel,
+html[data-theme="soft"] .market-panel {
+    background: #ffffff;
+    border-color: var(--border-color);
+    color: var(--primary-text);
+}
+
+html[data-theme="soft"] .home-brand,
+html[data-theme="soft"] .home-navigation a,
+html[data-theme="soft"] .main-nav a,
+html[data-theme="soft"] .main-nav a:not(.active),
+html[data-theme="soft"] .market-panel h1,
+html[data-theme="soft"] .market-panel h2,
+html[data-theme="soft"] .market-panel strong {
+    color: var(--primary-text);
+}
+
+html[data-theme="soft"] .home-brand span,
+html[data-theme="soft"] .home-navigation a.active,
+html[data-theme="soft"] .home-navigation a:hover,
+html[data-theme="soft"] .main-nav a.active {
+    color: var(--link-color);
+}
+
+html[data-theme="soft"] .home-search select,
+html[data-theme="soft"] .home-search input,
+html[data-theme="soft"] .header-control,
+html[data-theme="soft"] .theme-toggle,
+html[data-theme="soft"] .main-nav .theme-toggle {
+    background: #ffffff;
+    border-color: var(--border-color);
+    color: var(--primary-text);
+}
+
+html[data-theme="soft"] .home-search input::placeholder {
+    color: #7b8798;
+}
+
+html[data-theme="soft"] .home-search button {
+    background: var(--link-color);
+    border-color: var(--link-color);
+    color: #ffffff;
+}
+
+html[data-theme="soft"] .market-panel .home-panel-header,
+html[data-theme="soft"] .market-panel .market-facts,
+html[data-theme="soft"] .market-panel .market-facts div {
+    border-color: var(--border-color);
+}
+
+html[data-theme="soft"] .market-panel p,
+html[data-theme="soft"] .market-panel span,
+html[data-theme="soft"] .market-panel .home-eyebrow {
+    color: var(--secondary-text);
+}
+
+html[data-theme="soft"] .market-panel .chart-ranges span.active {
+    background: #e8f2fc;
+    color: var(--link-color);
+}
+
+html[data-theme="soft"] .market-panel .market-placeholder line {
+    stroke: var(--border-color);
+}
+
+html[data-theme="soft"] .market-panel .market-placeholder path {
+    stroke: var(--link-color);
+}
+
+html[data-theme="soft"] .home-panel {
+    box-shadow: var(--panel-shadow);
+}
+
+html[data-theme="clean"] .home-page,
+html[data-theme="clean"] body {
+    background: #ffffff;
+}
