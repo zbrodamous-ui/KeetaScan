@@ -7,70 +7,128 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
-    <title>Assets | KeetaScan</title>
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+    <title>Assets | KeetaView</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="assets-page-body">
 
-    <nav class="main-nav">
-        <a href="index.html">Home</a>
-        <a href="blocks.html">Blocks</a>
-        <a href="transactions.html">Transactions</a>
-        <a href="addresses.html">Addresses</a>
-        <a href="assets.html" class="active">Assets</a>
-        <a href="analytics.html">Analytics</a>
-        <a href="status.html">Status</a>
+<header class="home-header">
+    <a class="home-brand" href="index.html">
+        Keeta<span>View</span>
+    </a>
+
+    <form id="detailSearchForm" class="home-search">
+        <select id="detailSearchType" aria-label="Search type">
+            <option value="transaction">Transaction</option>
+            <option value="address">Address</option>
+            <option value="block">Block</option>
+            <option value="asset" selected>Asset</option>
+        </select>
+
+        <input
+            id="detailSearchInput"
+            type="search"
+            placeholder="Search address, transaction, block, or asset"
+            aria-label="Search value"
+        >
+
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="home-header-actions">
+        <button
+            class="header-control"
+            type="button"
+            aria-label="Settings are coming in the next milestone"
+            title="Settings are coming next"
+        >
+            ⚙
+        </button>
 
         <button
             id="themeToggle"
-            class="theme-toggle"
+            class="header-control"
             type="button"
+            aria-label="Switch appearance"
         >
-            Light Mode
+            Theme
         </button>
-    </nav>
+    </div>
+</header>
 
-    <main class="assets-page">
+<nav class="home-navigation" aria-label="Main navigation">
+    <a href="index.html">Home</a>
+    <a href="blocks.html">Blocks</a>
+    <a href="transactions.html">Transactions</a>
+    <a href="addresses.html">Addresses</a>
+    <a href="assets.html" class="active">Assets</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="status.html">Status</a>
+</nav>
 
-        <section class="assets-header">
+<main class="assets-dashboard">
+    <header class="assets-title-card">
+        <div>
+            <p class="home-eyebrow">KEETAVIEW ASSETS</p>
             <h1>Known Assets</h1>
-
             <p>
-                Assets discovered and remembered by KeetaScan.
+                Assets discovered and remembered by this KeetaView browser.
             </p>
-        </section>
+        </div>
 
-        <section class="analytics-panel">
-
-            <div class="panel-header">
-                <h2>Discovered Assets</h2>
-            </div> 
-                <div class="asset-list-header">
-    <span>Asset</span>
-    <span>Name</span>
-    <span>Address</span>
-    <span>Supply</span>
-</div>
-            <div
-                id="knownAssetsList"
-                class="analytics-list"
+        <label class="asset-filter">
+            <span>Filter assets</span>
+            <input
+                id="assetFilter"
+                type="search"
+                placeholder="Symbol, name, or address"
+                autocomplete="off"
             >
-                Loading known assets...
+        </label>
+    </header>
+
+    <section class="assets-list-card" aria-labelledby="assetsListTitle">
+        <header class="assets-card-header">
+            <div>
+                <p class="home-eyebrow">DISCOVERED ON KEETA</p>
+                <h2 id="assetsListTitle">Asset Directory</h2>
             </div>
 
-        </section>
+            <span id="assetResultCount" class="asset-result-count">
+                Loading assets…
+            </span>
+        </header>
 
-    </main>
+        <div class="asset-table-scroll">
+            <div class="asset-directory-table">
+                <div class="asset-directory-header" aria-hidden="true">
+                    <span>Asset</span>
+                    <span>Name</span>
+                    <span>Address</span>
+                    <span>Supply</span>
+                </div>
 
-  <script src="https://static.test.keeta.com/keetanet-browser.js"></script>
+                <div
+                    id="knownAssetsList"
+                    class="asset-directory-list"
+                    aria-live="polite"
+                >
+                    <p class="assets-empty">Loading known assets…</p>
+                </div>
+            </div>
+        </div>
+
+        <footer id="assetPagination" class="asset-pagination" hidden>
+            <button id="assetPrevious" type="button">← Previous</button>
+            <span id="assetPageStatus">Page 1 of 1</span>
+            <button id="assetNext" type="button">Next →</button>
+        </footer>
+    </section>
+</main>
+
+<script src="https://static.test.keeta.com/keetanet-browser.js"></script>
 <script src="shared.js"></script>
 <script src="assets.js"></script>
-
 </body>
 </html>
