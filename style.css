@@ -2432,3 +2432,60 @@ html[data-theme="clean"] .home-search button:hover {
     background: #f2f3f5;
     border-color: #c8cdd3;
 }
+
+
+/* KeetaView transaction details */
+
+.transaction-detail-shell.details-page {
+    width: min(100% - 40px, 1000px);
+    margin: 0 auto;
+    padding: 28px 0 64px;
+}
+
+.transaction-detail-shell h1 {
+    margin: 34px 0 24px;
+    color: var(--primary-text);
+}
+
+.transaction-detail-shell .transaction-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #c8d0d9;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(32, 45, 62, 0.10);
+}
+
+.transaction-detail-shell .detail-row {
+    border-color: var(--border-color);
+}
+
+.transaction-detail-shell .detail-row > span:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.transaction-detail-shell a:not(.detail-back-link) {
+    color: var(--link-color);
+}
+
+html[data-theme="clean"] .transaction-detail-shell .transaction-card {
+    border-color: #d5d9de;
+    box-shadow: 0 8px 24px rgba(32, 45, 62, 0.06);
+}
+
+@media (max-width: 700px) {
+    .transaction-detail-shell.details-page {
+        width: min(100% - 24px, 1000px);
+        padding-top: 18px;
+    }
+
+    .transaction-detail-shell .detail-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 18px 20px;
+    }
+
+    .transaction-detail-shell .detail-row > span:last-child {
+        text-align: left;
+    }
+}
