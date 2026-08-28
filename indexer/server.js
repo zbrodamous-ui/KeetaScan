@@ -194,6 +194,21 @@ if (
             )
             : 10;
 
+    const requestedOffset =
+        Number(
+            url.searchParams.get(
+                "offset"
+            )
+        );
+
+    const offset =
+        Number.isInteger(
+            requestedOffset
+        ) &&
+        requestedOffset >= 0
+            ? requestedOffset
+            : 0;
+
     const accounts =
         database.prepare(`
             SELECT
@@ -202,7 +217,11 @@ if (
             FROM accounts
             ORDER BY first_seen_timestamp DESC
             LIMIT ?
-        `).all(limit);
+            OFFSET ?
+        `).all(
+            limit,
+            offset
+        );
 
     sendJson(
         response,
