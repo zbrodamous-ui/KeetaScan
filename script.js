@@ -7,6 +7,9 @@ const searchInput =
 const searchButton =
     document.getElementById("searchButton");
 
+const homeSearchForm =
+    document.getElementById("homeSearchForm");
+
 const homeBlocksList =
     document.getElementById("homeBlocksList");
 
@@ -56,21 +59,28 @@ function runSearch() {
             )}`
     };
 
-    window.location.href =
-        routes[searchType.value];
+    const selectedType =
+        searchType.value.toLowerCase();
+
+    const destination =
+        routes[selectedType];
+
+    if (!destination) {
+        console.error(
+            "Unknown search type:",
+            searchType.value
+        );
+        return;
+    }
+
+    window.location.assign(destination);
 }
 
-searchButton.addEventListener(
-    "click",
-    runSearch
-);
-
-searchInput.addEventListener(
-    "keydown",
+homeSearchForm.addEventListener(
+    "submit",
     (event) => {
-        if (event.key === "Enter") {
-            runSearch();
-        }
+        event.preventDefault();
+        runSearch();
     }
 );
 
