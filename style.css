@@ -2340,3 +2340,40 @@ html[data-theme="soft"] .detail-back-link {
 html[data-theme="soft"] .detail-back-link:hover {
     color: #ffffff;
 }
+
+
+/* Soft Gray top navigation */
+
+html[data-theme="soft"] .home-header,
+html[data-theme="soft"] .home-navigation {
+    background: #6a6a6a;
+    border-color: #7a7a7a;
+    box-shadow: none;
+}
+
+html[data-theme="soft"] .home-brand,
+html[data-theme="soft"] .home-brand span,
+html[data-theme="soft"] .home-navigation a,
+html[data-theme="soft"] .home-navigation a:not(.active),
+html[data-theme="soft"] .home-navigation a.active,
+html[data-theme="soft"] .home-navigation a:hover {
+    color: #ffffff;
+}
+
+html[data-theme="soft"] .home-search select,
+html[data-theme="soft"] .home-search input,
+html[data-theme="soft"] .header-control {
+    background: #747474;
+    border-color: #858585;
+    color: #ffffff;
+}
+
+html[data-theme="soft"] .home-search input::placeholder {
+    color: #e2e2e2;
+}
+
+html[data-theme="soft"] .home-search button {
+    background: #1b2433;
+    border-color: #1b2433;
+    color: #ffffff;
+}
