@@ -2405,3 +2405,30 @@ html[data-theme="soft"] .home-navigation {
     border-top: 0;
     border-bottom: 0;
 }
+
+
+/* Clean White top controls */
+
+html[data-theme="clean"] .home-header,
+html[data-theme="clean"] .home-navigation {
+    border-top: 0;
+    border-bottom: 0;
+}
+
+html[data-theme="clean"] .home-search select,
+html[data-theme="clean"] .home-search input,
+html[data-theme="clean"] .home-search button,
+html[data-theme="clean"] .header-control {
+    background: #ffffff;
+    border-color: #d5d9de;
+    color: #171717;
+}
+
+html[data-theme="clean"] .home-search input::placeholder {
+    color: #7a8491;
+}
+
+html[data-theme="clean"] .home-search button:hover {
+    background: #f2f3f5;
+    border-color: #c8cdd3;
+}
