@@ -32,11 +32,36 @@ function runSearch() {
     }
 
     if (searchText.startsWith("keeta_")) {
-        window.location.href =
+        window.location.assign(
             `address.html?address=${encodeURIComponent(
                 searchText
-            )}`;
+            )}`
+        );
+        return;
+    }
 
+    const transactionMatch =
+        searchText.match(
+            /^([0-9a-f]{64}):(\d+)$/i
+        );
+
+    if (transactionMatch) {
+        window.location.assign(
+            `transaction.html?block=${encodeURIComponent(
+                transactionMatch[1]
+            )}&operation=${encodeURIComponent(
+                transactionMatch[2]
+            )}`
+        );
+        return;
+    }
+
+    if (/^[0-9a-f]{64}$/i.test(searchText)) {
+        window.location.assign(
+            `block.html?hash=${encodeURIComponent(
+                searchText
+            )}`
+        );
         return;
     }
 
