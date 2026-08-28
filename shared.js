@@ -76,12 +76,12 @@ function formatTokenAmount(amount, decimals, symbol = "") {
         : display;
 }
 const keetaScanThemes = [
-    "keeta",
+    "soft",
     "clean"
 ];
 
 const keetaScanThemeNames = {
-    keeta: "Keeta Contrast",
+    soft: "Soft Gray",
     clean: "Clean White"
 };
 
@@ -97,7 +97,7 @@ function initializeThemeToggle() {
     const preferredTheme =
         savedTheme === "clean"
             ? "clean"
-            : "keeta";
+            : "soft";
 
     applyTheme(
         preferredTheme
@@ -113,7 +113,7 @@ function initializeThemeToggle() {
             const currentTheme =
                 document.documentElement
                     .dataset.theme ||
-                "keeta";
+                "soft";
 
             const currentIndex =
                 keetaScanThemes.indexOf(
@@ -144,7 +144,7 @@ function applyTheme(theme) {
     const safeTheme =
         keetaScanThemes.includes(theme)
             ? theme
-            : "keeta";
+            : "soft";
 
     document.documentElement
         .dataset.theme =
