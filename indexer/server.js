@@ -214,6 +214,139 @@ if (
 }
             if (
                 request.method === "GET" &&
+                url.pathname === "/api/analytics"
+            ) {
+                const blockSummary =
+                    database.prepare(`
+                        SELECT
+                            COUNT(*) AS blocks,
+                            COALESCE(
+                                SUM(operation_count),
+                                0
+                            ) AS operations,
+                            COALESCE(
+                                AVG(operation_count),
+                                0
+                            ) AS average_operations,
+                            MIN(timestamp) AS first_timestamp,
+                            MAX(timestamp) AS latest_timestamp
+                        FROM blocks
+                    `).get();
+
+                const accountTotal =
+                    database.prepare(`
+                        SELECT COUNT(*) AS total
+                        FROM accounts
+                    `).get().total;
+
+                const transferTotal =
+                    database.prepare(`
+                        SELECT COUNT(*) AS total
+                        FROM transfers
+                    `).get().total;
+
+                const topSenders =
+                    database.prepare(`
+                        SELECT
+                            sender AS address,
+                            COUNT(*) AS total
+                        FROM transfers
+                        WHERE sender IS NOT NULL
+                        GROUP BY sender
+                        ORDER BY total DESC
+                        LIMIT 8
+                    `).all();
+
+                const topRecipients =
+                    database.prepare(`
+                        SELECT
+                            recipient AS address,
+                            COUNT(*) AS total
+                        FROM transfers
+                        WHERE recipient IS NOT NULL
+                        GROUP BY recipient
+                        ORDER BY total DESC
+                        LIMIT 8
+                    `).all();
+
+                const tokenActivity =
+                    database.prepare(`
+                        SELECT
+                            token,
+                            COUNT(*) AS transfers
+                        FROM transfers
+                        WHERE token IS NOT NULL
+                        GROUP BY token
+                        ORDER BY transfers DESC
+                        LIMIT 8
+                    `).all();
+
+                const activityNewestFirst =
+                    database.prepare(`
+                        SELECT
+                            substr(timestamp, 1, 10) AS day,
+                            COUNT(*) AS transfers
+                        FROM transfers
+                        GROUP BY day
+                        ORDER BY day DESC
+                        LIMIT 14
+                    `).all();
+
+                const recentTransfers =
+                    database.prepare(`
+                        SELECT
+                            block_hash,
+                            operation_index,
+                            sender,
+                            recipient,
+                            token,
+                            amount,
+                            timestamp
+                        FROM transfers
+                        ORDER BY timestamp DESC
+                        LIMIT 8
+                    `).all();
+
+                sendJson(
+                    response,
+                    200,
+                    {
+                        summary: {
+                            blocks:
+                                blockSummary.blocks,
+                            operations:
+                                blockSummary.operations,
+                            transfers:
+                                transferTotal,
+                            accounts:
+                                accountTotal,
+                            averageOperations:
+                                Number(
+                                    blockSummary
+                                        .average_operations
+                                ),
+                            firstTimestamp:
+                                blockSummary
+                                    .first_timestamp,
+                            latestTimestamp:
+                                blockSummary
+                                    .latest_timestamp
+                        },
+                        activity:
+                            activityNewestFirst
+                                .reverse(),
+                        topSenders,
+                        topRecipients,
+                        tokenActivity,
+                        recentTransfers
+                    }
+                );
+
+                return;
+            }
+
+            if (
+                request.method === "GET" &&
                 url.pathname === "/api/status"
             ) {
                 const blocks =
