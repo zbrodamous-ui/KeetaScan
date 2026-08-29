@@ -32,7 +32,7 @@ function shortAddress(address) {
         return address || "Unknown";
     }
 
-    return `${address.slice(0, 14)}...${address.slice(-6)}`;
+    return formatKeetaIdentifier(address, 14, 6);
 }
 
 function formatAssetSupply(rawSupply, decimalPlaces) {
