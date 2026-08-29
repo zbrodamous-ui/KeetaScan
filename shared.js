@@ -246,55 +246,6 @@ function createSettingsPanel() {
         </header>
 
         <form id="settingsForm">
-            <div class="settings-section">
-                <div class="settings-section-heading">
-                    <strong>Appearance</strong>
-                    <span>Choose how KeetaView looks on this browser.</span>
-                </div>
-
-                <div
-                    class="appearance-options"
-                    role="radiogroup"
-                    aria-label="Appearance"
-                >
-                    <button
-                        class="appearance-option"
-                        type="button"
-                        data-theme-choice="soft"
-                        role="radio"
-                    >
-                        <span class="appearance-preview soft-preview">
-                            <i></i><i></i>
-                        </span>
-
-                        <span>
-                            <strong>Soft Gray</strong>
-                            <small>Graphite canvas with white data cards</small>
-                        </span>
-
-                        <b aria-hidden="true">✓</b>
-                    </button>
-
-                    <button
-                        class="appearance-option"
-                        type="button"
-                        data-theme-choice="clean"
-                        role="radio"
-                    >
-                        <span class="appearance-preview clean-preview">
-                            <i></i><i></i>
-                        </span>
-
-                        <span>
-                            <strong>Clean White</strong>
-                            <small>Bright canvas with subtle borders</small>
-                        </span>
-
-                        <b aria-hidden="true">✓</b>
-                    </button>
-                </div>
-            </div>
-
             <div class="settings-preferences">
                 <label class="settings-preference-row">
                     <span>
@@ -361,16 +312,6 @@ function createSettingsPanel() {
 
     document.body.appendChild(panel);
     syncSettingsControls();
-
-    panel
-        .querySelectorAll("[data-theme-choice]")
-        .forEach((option) => {
-            option.addEventListener("click", () => {
-                saveAndApplyTheme(
-                    option.dataset.themeChoice
-                );
-            });
-        });
 
     panel
         .querySelector("#settingsForm")
@@ -443,7 +384,7 @@ function openSettingsPanel() {
     }
 
     panel
-        .querySelector(".appearance-option.selected")
+        .querySelector("#settingsLanguage")
         ?.focus();
 }
 
