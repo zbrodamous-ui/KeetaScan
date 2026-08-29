@@ -22,7 +22,7 @@ function shortAddress(address) {
         return address || "Unknown";
     }
 
-    return `${address.slice(0, 20)}...${address.slice(-10)}`;
+    return formatKeetaIdentifier(address, 20, 10);
 }
 
 function addressUrl(address) {
