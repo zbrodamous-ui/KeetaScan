@@ -161,7 +161,7 @@ function shortAddress(address) {
         return "Not available";
     }
 
-    return `${address.slice(0, 12)}...${address.slice(-6)}`;
+    return formatKeetaIdentifier(address);
 }
 async function loadRecentTransfers(
     assetAddress,
