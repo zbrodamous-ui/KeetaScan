@@ -4886,3 +4886,72 @@ html[data-theme="soft"] .settings-panel {
     }
 }
 
+/* Roomier settings layout */
+.settings-panel {
+    width: min(620px, calc(100vw - 32px));
+}
+
+.settings-preferences {
+    padding: 0 26px;
+}
+
+.settings-preference-row {
+    grid-template-columns: minmax(180px, 1fr) minmax(250px, 290px);
+    gap: 32px;
+    padding: 20px 0;
+}
+
+.settings-preference-row > span {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+}
+
+.settings-preference-row > span strong,
+.settings-preference-row > span small {
+    display: block;
+}
+
+.settings-preference-row > span strong {
+    font-size: 1rem;
+    line-height: 1.25;
+}
+
+.settings-preference-row > span small {
+    color: var(--muted-text, #718096);
+    font-size: 0.84rem;
+    line-height: 1.4;
+}
+
+.settings-save-row {
+    padding: 18px 26px 22px;
+}
+
+#saveSettings {
+    flex: 0 0 auto;
+    min-height: 42px;
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 10px;
+    background: #0b78b8;
+    color: #ffffff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+@media (max-width: 640px) {
+    .settings-preferences {
+        padding: 0 20px;
+    }
+
+    .settings-preference-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .settings-save-row {
+        padding: 18px 20px 22px;
+    }
+}
+
