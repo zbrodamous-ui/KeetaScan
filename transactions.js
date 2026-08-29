@@ -25,7 +25,7 @@ function shortValue(value, start = 12, end = 6) {
         return value || "Not available";
     }
 
-    return `${value.slice(0, start)}...${value.slice(-end)}`;
+    return formatKeetaIdentifier(value, start, end);
 }
 
 function transactionUrl(transfer) {
