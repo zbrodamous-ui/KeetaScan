@@ -4566,3 +4566,216 @@ html[data-theme="clean"] .status-message-card {
         text-align: left;
     }
 }
+
+
+
+/* ==========================
+   KeetaView Settings
+========================== */
+
+.header-control.appearance-symbol {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    min-width: 46px;
+    padding: 0;
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+body.settings-open {
+    overflow: hidden;
+}
+
+body.settings-open::after {
+    position: fixed;
+    z-index: 90;
+    inset: 0;
+    background: rgba(16, 23, 34, 0.30);
+    content: "";
+}
+
+.settings-panel {
+    position: fixed;
+    z-index: 100;
+    top: 82px;
+    right: 24px;
+    width: min(390px, calc(100vw - 32px));
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #c8d0d9;
+    border-radius: 16px;
+    box-shadow: 0 22px 60px rgba(22, 31, 44, 0.24);
+    color: #1b2433;
+}
+
+.settings-panel[hidden] {
+    display: none;
+}
+
+.settings-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 20px 22px;
+    border-bottom: 1px solid #d9dee4;
+}
+
+.settings-panel-header h2 {
+    margin: 3px 0 0;
+    font-size: 1.35rem;
+}
+
+.settings-panel-header button {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid #d2d8e0;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #53647a;
+    cursor: pointer;
+    font: inherit;
+    font-size: 1.4rem;
+}
+
+.settings-panel-header button:hover {
+    background: #f1f3f5;
+    color: #1b2433;
+}
+
+.settings-section {
+    padding: 22px;
+}
+
+.settings-section-heading strong,
+.settings-section-heading span {
+    display: block;
+}
+
+.settings-section-heading strong {
+    color: #26364b;
+}
+
+.settings-section-heading span {
+    margin-top: 5px;
+    color: #718096;
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.appearance-options {
+    display: grid;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.appearance-option {
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr) 20px;
+    gap: 13px;
+    align-items: center;
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #d5dbe2;
+    border-radius: 11px;
+    background: #ffffff;
+    color: #26364b;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    transition:
+        border-color 0.18s ease,
+        background 0.18s ease;
+}
+
+.appearance-option:hover {
+    background: #f6f8fa;
+}
+
+.appearance-option.selected {
+    border-color: #5a5a5a;
+    background: #f2f4f6;
+}
+
+.appearance-option > span:nth-child(2) strong,
+.appearance-option > span:nth-child(2) small {
+    display: block;
+}
+
+.appearance-option > span:nth-child(2) small {
+    margin-top: 4px;
+    color: #718096;
+    font-size: 0.76rem;
+    line-height: 1.35;
+}
+
+.appearance-option > b {
+    color: #1b2433;
+    opacity: 0;
+}
+
+.appearance-option.selected > b {
+    opacity: 1;
+}
+
+.appearance-preview {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4px;
+    width: 54px;
+    height: 38px;
+    padding: 5px;
+    border: 1px solid #cbd2da;
+    border-radius: 7px;
+}
+
+.appearance-preview i {
+    display: block;
+    border-radius: 3px;
+}
+
+.soft-preview {
+    background: #5a5a5a;
+}
+
+.soft-preview i {
+    background: #ffffff;
+}
+
+.clean-preview {
+    background: #ffffff;
+}
+
+.clean-preview i:first-child {
+    background: #e5e9ed;
+}
+
+.clean-preview i:last-child {
+    border: 1px solid #d5dbe2;
+    background: #ffffff;
+}
+
+.settings-panel-footer {
+    padding: 14px 22px;
+    border-top: 1px solid #d9dee4;
+    background: #f6f8fa;
+    color: #718096;
+    font-size: 0.78rem;
+}
+
+html[data-theme="soft"] .settings-panel {
+    border-color: #777777;
+}
+
+@media (max-width: 700px) {
+    .settings-panel {
+        top: 16px;
+        right: 16px;
+        max-height: calc(100vh - 32px);
+        overflow-y: auto;
+    }
+}
