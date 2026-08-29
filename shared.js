@@ -85,6 +85,116 @@ const keetaScanThemeNames = {
     clean: "Clean White"
 };
 
+
+const defaultKeetaViewPreferences = {
+    language: "en",
+    currency: "usd",
+    addressFormat: "middle",
+    timeZone: "local"
+};
+
+function getSavedPreferences() {
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem("keetaViewPreferences") ||
+            "{}"
+        );
+
+        return {
+            ...defaultKeetaViewPreferences,
+            ...saved
+        };
+    } catch (error) {
+        return {
+            ...defaultKeetaViewPreferences
+        };
+    }
+}
+
+function applyDisplayPreferences(preferences) {
+    const safeAddressFormat =
+        preferences.addressFormat === "back"
+            ? "back"
+            : "middle";
+    const safeTimeZone =
+        preferences.timeZone === "utc"
+            ? "utc"
+            : "local";
+
+    document.documentElement.dataset.addressFormat =
+        safeAddressFormat;
+    document.documentElement.dataset.timeZone =
+        safeTimeZone;
+}
+
+function formatKeetaIdentifier(
+    value,
+    beginningLength = 12,
+    endingLength = 6
+) {
+    const text = String(value || "");
+
+    if (
+        !text ||
+        text.length <= beginningLength + endingLength + 3
+    ) {
+        return text;
+    }
+
+    const format =
+        document.documentElement.dataset.addressFormat ||
+        getSavedPreferences().addressFormat;
+
+    if (format === "back") {
+        return `${text.slice(
+            0,
+            beginningLength + endingLength
+        )}...`;
+    }
+
+    return `${text.slice(0, beginningLength)}...${
+        text.slice(-endingLength)
+    }`;
+}
+
+function formatKeetaDate(value) {
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "Not available";
+    }
+
+    const timeZone =
+        document.documentElement.dataset.timeZone ||
+        getSavedPreferences().timeZone;
+
+    return timeZone === "utc"
+        ? date.toLocaleString(undefined, {
+            timeZone: "UTC",
+            timeZoneName: "short"
+        })
+        : date.toLocaleString();
+}
+
+function syncSettingsControls() {
+    const panel = document.getElementById("settingsPanel");
+
+    if (!panel) {
+        return;
+    }
+
+    const preferences = getSavedPreferences();
+
+    panel.querySelector("#settingsLanguage").value =
+        preferences.language;
+    panel.querySelector("#settingsCurrency").value =
+        preferences.currency;
+    panel.querySelector("#settingsAddressFormat").value =
+        preferences.addressFormat;
+    panel.querySelector("#settingsTimeZone").value =
+        preferences.timeZone;
+}
+
 function getSavedTheme() {
     return localStorage.getItem("keetaScanTheme") === "clean"
         ? "clean"
@@ -135,61 +245,122 @@ function createSettingsPanel() {
             </button>
         </header>
 
-        <div class="settings-section">
-            <div class="settings-section-heading">
-                <strong>Appearance</strong>
-                <span>Choose how KeetaView looks on this browser.</span>
+        <form id="settingsForm">
+            <div class="settings-section">
+                <div class="settings-section-heading">
+                    <strong>Appearance</strong>
+                    <span>Choose how KeetaView looks on this browser.</span>
+                </div>
+
+                <div
+                    class="appearance-options"
+                    role="radiogroup"
+                    aria-label="Appearance"
+                >
+                    <button
+                        class="appearance-option"
+                        type="button"
+                        data-theme-choice="soft"
+                        role="radio"
+                    >
+                        <span class="appearance-preview soft-preview">
+                            <i></i><i></i>
+                        </span>
+
+                        <span>
+                            <strong>Soft Gray</strong>
+                            <small>Graphite canvas with white data cards</small>
+                        </span>
+
+                        <b aria-hidden="true">✓</b>
+                    </button>
+
+                    <button
+                        class="appearance-option"
+                        type="button"
+                        data-theme-choice="clean"
+                        role="radio"
+                    >
+                        <span class="appearance-preview clean-preview">
+                            <i></i><i></i>
+                        </span>
+
+                        <span>
+                            <strong>Clean White</strong>
+                            <small>Bright canvas with subtle borders</small>
+                        </span>
+
+                        <b aria-hidden="true">✓</b>
+                    </button>
+                </div>
             </div>
 
-            <div
-                class="appearance-options"
-                role="radiogroup"
-                aria-label="Appearance"
-            >
-                <button
-                    class="appearance-option"
-                    type="button"
-                    data-theme-choice="soft"
-                    role="radio"
-                >
-                    <span class="appearance-preview soft-preview">
-                        <i></i><i></i>
-                    </span>
-
+            <div class="settings-preferences">
+                <label class="settings-preference-row">
                     <span>
-                        <strong>Soft Gray</strong>
-                        <small>Graphite canvas with white data cards</small>
+                        <strong>Language</strong>
+                        <small>Choose desired language</small>
                     </span>
 
-                    <b aria-hidden="true">✓</b>
-                </button>
+                    <select id="settingsLanguage">
+                        <option value="en">English</option>
+                    </select>
+                </label>
 
-                <button
-                    class="appearance-option"
-                    type="button"
-                    data-theme-choice="clean"
-                    role="radio"
-                >
-                    <span class="appearance-preview clean-preview">
-                        <i></i><i></i>
-                    </span>
-
+                <label class="settings-preference-row">
                     <span>
-                        <strong>Clean White</strong>
-                        <small>Bright canvas with subtle borders</small>
+                        <strong>Currency</strong>
+                        <small>Choose desired currency</small>
                     </span>
 
-                    <b aria-hidden="true">✓</b>
-                </button>
+                    <select id="settingsCurrency">
+                        <option value="usd">United States Dollar</option>
+                    </select>
+                </label>
+
+                <label class="settings-preference-row">
+                    <span>
+                        <strong>Address Display</strong>
+                        <small>Choose address truncation format</small>
+                    </span>
+
+                    <select id="settingsAddressFormat">
+                        <option value="middle">
+                            Middle (keeta_abcd...wxyz)
+                        </option>
+                        <option value="back">
+                            Back (keeta_abcdwxyz...)
+                        </option>
+                    </select>
+                </label>
+
+                <label class="settings-preference-row">
+                    <span>
+                        <strong>Date &amp; Time</strong>
+                        <small>Display times locally or in UTC</small>
+                    </span>
+
+                    <select id="settingsTimeZone">
+                        <option value="local">Local time</option>
+                        <option value="utc">UTC</option>
+                    </select>
+                </label>
             </div>
-        </div>
 
-        <footer class="settings-panel-footer">
-            Settings are saved on this browser.
-        </footer>
+            <footer class="settings-save-row">
+                <span id="settingsSaveStatus" aria-live="polite">
+                    Preferences are saved on this browser.
+                </span>
+
+                <button id="saveSettings" type="submit">
+                    Save Preferences
+                </button>
+            </footer>
+        </form>
     `;
 
     document.body.appendChild(panel);
+    syncSettingsControls();
 
     panel
         .querySelectorAll("[data-theme-choice]")
@@ -199,6 +370,38 @@ function createSettingsPanel() {
                     option.dataset.themeChoice
                 );
             });
+        });
+
+    panel
+        .querySelector("#settingsForm")
+        .addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const preferences = {
+                language:
+                    panel.querySelector("#settingsLanguage").value,
+                currency:
+                    panel.querySelector("#settingsCurrency").value,
+                addressFormat:
+                    panel.querySelector("#settingsAddressFormat").value,
+                timeZone:
+                    panel.querySelector("#settingsTimeZone").value
+            };
+
+            localStorage.setItem(
+                "keetaViewPreferences",
+                JSON.stringify(preferences)
+            );
+            applyDisplayPreferences(preferences);
+
+            const status =
+                panel.querySelector("#settingsSaveStatus");
+            status.textContent = "Preferences saved.";
+
+            window.setTimeout(() => {
+                status.textContent =
+                    "Preferences are saved on this browser.";
+            }, 1800);
         });
 
     panel
@@ -231,6 +434,7 @@ function openSettingsPanel() {
             ".home-header-actions .header-control:not(#themeToggle)"
         );
 
+    syncSettingsControls();
     panel.hidden = false;
     document.body.classList.add("settings-open");
 
@@ -444,6 +648,7 @@ function initializeDetailSearch() {
     });
 }
 
+applyDisplayPreferences(getSavedPreferences());
 initializeThemeToggle();
 initializeSettings();
 initializeDetailSearch();
