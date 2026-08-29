@@ -282,6 +282,10 @@ function initializeSettings() {
     settingsButton.title = "Settings";
 
     createSettingsPanel();
+    updateSettingsSelection(
+        document.documentElement.dataset.theme ||
+        getSavedTheme()
+    );
 
     settingsButton.addEventListener("click", () => {
         const panel = document.getElementById("settingsPanel");
