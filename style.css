@@ -4779,3 +4779,110 @@ html[data-theme="soft"] .settings-panel {
         overflow-y: auto;
     }
 }
+
+/* Expanded saved preferences */
+.settings-panel {
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.settings-preferences {
+    border-top: 1px solid var(--border-color, rgba(148, 163, 184, 0.28));
+}
+
+.settings-preference-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+    gap: 24px;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border-color, rgba(148, 163, 184, 0.28));
+}
+
+.settings-preference-copy {
+    display: grid;
+    gap: 5px;
+}
+
+.settings-preference-copy strong {
+    color: inherit;
+    font-size: 0.95rem;
+}
+
+.settings-preference-copy small {
+    color: var(--muted-text, #718096);
+    line-height: 1.45;
+}
+
+.settings-preference-row select {
+    width: 100%;
+    min-height: 42px;
+    padding: 9px 36px 9px 12px;
+    border: 1px solid var(--border-color, #cbd5e1);
+    border-radius: 10px;
+    background: var(--card-bg, #fff);
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+
+.settings-save-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    padding-top: 20px;
+}
+
+.settings-save-status {
+    min-height: 1.2em;
+    color: var(--muted-text, #718096);
+    font-size: 0.88rem;
+}
+
+.settings-save-button {
+    min-height: 42px;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 10px;
+    background: #0b78b8;
+    color: #fff;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.settings-save-button:hover {
+    background: #09699f;
+}
+
+.settings-save-button:focus-visible,
+.settings-preference-row select:focus-visible {
+    outline: 3px solid rgba(14, 165, 233, 0.28);
+    outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+    .settings-panel {
+        width: calc(100vw - 24px);
+        right: 12px;
+        top: 76px;
+        max-height: calc(100vh - 88px);
+    }
+
+    .settings-preference-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .settings-save-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .settings-save-button {
+        width: 100%;
+    }
+}
+
