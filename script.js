@@ -22,6 +22,18 @@ const marketStatus =
     document.getElementById("marketStatus");
 const marketChartPath =
     document.getElementById("marketChartPath");
+const marketHoverLine =
+    document.getElementById("marketHoverLine");
+const marketHoverPoint =
+    document.getElementById("marketHoverPoint");
+const marketTooltip =
+    document.getElementById("marketTooltip");
+const marketTooltipTime =
+    document.getElementById("marketTooltipTime");
+const marketTooltipPrice =
+    document.getElementById("marketTooltipPrice");
+const marketTooltipVolume =
+    document.getElementById("marketTooltipVolume");
 
 const client =
     KeetaNet.Client.fromNetwork("main");
@@ -31,6 +43,8 @@ const tokenDisplayCache =
 
 let marketRequestInProgress = false;
 let hasMarketData = false;
+let marketChartPoints = [];
+let marketChartVolumes = [];
 
 function runSearch() {
     const searchText =
@@ -339,41 +353,232 @@ function formatMarketCompact(value) {
 function createMarketChartPath(prices) {
     const values =
         prices
-            .map((point) => Number(point?.[1]))
-            .filter(Number.isFinite);
+            .map((point) => ({
+                timestamp:
+                    Number(point?.[0]),
+                price:
+                    Number(point?.[1])
+            }))
+            .filter(
+                (point) =>
+                    Number.isFinite(
+                        point.timestamp
+                    ) &&
+                    Number.isFinite(
+                        point.price
+                    )
+            );
 
     if (values.length < 2) {
+        marketChartPoints = [];
         return "";
     }
 
-    const minimum = Math.min(...values);
-    const maximum = Math.max(...values);
-    const range = maximum - minimum || 1;
+    const priceValues =
+        values.map(
+            (point) => point.price
+        );
 
-    return values
-        .map((price, index) => {
-            const x =
-                15 +
-                (
-                    index /
-                    (values.length - 1)
-                ) *
-                670;
+    const minimum =
+        Math.min(...priceValues);
 
-            const y =
-                175 -
-                (
-                    (price - minimum) /
-                    range
-                ) *
-                135;
+    const maximum =
+        Math.max(...priceValues);
 
-            return `${index === 0 ? "M" : "L"}${x.toFixed(
+    const range =
+        maximum - minimum || 1;
+
+    marketChartPoints =
+        values.map(
+            (point, index) => ({
+                ...point,
+                x:
+                    15 +
+                    (
+                        index /
+                        (values.length - 1)
+                    ) *
+                    670,
+                y:
+                    175 -
+                    (
+                        (point.price - minimum) /
+                        range
+                    ) *
+                    135
+            })
+        );
+
+    return marketChartPoints
+        .map((point, index) =>
+            `${index === 0 ? "M" : "L"}${point.x.toFixed(
                 1
-            )} ${y.toFixed(1)}`;
-        })
+            )} ${point.y.toFixed(1)}`
+        )
         .join(" ");
 }
+
+function hideMarketTooltip() {
+    marketHoverLine.hidden = true;
+    marketHoverPoint.hidden = true;
+    marketTooltip.hidden = true;
+}
+
+function showMarketTooltip(event) {
+    if (marketChartPoints.length < 2) {
+        return;
+    }
+
+    const svg =
+        marketChartPath.ownerSVGElement;
+
+    const svgBounds =
+        svg.getBoundingClientRect();
+
+    const pointerX =
+        Math.max(
+            15,
+            Math.min(
+                685,
+                (
+                    (event.clientX - svgBounds.left) /
+                    svgBounds.width
+                ) *
+                700
+            )
+        );
+
+    const index =
+        Math.max(
+            0,
+            Math.min(
+                marketChartPoints.length - 1,
+                Math.round(
+                    (
+                        (pointerX - 15) /
+                        670
+                    ) *
+                    (
+                        marketChartPoints.length - 1
+                    )
+                )
+            )
+        );
+
+    const point =
+        marketChartPoints[index];
+
+    const volumeIndex =
+        marketChartVolumes.length > 1
+            ? Math.round(
+                (
+                    index /
+                    (
+                        marketChartPoints.length - 1
+                    )
+                ) *
+                (
+                    marketChartVolumes.length - 1
+                )
+            )
+            : 0;
+
+    const volume =
+        Number(
+            marketChartVolumes[
+                volumeIndex
+            ]?.[1]
+        );
+
+    marketHoverLine.setAttribute(
+        "x1",
+        point.x
+    );
+
+    marketHoverLine.setAttribute(
+        "x2",
+        point.x
+    );
+
+    marketHoverPoint.setAttribute(
+        "cx",
+        point.x
+    );
+
+    marketHoverPoint.setAttribute(
+        "cy",
+        point.y
+    );
+
+    marketTooltipTime.textContent =
+        new Date(
+            point.timestamp
+        ).toLocaleString();
+
+    marketTooltipPrice.textContent =
+        formatMarketCurrency(
+            point.price,
+            point.price < 1 ? 6 : 2
+        );
+
+    marketTooltipVolume.textContent =
+        formatMarketCurrency(
+            volume
+        );
+
+    marketHoverLine.hidden = false;
+    marketHoverPoint.hidden = false;
+    marketTooltip.hidden = false;
+
+    const chartContainer =
+        svg.closest(
+            ".market-placeholder"
+        );
+
+    const containerBounds =
+        chartContainer.getBoundingClientRect();
+
+    const tooltipWidth =
+        marketTooltip.offsetWidth;
+
+    const left =
+        Math.max(
+            12,
+            Math.min(
+                containerBounds.width -
+                    tooltipWidth -
+                    12,
+                event.clientX -
+                    containerBounds.left +
+                    14
+            )
+        );
+
+    marketTooltip.style.left =
+        `${left}px`;
+
+    marketTooltip.style.top =
+        `${Math.max(
+            82,
+            event.clientY -
+                containerBounds.top -
+                92
+        )}px`;
+}
+
+marketChartPath
+    .ownerSVGElement
+    .addEventListener(
+        "pointermove",
+        showMarketTooltip
+    );
+
+marketChartPath
+    .ownerSVGElement
+    .addEventListener(
+        "pointerleave",
+        hideMarketTooltip
+    );
 
 async function loadMarketData() {
     if (marketRequestInProgress) {
@@ -467,12 +672,21 @@ async function loadMarketData() {
                 2
             );
 
+        marketChartVolumes =
+            Array.isArray(
+                market.volumes
+            )
+                ? market.volumes
+                : [];
+
         marketChartPath.setAttribute(
             "d",
             createMarketChartPath(
                 market.prices || []
             )
         );
+
+        hideMarketTooltip();
 
         marketChartPath.style.stroke =
             directionColor;
