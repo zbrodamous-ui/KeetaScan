@@ -5095,3 +5095,36 @@ html[data-theme="soft"] .settings-panel {
 .market-tooltip b {
     color: #26364b;
 }
+
+
+/* KTA chart scale and current value */
+.market-placeholder .market-area-path {
+    fill: url("#marketAreaGradient");
+    stroke: none;
+}
+
+.market-placeholder svg > text {
+    fill: #718096;
+    font-size: 11px;
+    text-anchor: end;
+}
+
+.market-placeholder .market-hover-line {
+    stroke: #64748b;
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+}
+
+#marketCurrentBadge rect {
+    stroke: none;
+}
+
+#marketCurrentBadge text {
+    fill: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+html[data-theme="soft"] .market-placeholder svg > text {
+    fill: #718096;
+}
