@@ -5103,6 +5103,15 @@ html[data-theme="soft"] .settings-panel {
     stroke: none;
 }
 
+.market-volume-bars {
+    opacity: 0.16;
+    pointer-events: none;
+}
+
+.market-volume-bars rect {
+    shape-rendering: crispEdges;
+}
+
 .market-placeholder svg > text {
     fill: #718096;
     font-size: 11px;
