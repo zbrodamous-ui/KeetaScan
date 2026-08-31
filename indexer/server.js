@@ -11,6 +11,13 @@ const database =
 
 const port = 3000;
 
+const marketCache = {
+    expiresAt: 0,
+    data: null
+};
+
+const marketCacheDuration = 5 * 60 * 1000;
+
 function sendJson(
     response,
     statusCode,
@@ -33,12 +40,119 @@ function sendJson(
 
 const server =
     http.createServer(
-        (request, response) => {
+        async (request, response) => {
             const url =
                 new URL(
                     request.url,
                     `http://${request.headers.host}`
                 );
+
+            if (
+                request.method === "GET" &&
+                url.pathname === "/api/market"
+            ) {
+                if (
+                    marketCache.data &&
+                    Date.now() < marketCache.expiresAt
+                ) {
+                    sendJson(
+                        response,
+                        200,
+                        marketCache.data
+                    );
+
+                    return;
+                }
+
+                try {
+                    const [
+                        coinResponse,
+                        chartResponse
+                    ] = await Promise.all([
+                        fetch(
+                            "https://api.coingecko.com/api/v3/coins/keeta?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
+                        ),
+                        fetch(
+                            "https://api.coingecko.com/api/v3/coins/keeta/market_chart?vs_currency=usd&days=1"
+                        )
+                    ]);
+
+                    if (
+                        !coinResponse.ok ||
+                        !chartResponse.ok
+                    ) {
+                        throw new Error(
+                            "CoinGecko did not return KTA market data."
+                        );
+                    }
+
+                    const coin =
+                        await coinResponse.json();
+
+                    const chart =
+                        await chartResponse.json();
+
+                    const market =
+                        coin.market_data || {};
+
+                    const marketData = {
+                        price:
+                            market.current_price?.usd ??
+                            null,
+                        priceChange24h:
+                            market.price_change_percentage_24h ??
+                            null,
+                        marketCap:
+                            market.market_cap?.usd ??
+                            null,
+                        volume24h:
+                            market.total_volume?.usd ??
+                            null,
+                        circulatingSupply:
+                            market.circulating_supply ??
+                            null,
+                        allTimeHigh:
+                            market.ath?.usd ??
+                            null,
+                        prices:
+                            Array.isArray(chart.prices)
+                                ? chart.prices
+                                : [],
+                        updatedAt:
+                            coin.last_updated ||
+                            new Date().toISOString(),
+                        source:
+                            "CoinGecko"
+                    };
+
+                    marketCache.data = marketData;
+                    marketCache.expiresAt =
+                        Date.now() +
+                        marketCacheDuration;
+
+                    sendJson(
+                        response,
+                        200,
+                        marketData
+                    );
+                } catch (error) {
+                    console.error(
+                        "Market data error:",
+                        error
+                    );
+
+                    sendJson(
+                        response,
+                        502,
+                        {
+                            error:
+                                "KTA market data is temporarily unavailable."
+                        }
+                    );
+                }
+
+                return;
+            }
 
             if (
                 request.method === "GET" &&
