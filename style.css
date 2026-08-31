@@ -5115,6 +5115,20 @@ html[data-theme="soft"] .settings-panel {
     stroke-dasharray: 4 4;
 }
 
+.market-placeholder svg > .market-time-label {
+    fill: #718096;
+    font-size: 10px;
+    text-anchor: middle;
+}
+
+#marketTimeStart {
+    text-anchor: start;
+}
+
+#marketTimeEnd {
+    text-anchor: end;
+}
+
 #marketCurrentBadge rect {
     stroke: none;
 }
