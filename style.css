@@ -5018,3 +5018,66 @@ html[data-theme="soft"] .settings-panel {
     outline: 3px solid rgba(14, 165, 233, 0.28);
     outline-offset: 2px;
 }
+
+
+/* Interactive KTA market chart */
+.market-placeholder {
+    position: relative;
+}
+
+.market-placeholder svg {
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.market-hover-line {
+    stroke: #64748b;
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+    pointer-events: none;
+}
+
+.market-hover-point {
+    fill: #ffffff;
+    stroke: currentColor;
+    stroke-width: 3;
+    pointer-events: none;
+}
+
+.market-tooltip {
+    position: absolute;
+    z-index: 4;
+    display: grid;
+    gap: 6px;
+    min-width: 190px;
+    padding: 12px 14px;
+    border: 1px solid #d9dee4;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.97);
+    box-shadow: 0 10px 28px rgba(32, 45, 62, 0.16);
+    color: #26364b;
+    font-size: 0.82rem;
+    pointer-events: none;
+}
+
+.market-tooltip[hidden],
+.market-hover-line[hidden],
+.market-hover-point[hidden] {
+    display: none;
+}
+
+.market-tooltip strong {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e2e6eb;
+}
+
+.market-tooltip span {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    color: #66768a;
+}
+
+.market-tooltip b {
+    color: #26364b;
+}
