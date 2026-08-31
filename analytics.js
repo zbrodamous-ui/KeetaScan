@@ -13,7 +13,7 @@ function shortAnalyticsValue(
         return "Not available";
     }
 
-    return `${value.slice(0, start)}...${value.slice(-end)}`;
+    return formatKeetaIdentifier(value, start, end);
 }
 
 function formatIndexedDate(value) {
@@ -21,7 +21,7 @@ function formatIndexedDate(value) {
         return "Not available";
     }
 
-    return new Date(value).toLocaleString();
+    return formatKeetaDate(value);
 }
 
 async function getAnalyticsToken(tokenAddress) {

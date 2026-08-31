@@ -593,3 +593,36 @@ applyDisplayPreferences(getSavedPreferences());
 initializeThemeToggle();
 initializeSettings();
 initializeDetailSearch();
+
+
+function attachKeetaCopyButton(element, value, label = "value") {
+    if (!element || !value || value === "Not available") {
+        return;
+    }
+
+    element
+        .querySelector(".copy-value-button")
+        ?.remove();
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "copy-value-button";
+    button.textContent = "Copy";
+    button.title = `Copy ${label}`;
+    button.setAttribute("aria-label", `Copy ${label}`);
+
+    button.addEventListener("click", async () => {
+        try {
+            await navigator.clipboard.writeText(String(value));
+            button.textContent = "Copied";
+            window.setTimeout(() => {
+                button.textContent = "Copy";
+            }, 1400);
+        } catch (error) {
+            console.error("Unable to copy value:", error);
+            button.textContent = "Copy failed";
+        }
+    });
+
+    element.appendChild(button);
+}

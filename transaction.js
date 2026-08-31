@@ -75,7 +75,7 @@ const fee =
 const blockElement =
     document.getElementById("block");
     transactionHash.textContent =
-    `${blockHash.slice(0, 12)}...${blockHash.slice(-6)}:${operationIndex}`;
+    `${formatKeetaIdentifier(blockHash)}:${operationIndex}`;
 
 status.textContent =
     "Success";
@@ -155,12 +155,12 @@ if (
 
 from.innerHTML =
     sender !== "Not available"
-        ? `<a href="address.html?address=${encodeURIComponent(sender)}">${sender.slice(0, 12)}...${sender.slice(-6)}</a>`
+        ? `<a href="address.html?address=${encodeURIComponent(sender)}">${formatKeetaIdentifier(sender)}</a>`
         : "Not available";
 
 to.innerHTML =
     recipient !== "Not available"
-        ? `<a href="address.html?address=${encodeURIComponent(recipient)}">${recipient.slice(0, 12)}...${recipient.slice(-6)}</a>`
+        ? `<a href="address.html?address=${encodeURIComponent(recipient)}">${formatKeetaIdentifier(recipient)}</a>`
         : "Not available";
 
 amount.textContent =
@@ -170,7 +170,7 @@ fee.textContent =
     "—";
 
 blockElement.innerHTML =
-    `<a href="block.html?hash=${encodeURIComponent(blockHash)}">${blockHash.slice(0, 12)}...${blockHash.slice(-6)}</a>`;
+    `<a href="block.html?hash=${encodeURIComponent(blockHash)}">${formatKeetaIdentifier(blockHash)}</a>`;
 
 }
 

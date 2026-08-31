@@ -37,7 +37,7 @@ function formatDate(value) {
 
     return Number.isNaN(date.getTime())
         ? "Not available"
-        : date.toLocaleString();
+        : formatKeetaDate(date);
 }
 
 function setServiceState(indicator, label, online, text) {
@@ -104,7 +104,7 @@ function renderStatus(status, analytics) {
     fields.averageOperations.textContent =
         Number.isFinite(average) ? average.toFixed(2) : "—";
 
-    fields.lastChecked.textContent = new Date().toLocaleString();
+    fields.lastChecked.textContent = formatKeetaDate(new Date());
 }
 
 async function loadStatus() {
@@ -133,7 +133,7 @@ async function loadStatus() {
         setOnlineState();
     } catch (error) {
         setOfflineState(error);
-        fields.lastChecked.textContent = new Date().toLocaleString();
+        fields.lastChecked.textContent = formatKeetaDate(new Date());
     } finally {
         refreshStatusButton.disabled = false;
         refreshStatusButton.textContent = "Refresh";
