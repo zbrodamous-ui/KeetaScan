@@ -5040,7 +5040,7 @@ html[data-theme="soft"] .settings-panel {
 }
 
 .market-placeholder svg {
-    cursor: crosshair;
+    cursor: default;
     touch-action: none;
 }
 
