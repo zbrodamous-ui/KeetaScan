@@ -841,6 +841,14 @@ async function loadMarketData(
         marketHoverPoint.style.strokeWidth =
             "3";
 
+        marketHoverPoint.setAttribute(
+            "r",
+            "6"
+        );
+
+        marketHoverPoint.style.filter =
+            `drop-shadow(0 0 4px ${directionColor}) drop-shadow(0 0 8px ${directionColor})`;
+
         marketAreaStart.setAttribute(
             "stop-color",
             directionColor
