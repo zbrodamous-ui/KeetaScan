@@ -16,6 +16,13 @@ const homeBlocksList =
 const homeTransactionsList =
     document.getElementById("homeTransactionsList");
 
+const marketPrice =
+    document.getElementById("marketPrice");
+const marketStatus =
+    document.getElementById("marketStatus");
+const marketChartPath =
+    document.getElementById("marketChartPath");
+
 const client =
     KeetaNet.Client.fromNetwork("main");
 
@@ -290,6 +297,176 @@ async function createTransferRow(
     return row;
 }
 
+function formatMarketCurrency(
+    value,
+    maximumFractionDigits = 0
+) {
+    const number = Number(value);
+
+    if (!Number.isFinite(number)) {
+        return "—";
+    }
+
+    return new Intl.NumberFormat(
+        undefined,
+        {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits
+        }
+    ).format(number);
+}
+
+function formatMarketCompact(value) {
+    const number = Number(value);
+
+    if (!Number.isFinite(number)) {
+        return "—";
+    }
+
+    return new Intl.NumberFormat(
+        undefined,
+        {
+            notation: "compact",
+            maximumFractionDigits: 2
+        }
+    ).format(number);
+}
+
+function createMarketChartPath(prices) {
+    const values =
+        prices
+            .map((point) => Number(point?.[1]))
+            .filter(Number.isFinite);
+
+    if (values.length < 2) {
+        return "";
+    }
+
+    const minimum = Math.min(...values);
+    const maximum = Math.max(...values);
+    const range = maximum - minimum || 1;
+
+    return values
+        .map((price, index) => {
+            const x =
+                15 +
+                (
+                    index /
+                    (values.length - 1)
+                ) *
+                670;
+
+            const y =
+                175 -
+                (
+                    (price - minimum) /
+                    range
+                ) *
+                135;
+
+            return `${index === 0 ? "M" : "L"}${x.toFixed(
+                1
+            )} ${y.toFixed(1)}`;
+        })
+        .join(" ");
+}
+
+async function loadMarketData() {
+    try {
+        const response =
+            await fetch(
+                "http://localhost:3000/api/market"
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                "Market endpoint unavailable."
+            );
+        }
+
+        const market =
+            await response.json();
+
+        const price =
+            Number(market.price);
+
+        const change =
+            Number(market.priceChange24h);
+
+        marketPrice.textContent =
+            Number.isFinite(price)
+                ? `${formatMarketCurrency(
+                    price,
+                    price < 1 ? 5 : 2
+                )} KTA`
+                : "KTA price unavailable";
+
+        marketStatus.textContent =
+            Number.isFinite(change)
+                ? `${change >= 0 ? "+" : ""}${change.toFixed(
+                    2
+                )}% over 24 hours · Updated ${timeAgo(
+                    market.updatedAt
+                )}`
+                : `Updated ${timeAgo(
+                    market.updatedAt
+                )}`;
+
+        document.getElementById(
+            "marketCap"
+        ).textContent =
+            formatMarketCurrency(
+                market.marketCap
+            );
+
+        document.getElementById(
+            "marketVolume"
+        ).textContent =
+            formatMarketCurrency(
+                market.volume24h
+            );
+
+        document.getElementById(
+            "marketSupply"
+        ).textContent =
+            `${formatMarketCompact(
+                market.circulatingSupply
+            )} KTA`;
+
+        document.getElementById(
+            "marketAth"
+        ).textContent =
+            formatMarketCurrency(
+                market.allTimeHigh,
+                2
+            );
+
+        marketChartPath.setAttribute(
+            "d",
+            createMarketChartPath(
+                market.prices || []
+            )
+        );
+    } catch (error) {
+        console.error(
+            "Market loading error:",
+            error
+        );
+
+        marketPrice.textContent =
+            "KTA market data unavailable";
+
+        marketStatus.textContent =
+            "The verified market feed could not be reached. KeetaView will retry when the page reloads.";
+
+        marketChartPath.setAttribute(
+            "d",
+            ""
+        );
+    }
+}
+
 async function loadHomepage() {
     try {
         const [
@@ -467,4 +644,5 @@ async function rememberRecentAssets() {
 }
 
 loadHomepage();
+loadMarketData();
 rememberRecentAssets();
