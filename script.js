@@ -34,6 +34,12 @@ const marketAxisLabels = [
     document.getElementById("marketAxisLower"),
     document.getElementById("marketAxisBottom")
 ];
+const marketTimeLabels = [
+    document.getElementById("marketTimeStart"),
+    document.getElementById("marketTimeFirst"),
+    document.getElementById("marketTimeSecond"),
+    document.getElementById("marketTimeEnd")
+];
 const marketCurrentBadge =
     document.getElementById("marketCurrentBadge");
 const marketCurrentBadgeRect =
@@ -373,6 +379,34 @@ function formatMarketCompact(value) {
     ).format(number);
 }
 
+function formatMarketTimeLabel(timestamp) {
+    const date = new Date(timestamp);
+
+    if (
+        activeMarketRange === "1h" ||
+        activeMarketRange === "1d"
+    ) {
+        return date.toLocaleTimeString(
+            [],
+            {
+                hour: "numeric",
+                minute:
+                    activeMarketRange === "1h"
+                        ? "2-digit"
+                        : undefined
+            }
+        );
+    }
+
+    return date.toLocaleDateString(
+        [],
+        {
+            month: "short",
+            day: "numeric"
+        }
+    );
+}
+
 function createMarketChartPath(prices) {
     const values =
         prices
@@ -403,6 +437,24 @@ function createMarketChartPath(prices) {
         );
         return "";
     }
+
+    const timeIndexes = [
+        0,
+        Math.round((values.length - 1) / 3),
+        Math.round(((values.length - 1) * 2) / 3),
+        values.length - 1
+    ];
+
+    marketTimeLabels.forEach(
+        (label, index) => {
+            label.textContent =
+                formatMarketTimeLabel(
+                    values[
+                        timeIndexes[index]
+                    ].timestamp
+                );
+        }
+    );
 
     const priceValues =
         values.map(
