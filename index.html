@@ -110,7 +110,43 @@
                     <line x1="15" y1="105" x2="685" y2="105"></line>
                     <line x1="15" y1="165" x2="685" y2="165"></line>
                     <path id="marketChartPath" d=""></path>
+
+                    <line
+                        id="marketHoverLine"
+                        class="market-hover-line"
+                        x1="0"
+                        y1="40"
+                        x2="0"
+                        y2="175"
+                        hidden
+                    ></line>
+
+                    <circle
+                        id="marketHoverPoint"
+                        class="market-hover-point"
+                        cx="0"
+                        cy="0"
+                        r="5"
+                        hidden
+                    ></circle>
                 </svg>
+
+                <div
+                    id="marketTooltip"
+                    class="market-tooltip"
+                    role="status"
+                    hidden
+                >
+                    <strong id="marketTooltipTime">—</strong>
+                    <span>
+                        Price:
+                        <b id="marketTooltipPrice">—</b>
+                    </span>
+                    <span>
+                        Volume:
+                        <b id="marketTooltipVolume">—</b>
+                    </span>
+                </div>
             </div>
 
             <div class="market-facts">
