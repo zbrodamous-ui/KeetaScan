@@ -353,6 +353,139 @@ async function renderRecentTransfers(transfers) {
     });
 }
 
+function formatAnalyticsCurrency(
+    value,
+    maximumFractionDigits = 0
+) {
+    const number = Number(value);
+
+    if (!Number.isFinite(number)) {
+        return "—";
+    }
+
+    return new Intl.NumberFormat(
+        undefined,
+        {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits
+        }
+    ).format(number);
+}
+
+async function loadMarketAnalytics() {
+    const status =
+        document.getElementById(
+            "analyticsMarketStatus"
+        );
+
+    try {
+        const response =
+            await fetch(
+                "http://localhost:3000/api/market?range=1d",
+                {
+                    cache: "no-store"
+                }
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                `Market API returned ${response.status}`
+            );
+        }
+
+        const market =
+            await response.json();
+
+        const price =
+            Number(market.price);
+
+        const change =
+            Number(market.priceChange24h);
+
+        const directionColor =
+            change > 0
+                ? "#16a34a"
+                : change < 0
+                    ? "#dc2626"
+                    : "#1676cf";
+
+        document.getElementById(
+            "analyticsMarketPrice"
+        ).textContent =
+            `${formatAnalyticsCurrency(
+                price,
+                price < 1 ? 5 : 2
+            )} KTA`;
+
+        const changeElement =
+            document.getElementById(
+                "analyticsMarketChange"
+            );
+
+        changeElement.textContent =
+            Number.isFinite(change)
+                ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`
+                : "—";
+
+        changeElement.style.color =
+            directionColor;
+
+        document.getElementById(
+            "analyticsMarketCap"
+        ).textContent =
+            formatAnalyticsCurrency(
+                market.marketCap
+            );
+
+        document.getElementById(
+            "analyticsMarketVolume"
+        ).textContent =
+            formatAnalyticsCurrency(
+                market.volume24h
+            );
+
+        document.getElementById(
+            "analyticsMarketSupply"
+        ).textContent =
+            `${Number(
+                market.circulatingSupply
+            ).toLocaleString(
+                undefined,
+                {
+                    notation: "compact",
+                    maximumFractionDigits: 2
+                }
+            )} KTA`;
+
+        document.getElementById(
+            "analyticsMarketAth"
+        ).textContent =
+            formatAnalyticsCurrency(
+                market.allTimeHigh,
+                2
+            );
+
+        status.textContent =
+            `Live · Updated ${timeAgo(
+                market.updatedAt
+            )}`;
+
+        status.style.color =
+            directionColor;
+    } catch (error) {
+        console.error(
+            "Market analytics loading error:",
+            error
+        );
+
+        status.textContent =
+            "Market feed temporarily unavailable";
+        status.style.color =
+            "#b45309";
+    }
+}
+
 function initializeAnalyticsTabs() {
     const networkTab =
         document.getElementById(
@@ -535,3 +668,9 @@ async function loadAnalytics() {
 
 initializeAnalyticsTabs();
 loadAnalytics();
+loadMarketAnalytics();
+
+window.setInterval(
+    loadMarketAnalytics,
+    60 * 1000
+);
