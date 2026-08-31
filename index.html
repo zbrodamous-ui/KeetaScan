@@ -85,7 +85,7 @@
                     <h1>Live market chart</h1>
                 </div>
 
-                <div class="chart-ranges" aria-label="Future chart ranges">
+                <div class="chart-ranges" aria-label="Market chart range">
                     <span>1H</span>
                     <span class="active">1D</span>
                     <span>1W</span>
@@ -95,43 +95,53 @@
 
             <div class="market-placeholder">
                 <div>
-                    <strong>Verified market feed coming next</strong>
-                    <p>
-                        Price and historical data will appear here
-                        once its source is connected and attributed.
+                    <strong id="marketPrice">Loading KTA market data…</strong>
+                    <p id="marketStatus">
+                        Connecting to the verified CoinGecko feed.
                     </p>
                 </div>
 
                 <svg
                     viewBox="0 0 700 210"
                     role="img"
-                    aria-label="Placeholder for the future KTA market chart"
+                    aria-label="KTA price over the last 24 hours"
                 >
                     <line x1="15" y1="45" x2="685" y2="45"></line>
                     <line x1="15" y1="105" x2="685" y2="105"></line>
                     <line x1="15" y1="165" x2="685" y2="165"></line>
-                    <path d="M15 152 L75 145 L135 154 L195 126 L255 136 L315 92 L375 111 L435 82 L495 98 L555 59 L615 71 L685 48"></path>
+                    <path id="marketChartPath" d=""></path>
                 </svg>
             </div>
 
             <div class="market-facts">
                 <div>
                     <span>Market Cap</span>
-                    <strong>—</strong>
+                    <strong id="marketCap">—</strong>
                 </div>
                 <div>
                     <span>24h Volume</span>
-                    <strong>—</strong>
+                    <strong id="marketVolume">—</strong>
                 </div>
                 <div>
                     <span>Circulating Supply</span>
-                    <strong>—</strong>
+                    <strong id="marketSupply">—</strong>
                 </div>
                 <div>
                     <span>All-Time High</span>
-                    <strong>—</strong>
+                    <strong id="marketAth">—</strong>
                 </div>
             </div>
+
+            <p class="snapshot-note">
+                Market data provided by
+                <a
+                    href="https://www.coingecko.com/en/coins/keeta"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    CoinGecko
+                </a>.
+            </p>
         </article>
 
         <article class="home-panel snapshot-panel">
