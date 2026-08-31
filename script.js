@@ -29,6 +29,9 @@ const client =
 const tokenDisplayCache =
     new Map();
 
+let marketRequestInProgress = false;
+let hasMarketData = false;
+
 function runSearch() {
     const searchText =
         searchInput.value.trim();
@@ -373,10 +376,19 @@ function createMarketChartPath(prices) {
 }
 
 async function loadMarketData() {
+    if (marketRequestInProgress) {
+        return;
+    }
+
+    marketRequestInProgress = true;
+
     try {
         const response =
             await fetch(
-                "http://localhost:3000/api/market"
+                "http://localhost:3000/api/market",
+                {
+                    cache: "no-store"
+                }
             );
 
         if (!response.ok) {
@@ -394,6 +406,13 @@ async function loadMarketData() {
         const change =
             Number(market.priceChange24h);
 
+        const directionColor =
+            change > 0
+                ? "#16a34a"
+                : change < 0
+                    ? "#dc2626"
+                    : "#1676cf";
+
         marketPrice.textContent =
             Number.isFinite(price)
                 ? `${formatMarketCurrency(
@@ -402,16 +421,22 @@ async function loadMarketData() {
                 )} KTA`
                 : "KTA price unavailable";
 
+        marketPrice.style.color =
+            directionColor;
+
         marketStatus.textContent =
             Number.isFinite(change)
-                ? `${change >= 0 ? "+" : ""}${change.toFixed(
+                ? `● Live · ${change >= 0 ? "+" : ""}${change.toFixed(
                     2
                 )}% over 24 hours · Updated ${timeAgo(
                     market.updatedAt
                 )}`
-                : `Updated ${timeAgo(
+                : `● Live · Updated ${timeAgo(
                     market.updatedAt
                 )}`;
+
+        marketStatus.style.color =
+            directionColor;
 
         document.getElementById(
             "marketCap"
@@ -448,22 +473,36 @@ async function loadMarketData() {
                 market.prices || []
             )
         );
+
+        marketChartPath.style.stroke =
+            directionColor;
+
+        hasMarketData = true;
     } catch (error) {
         console.error(
             "Market loading error:",
             error
         );
 
-        marketPrice.textContent =
-            "KTA market data unavailable";
+        if (hasMarketData) {
+            marketStatus.textContent =
+                "Live update paused · Showing the last successful market data";
+            marketStatus.style.color =
+                "#b45309";
+        } else {
+            marketPrice.textContent =
+                "KTA market data unavailable";
 
-        marketStatus.textContent =
-            "The verified market feed could not be reached. KeetaView will retry when the page reloads.";
+            marketStatus.textContent =
+                "The verified market feed could not be reached. KeetaView will retry automatically.";
 
-        marketChartPath.setAttribute(
-            "d",
-            ""
-        );
+            marketChartPath.setAttribute(
+                "d",
+                ""
+            );
+        }
+    } finally {
+        marketRequestInProgress = false;
     }
 }
 
@@ -645,4 +684,10 @@ async function rememberRecentAssets() {
 
 loadHomepage();
 loadMarketData();
+
+window.setInterval(
+    loadMarketData,
+    60 * 1000
+);
+
 rememberRecentAssets();
