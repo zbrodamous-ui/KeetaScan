@@ -44,14 +44,14 @@ function firstObserved(timestamp) {
 }
 
 function createAddressRow(account) {
-    const row = document.createElement("a");
+    const row = document.createElement("div");
     row.className = "address-directory-row";
-    row.href = addressUrl(account.address);
-    row.setAttribute("aria-label", `Open address ${account.address}`);
 
     row.innerHTML = `
         <span class="address-directory-value" title="${account.address}">
-            ${shortAddress(account.address)}
+            <a href="${addressUrl(account.address)}">
+                ${shortAddress(account.address)}
+            </a>
         </span>
 
         <span class="address-directory-age">
@@ -62,6 +62,25 @@ function createAddressRow(account) {
             Mainnet
         </span>
     `;
+
+    const addressValue =
+        row.querySelector(".address-directory-value");
+
+    attachKeetaCopyButton(
+        addressValue,
+        account.address,
+        "address"
+    );
+
+    row.addEventListener("click", (event) => {
+        if (event.target.closest("a, button")) {
+            return;
+        }
+
+        window.location.assign(
+            addressUrl(account.address)
+        );
+    });
 
     return row;
 }
