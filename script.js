@@ -594,8 +594,20 @@ function renderMarketVolumeBars(
             }
         );
 
-    const maximum =
-        Math.max(...sampledValues) || 1;
+    const sortedValues =
+        [...sampledValues].sort(
+            (a, b) => a - b
+        );
+
+    const scaleMaximum =
+        sortedValues[
+            Math.min(
+                sortedValues.length - 1,
+                Math.floor(
+                    sortedValues.length * 0.9
+                )
+            )
+        ] || 1;
 
     const chartWidth = 635;
     const barGap = 1.4;
@@ -609,8 +621,14 @@ function renderMarketVolumeBars(
         (volume, index) => {
             const height =
                 Math.max(
-                    1,
-                    (volume / maximum) * 24
+                    2,
+                    Math.sqrt(
+                        Math.min(
+                            volume,
+                            scaleMaximum
+                        ) /
+                        scaleMaximum
+                    ) * 28
                 );
 
             const bar =
