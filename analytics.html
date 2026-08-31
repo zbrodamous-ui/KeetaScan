@@ -243,20 +243,57 @@
         hidden
     >
         <article class="analytics-dashboard-card market-source-card">
-            <p class="home-eyebrow">KTA MARKET</p>
-            <h2>Verified market data is the next milestone</h2>
-            <p>
-                Price, market capitalization, volume, circulating supply,
-                and historical charts will appear here after an authorized
-                market-data source is connected and credited.
-            </p>
+            <header class="analytics-card-header">
+                <div>
+                    <p class="home-eyebrow">KTA MARKET</p>
+                    <h2>Live Market Overview</h2>
+                </div>
+
+                <span
+                    id="analyticsMarketStatus"
+                    class="analytics-range-label"
+                >
+                    Loading verified market data…
+                </span>
+            </header>
 
             <div class="market-coming-grid">
-                <div><span>Price</span><strong>—</strong></div>
-                <div><span>Market Cap</span><strong>—</strong></div>
-                <div><span>24h Volume</span><strong>—</strong></div>
-                <div><span>Circulating Supply</span><strong>—</strong></div>
+                <div>
+                    <span>Price</span>
+                    <strong id="analyticsMarketPrice">—</strong>
+                </div>
+                <div>
+                    <span>24h Change</span>
+                    <strong id="analyticsMarketChange">—</strong>
+                </div>
+                <div>
+                    <span>Market Cap</span>
+                    <strong id="analyticsMarketCap">—</strong>
+                </div>
+                <div>
+                    <span>24h Volume</span>
+                    <strong id="analyticsMarketVolume">—</strong>
+                </div>
+                <div>
+                    <span>Circulating Supply</span>
+                    <strong id="analyticsMarketSupply">—</strong>
+                </div>
+                <div>
+                    <span>All-Time High</span>
+                    <strong id="analyticsMarketAth">—</strong>
+                </div>
             </div>
+
+            <p class="analytics-disclosure">
+                Verified market data provided by
+                <a
+                    href="https://www.coingecko.com/en/coins/keeta"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    CoinGecko
+                </a>.
+            </p>
         </article>
     </section>
 </main>
