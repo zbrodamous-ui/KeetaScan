@@ -11,10 +11,7 @@ const database =
 
 const port = 3000;
 
-const marketCache = {
-    expiresAt: 0,
-    data: null
-};
+const marketCache = new Map();
 
 const marketCacheDuration = 60 * 1000;
 
@@ -51,14 +48,56 @@ const server =
                 request.method === "GET" &&
                 url.pathname === "/api/market"
             ) {
+                const requestedRange =
+                    url.searchParams.get(
+                        "range"
+                    ) || "1d";
+
+                const rangeSettings = {
+                    "1h": {
+                        days: 1,
+                        duration:
+                            60 * 60 * 1000
+                    },
+                    "1d": {
+                        days: 1,
+                        duration:
+                            24 * 60 * 60 * 1000
+                    },
+                    "1w": {
+                        days: 7,
+                        duration:
+                            7 * 24 * 60 * 60 * 1000
+                    },
+                    "1m": {
+                        days: 30,
+                        duration:
+                            30 * 24 * 60 * 60 * 1000
+                    }
+                };
+
+                const range =
+                    rangeSettings[
+                        requestedRange
+                    ]
+                        ? requestedRange
+                        : "1d";
+
+                const settings =
+                    rangeSettings[range];
+
+                const cached =
+                    marketCache.get(range);
+
                 if (
-                    marketCache.data &&
-                    Date.now() < marketCache.expiresAt
+                    cached?.data &&
+                    Date.now() <
+                        cached.expiresAt
                 ) {
                     sendJson(
                         response,
                         200,
-                        marketCache.data
+                        cached.data
                     );
 
                     return;
@@ -73,7 +112,7 @@ const server =
                             "https://api.coingecko.com/api/v3/coins/keeta?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
                         ),
                         fetch(
-                            "https://api.coingecko.com/api/v3/coins/keeta/market_chart?vs_currency=usd&days=1"
+                            `https://api.coingecko.com/api/v3/coins/keeta/market_chart?vs_currency=usd&days=${settings.days}`
                         )
                     ]);
 
@@ -95,7 +134,36 @@ const server =
                     const market =
                         coin.market_data || {};
 
+                    const cutoff =
+                        Date.now() -
+                        settings.duration;
+
+                    const prices =
+                        Array.isArray(
+                            chart.prices
+                        )
+                            ? chart.prices.filter(
+                                (point) =>
+                                    Number(
+                                        point?.[0]
+                                    ) >= cutoff
+                            )
+                            : [];
+
+                    const volumes =
+                        Array.isArray(
+                            chart.total_volumes
+                        )
+                            ? chart.total_volumes.filter(
+                                (point) =>
+                                    Number(
+                                        point?.[0]
+                                    ) >= cutoff
+                            )
+                            : [];
+
                     const marketData = {
+                        range,
                         price:
                             market.current_price?.usd ??
                             null,
@@ -114,16 +182,8 @@ const server =
                         allTimeHigh:
                             market.ath?.usd ??
                             null,
-                        prices:
-                            Array.isArray(chart.prices)
-                                ? chart.prices
-                                : [],
-                        volumes:
-                            Array.isArray(
-                                chart.total_volumes
-                            )
-                                ? chart.total_volumes
-                                : [],
+                        prices,
+                        volumes,
                         updatedAt:
                             coin.last_updated ||
                             new Date().toISOString(),
@@ -131,10 +191,16 @@ const server =
                             "CoinGecko"
                     };
 
-                    marketCache.data = marketData;
-                    marketCache.expiresAt =
-                        Date.now() +
-                        marketCacheDuration;
+                    marketCache.set(
+                        range,
+                        {
+                            data:
+                                marketData,
+                            expiresAt:
+                                Date.now() +
+                                marketCacheDuration
+                        }
+                    );
 
                     sendJson(
                         response,
