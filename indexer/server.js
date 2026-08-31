@@ -118,6 +118,12 @@ const server =
                             Array.isArray(chart.prices)
                                 ? chart.prices
                                 : [],
+                        volumes:
+                            Array.isArray(
+                                chart.total_volumes
+                            )
+                                ? chart.total_volumes
+                                : [],
                         updatedAt:
                             coin.last_updated ||
                             new Date().toISOString(),
