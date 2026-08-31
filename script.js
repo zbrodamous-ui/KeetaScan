@@ -22,6 +22,24 @@ const marketStatus =
     document.getElementById("marketStatus");
 const marketChartPath =
     document.getElementById("marketChartPath");
+const marketAreaPath =
+    document.getElementById("marketAreaPath");
+const marketAreaStart =
+    document.getElementById("marketAreaStart");
+const marketAreaEnd =
+    document.getElementById("marketAreaEnd");
+const marketAxisLabels = [
+    document.getElementById("marketAxisTop"),
+    document.getElementById("marketAxisUpper"),
+    document.getElementById("marketAxisLower"),
+    document.getElementById("marketAxisBottom")
+];
+const marketCurrentBadge =
+    document.getElementById("marketCurrentBadge");
+const marketCurrentBadgeRect =
+    document.getElementById("marketCurrentBadgeRect");
+const marketCurrentBadgeText =
+    document.getElementById("marketCurrentBadgeText");
 const marketHoverLine =
     document.getElementById("marketHoverLine");
 const marketHoverPoint =
@@ -376,6 +394,13 @@ function createMarketChartPath(prices) {
 
     if (values.length < 2) {
         marketChartPoints = [];
+        marketAreaPath.setAttribute("d", "");
+        marketCurrentBadge.hidden = true;
+        marketAxisLabels.forEach(
+            (label) => {
+                label.textContent = "—";
+            }
+        );
         return "";
     }
 
@@ -403,7 +428,7 @@ function createMarketChartPath(prices) {
                         index /
                         (values.length - 1)
                     ) *
-                    670,
+                    635,
                 y:
                     175 -
                     (
@@ -414,13 +439,65 @@ function createMarketChartPath(prices) {
             })
         );
 
-    return marketChartPoints
-        .map((point, index) =>
-            `${index === 0 ? "M" : "L"}${point.x.toFixed(
-                1
-            )} ${point.y.toFixed(1)}`
-        )
-        .join(" ");
+    const linePath =
+        marketChartPoints
+            .map((point, index) =>
+                `${index === 0 ? "M" : "L"}${point.x.toFixed(
+                    1
+                )} ${point.y.toFixed(1)}`
+            )
+            .join(" ");
+
+    marketAreaPath.setAttribute(
+        "d",
+        `${linePath} L650 175 L15 175 Z`
+    );
+
+    const axisValues = [
+        maximum,
+        maximum - range / 3,
+        maximum - (range * 2) / 3,
+        minimum
+    ];
+
+    marketAxisLabels.forEach(
+        (label, index) => {
+            const value =
+                axisValues[index];
+
+            label.textContent =
+                formatMarketCurrency(
+                    value,
+                    value < 1 ? 3 : 2
+                );
+        }
+    );
+
+    const latest =
+        marketChartPoints[
+            marketChartPoints.length - 1
+        ];
+
+    marketCurrentBadge.setAttribute(
+        "transform",
+        `translate(0 ${Math.max(
+            0,
+            Math.min(
+                190,
+                latest.y - 10
+            )
+        )})`
+    );
+
+    marketCurrentBadgeText.textContent =
+        formatMarketCurrency(
+            latest.price,
+            latest.price < 1 ? 3 : 2
+        );
+
+    marketCurrentBadge.hidden = false;
+
+    return linePath;
 }
 
 function hideMarketTooltip() {
@@ -444,7 +521,7 @@ function showMarketTooltip(event) {
         Math.max(
             15,
             Math.min(
-                685,
+                650,
                 (
                     (event.clientX - svgBounds.left) /
                     svgBounds.width
@@ -461,7 +538,7 @@ function showMarketTooltip(event) {
                 Math.round(
                     (
                         (pointerX - 15) /
-                        670
+                        635
                     ) *
                     (
                         marketChartPoints.length - 1
@@ -755,6 +832,19 @@ async function loadMarketData(
         marketChartPath.style.stroke =
             directionColor;
 
+        marketAreaStart.setAttribute(
+            "stop-color",
+            directionColor
+        );
+
+        marketAreaEnd.setAttribute(
+            "stop-color",
+            directionColor
+        );
+
+        marketCurrentBadgeRect.style.fill =
+            directionColor;
+
         hasMarketData = true;
     } catch (error) {
         console.error(
@@ -778,6 +868,13 @@ async function loadMarketData(
                 "d",
                 ""
             );
+
+            marketAreaPath.setAttribute(
+                "d",
+                ""
+            );
+
+            marketCurrentBadge.hidden = true;
         }
     } finally {
         marketRequestInProgress = false;
