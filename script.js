@@ -501,8 +501,8 @@ function createMarketChartPath(prices) {
 }
 
 function hideMarketTooltip() {
-    marketHoverLine.hidden = true;
-    marketHoverPoint.hidden = true;
+    marketHoverLine.setAttribute("hidden", "");
+    marketHoverPoint.setAttribute("hidden", "");
     marketTooltip.hidden = true;
 }
 
@@ -608,8 +608,8 @@ function showMarketTooltip(event) {
             volume
         );
 
-    marketHoverLine.hidden = false;
-    marketHoverPoint.hidden = false;
+    marketHoverLine.removeAttribute("hidden");
+    marketHoverPoint.removeAttribute("hidden");
     marketTooltip.hidden = false;
 
     const chartContainer =
