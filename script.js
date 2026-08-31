@@ -34,6 +34,10 @@ const marketTooltipPrice =
     document.getElementById("marketTooltipPrice");
 const marketTooltipVolume =
     document.getElementById("marketTooltipVolume");
+const marketRangeButtons =
+    document.querySelectorAll(
+        "[data-market-range]"
+    );
 
 const client =
     KeetaNet.Client.fromNetwork("main");
@@ -45,6 +49,7 @@ let marketRequestInProgress = false;
 let hasMarketData = false;
 let marketChartPoints = [];
 let marketChartVolumes = [];
+let activeMarketRange = "1d";
 
 function runSearch() {
     const searchText =
@@ -580,7 +585,57 @@ marketChartPath
         hideMarketTooltip
     );
 
-async function loadMarketData() {
+
+marketRangeButtons.forEach((button) => {
+    button.setAttribute(
+        "aria-pressed",
+        String(
+            button.dataset.marketRange ===
+            activeMarketRange
+        )
+    );
+
+    button.addEventListener("click", () => {
+        const range =
+            button.dataset.marketRange;
+
+        if (
+            !range ||
+            range === activeMarketRange
+        ) {
+            return;
+        }
+
+        activeMarketRange = range;
+
+        marketRangeButtons.forEach(
+            (rangeButton) => {
+                const selected =
+                    rangeButton === button;
+
+                rangeButton.classList.toggle(
+                    "active",
+                    selected
+                );
+
+                rangeButton.setAttribute(
+                    "aria-pressed",
+                    String(selected)
+                );
+            }
+        );
+
+        marketStatus.textContent =
+            "Loading selected chart range…";
+
+        hideMarketTooltip();
+        loadMarketData(range);
+    });
+});
+
+async function loadMarketData(
+    range = activeMarketRange
+) {
     if (marketRequestInProgress) {
         return;
     }
@@ -590,7 +645,9 @@ async function loadMarketData() {
     try {
         const response =
             await fetch(
-                "http://localhost:3000/api/market",
+                `http://localhost:3000/api/market?range=${encodeURIComponent(
+                    range
+                )}`,
                 {
                     cache: "no-store"
                 }
@@ -629,14 +686,21 @@ async function loadMarketData() {
         marketPrice.style.color =
             directionColor;
 
+        const rangeLabel = {
+            "1h": "1H",
+            "1d": "1D",
+            "1w": "1W",
+            "1m": "1M"
+        }[range] || "1D";
+
         marketStatus.textContent =
             Number.isFinite(change)
-                ? `● Live · ${change >= 0 ? "+" : ""}${change.toFixed(
+                ? `● Live · ${rangeLabel} view · ${change >= 0 ? "+" : ""}${change.toFixed(
                     2
                 )}% over 24 hours · Updated ${timeAgo(
                     market.updatedAt
                 )}`
-                : `● Live · Updated ${timeAgo(
+                : `● Live · ${rangeLabel} view · Updated ${timeAgo(
                     market.updatedAt
                 )}`;
 
