@@ -16,7 +16,7 @@ const marketCache = {
     data: null
 };
 
-const marketCacheDuration = 5 * 60 * 1000;
+const marketCacheDuration = 60 * 1000;
 
 function sendJson(
     response,
