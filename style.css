@@ -602,6 +602,40 @@ body {
     min-width: 0;
     overflow-wrap: anywhere;
 }
+
+.addresses-table-header,
+#addressesPageList .address-row {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(140px, 0.8fr)
+        minmax(100px, 0.5fr);
+    gap: 20px;
+    align-items: center;
+}
+
+.addresses-table-header {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--secondary-text);
+    font-size: 0.85rem;
+}
+
+#addressesPageList .address-row {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+#addressesPageList .address-row:hover {
+    background: var(--row-hover);
+}
+
+#addressesPageList .address-row span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
 .analytics-list {
     display: flex;
     flex-direction: column;
