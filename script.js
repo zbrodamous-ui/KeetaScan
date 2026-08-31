@@ -832,6 +832,15 @@ async function loadMarketData(
         marketChartPath.style.stroke =
             directionColor;
 
+        marketHoverPoint.style.fill =
+            directionColor;
+
+        marketHoverPoint.style.stroke =
+            "#ffffff";
+
+        marketHoverPoint.style.strokeWidth =
+            "3";
+
         marketAreaStart.setAttribute(
             "stop-color",
             directionColor
