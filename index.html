@@ -118,10 +118,63 @@
                     role="img"
                     aria-label="KTA price over the last 24 hours"
                 >
-                    <line x1="15" y1="45" x2="685" y2="45"></line>
-                    <line x1="15" y1="105" x2="685" y2="105"></line>
-                    <line x1="15" y1="165" x2="685" y2="165"></line>
+                    <defs>
+                        <linearGradient
+                            id="marketAreaGradient"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                        >
+                            <stop
+                                id="marketAreaStart"
+                                offset="0%"
+                                stop-opacity="0.24"
+                            ></stop>
+                            <stop
+                                id="marketAreaEnd"
+                                offset="100%"
+                                stop-opacity="0.02"
+                            ></stop>
+                        </linearGradient>
+                    </defs>
+
+                    <line x1="15" y1="40" x2="650" y2="40"></line>
+                    <line x1="15" y1="85" x2="650" y2="85"></line>
+                    <line x1="15" y1="130" x2="650" y2="130"></line>
+                    <line x1="15" y1="175" x2="650" y2="175"></line>
+
+                    <text id="marketAxisTop" x="692" y="44">—</text>
+                    <text id="marketAxisUpper" x="692" y="89">—</text>
+                    <text id="marketAxisLower" x="692" y="134">—</text>
+                    <text id="marketAxisBottom" x="692" y="179">—</text>
+
+                    <path
+                        id="marketAreaPath"
+                        class="market-area-path"
+                        d=""
+                    ></path>
+
                     <path id="marketChartPath" d=""></path>
+
+                    <g id="marketCurrentBadge" hidden>
+                        <rect
+                            id="marketCurrentBadgeRect"
+                            x="650"
+                            y="0"
+                            width="48"
+                            height="20"
+                            rx="5"
+                        ></rect>
+                        <text
+                            id="marketCurrentBadgeText"
+                            x="674"
+                            y="14"
+                            text-anchor="middle"
+                        >
+                            —
+                        </text>
+                    </g>
 
                     <line
                         id="marketHoverLine"
