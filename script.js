@@ -22,6 +22,8 @@ const marketStatus =
     document.getElementById("marketStatus");
 const marketChartPath =
     document.getElementById("marketChartPath");
+const marketVolumeBars =
+    document.getElementById("marketVolumeBars");
 const marketAreaPath =
     document.getElementById("marketAreaPath");
 const marketAreaStart =
@@ -552,6 +554,101 @@ function createMarketChartPath(prices) {
     return linePath;
 }
 
+function renderMarketVolumeBars(
+    volumes,
+    directionColor
+) {
+    marketVolumeBars.replaceChildren();
+
+    const values =
+        volumes
+            .map((point) =>
+                Number(point?.[1])
+            )
+            .filter(Number.isFinite);
+
+    if (values.length < 2) {
+        return;
+    }
+
+    const barCount =
+        Math.min(72, values.length);
+
+    const sampledValues =
+        Array.from(
+            { length: barCount },
+            (_, index) => {
+                const sourceIndex =
+                    Math.round(
+                        (
+                            index /
+                            Math.max(
+                                1,
+                                barCount - 1
+                            )
+                        ) *
+                        (values.length - 1)
+                    );
+
+                return values[sourceIndex];
+            }
+        );
+
+    const maximum =
+        Math.max(...sampledValues) || 1;
+
+    const chartWidth = 635;
+    const barGap = 1.4;
+    const barWidth =
+        Math.max(
+            1,
+            chartWidth / barCount - barGap
+        );
+
+    sampledValues.forEach(
+        (volume, index) => {
+            const height =
+                Math.max(
+                    1,
+                    (volume / maximum) * 24
+                );
+
+            const bar =
+                document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "rect"
+                );
+
+            bar.setAttribute(
+                "x",
+                String(
+                    15 +
+                    index *
+                    (chartWidth / barCount)
+                )
+            );
+            bar.setAttribute(
+                "y",
+                String(175 - height)
+            );
+            bar.setAttribute(
+                "width",
+                String(barWidth)
+            );
+            bar.setAttribute(
+                "height",
+                String(height)
+            );
+            bar.style.fill =
+                directionColor;
+
+            marketVolumeBars.appendChild(
+                bar
+            );
+        }
+    );
+}
+
 function hideMarketTooltip() {
     marketHoverLine.setAttribute("hidden", "");
     marketHoverPoint.setAttribute("hidden", "");
@@ -877,6 +974,11 @@ async function loadMarketData(
             createMarketChartPath(
                 market.prices || []
             )
+        );
+
+        renderMarketVolumeBars(
+            marketChartVolumes,
+            directionColor
         );
 
         hideMarketTooltip();
