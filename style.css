@@ -5583,3 +5583,24 @@ html[data-theme="clean"] body.detail-page-body .home-navigation {
 html[data-theme="soft"] body.detail-page-body .transaction-detail-shell h1 {
     color: #ffffff;
 }
+
+
+/* White header controls over the dark animated background */
+html[data-theme="soft"] .home-search select,
+html[data-theme="soft"] .home-search input,
+html[data-theme="soft"] .home-search button,
+html[data-theme="soft"] .header-control {
+    background: #ffffff;
+    border-color: #d5d9de;
+    color: #171717;
+}
+
+html[data-theme="soft"] .home-search input::placeholder {
+    color: #6f7885;
+}
+
+html[data-theme="soft"] .home-search button:hover,
+html[data-theme="soft"] .header-control:hover {
+    background: #f2f3f5;
+    border-color: #c8cdd3;
+}
