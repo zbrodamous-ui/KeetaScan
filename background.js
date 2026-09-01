@@ -1,8 +1,26 @@
 (() => {
     "use strict";
 
+    const supportedPages = [
+        "home-page",
+        "blocks-page-body",
+        "transactions-page-body",
+        "addresses-page-body",
+        "assets-page-body",
+        "analytics-page-body",
+        "status-page-body"
+    ];
+
+    const isSupportedPage =
+        supportedPages.some(
+            (pageClass) =>
+                document.body.classList.contains(
+                    pageClass
+                )
+        );
+
     if (
-        !document.body.classList.contains("home-page") ||
+        !isSupportedPage ||
         document.getElementById("keeta-bg")
     ) {
         return;
