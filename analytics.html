@@ -257,6 +257,105 @@
                 </span>
             </header>
 
+            <div class="analytics-market-chart">
+                <div class="analytics-market-chart-toolbar">
+                    <span>Historical price and volume</span>
+
+                    <div
+                        class="chart-ranges"
+                        aria-label="Analytics market chart range"
+                    >
+                        <button type="button" data-analytics-market-range="1h">
+                            1H
+                        </button>
+                        <button
+                            type="button"
+                            class="active"
+                            data-analytics-market-range="1d"
+                        >
+                            1D
+                        </button>
+                        <button type="button" data-analytics-market-range="1w">
+                            1W
+                        </button>
+                        <button type="button" data-analytics-market-range="1m">
+                            1M
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-market-chart-stage">
+                    <svg
+                        id="analyticsMarketChartSvg"
+                        viewBox="0 0 1000 340"
+                        role="img"
+                        aria-label="Interactive KTA market price chart"
+                    >
+                        <defs>
+                            <linearGradient
+                                id="analyticsMarketGradient"
+                                x1="0"
+                                y1="0"
+                                x2="0"
+                                y2="1"
+                            >
+                                <stop
+                                    id="analyticsMarketGradientStart"
+                                    offset="0%"
+                                    stop-opacity="0.24"
+                                ></stop>
+                                <stop
+                                    id="analyticsMarketGradientEnd"
+                                    offset="100%"
+                                    stop-opacity="0.02"
+                                ></stop>
+                            </linearGradient>
+                        </defs>
+
+                        <g id="analyticsMarketGrid"></g>
+                        <path
+                            id="analyticsMarketArea"
+                            fill="url(#analyticsMarketGradient)"
+                            stroke="none"
+                        ></path>
+                        <g id="analyticsMarketVolumeBars"></g>
+                        <path
+                            id="analyticsMarketLine"
+                            fill="none"
+                        ></path>
+                        <g id="analyticsMarketAxis"></g>
+
+                        <line
+                            id="analyticsMarketHoverLine"
+                            class="analytics-market-hover-line"
+                            hidden
+                        ></line>
+                        <circle
+                            id="analyticsMarketHoverPoint"
+                            class="analytics-market-hover-point"
+                            r="7"
+                            hidden
+                        ></circle>
+                    </svg>
+
+                    <div
+                        id="analyticsMarketTooltip"
+                        class="analytics-market-tooltip"
+                        hidden
+                    >
+                        <strong id="analyticsMarketTooltipTime">—</strong>
+                        <span>
+                            Price:
+                            <b id="analyticsMarketTooltipPrice">—</b>
+                        </span>
+                        <span>
+                            Volume:
+                            <b id="analyticsMarketTooltipVolume">—</b>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             <div class="market-coming-grid">
                 <div>
                     <span>Price</span>
