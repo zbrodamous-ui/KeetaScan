@@ -121,8 +121,7 @@ const displayAmount =
 
 });
 
-blockTitle.textContent =
-    `Block ${block.hash.toString().slice(0, 16)}...`;
+blockTitle.textContent = "Block";
 blockDetails.innerHTML = `
     <div class="detail-label">Hash</div>
     <div class="detail-value">${block.hash.toString()}</div>
