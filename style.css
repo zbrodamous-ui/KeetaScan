@@ -5833,3 +5833,74 @@ html[data-theme="soft"] .header-control:hover {
         white-space: nowrap;
     }
 }
+
+
+/* Mobile asset rows: prevent clipping and preserve every field */
+@media (max-width: 700px) {
+    .asset-table-scroll {
+        overflow-x: visible;
+    }
+
+    .asset-directory-table {
+        min-width: 0;
+    }
+
+    .asset-directory-header {
+        display: none;
+    }
+
+    .asset-directory-row {
+        grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+        gap: 16px 18px;
+        min-height: 0;
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .asset-directory-row > span {
+        display: grid;
+        gap: 5px;
+        text-align: left;
+    }
+
+    .asset-directory-address,
+    .asset-directory-supply {
+        grid-column: 1 / -1;
+    }
+
+    .asset-directory-symbol::before {
+        content: "Asset";
+    }
+
+    .asset-directory-name::before {
+        content: "Name";
+    }
+
+    .asset-directory-address::before {
+        content: "Address";
+    }
+
+    .asset-directory-supply::before {
+        content: "Supply";
+    }
+
+    .asset-directory-row > span::before {
+        color: var(--secondary-text);
+        font-family: inherit;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .asset-directory-name,
+    .asset-directory-address {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .asset-directory-supply {
+        text-align: left;
+    }
+}
