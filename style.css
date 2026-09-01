@@ -5697,3 +5697,16 @@ html[data-theme="soft"] .header-control:hover {
         text-align: left;
     }
 }
+
+
+/* Finish mobile transaction-card spacing */
+@media (max-width: 700px) {
+    .transaction-directory-block {
+        display: grid;
+        gap: 5px;
+    }
+
+    .transaction-directory-row {
+        border-bottom: 1px solid var(--border-color);
+    }
+}
