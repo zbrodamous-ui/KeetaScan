@@ -284,18 +284,34 @@
             const image =
                 document.createElement("img");
 
+            const isKeetaLogo =
+                index % 2 === 1;
+
             image.className =
-                "kv-logo";
+                `kv-logo ${isKeetaLogo
+                    ? "kv-logo-keeta"
+                    : "kv-logo-keetaview"}`;
             image.src =
-                "favicon.svg";
+                isKeetaLogo
+                    ? "keeta-logo.svg"
+                    : "favicon.svg";
             image.alt = "";
-            image.width =
-                18 +
-                Math.round(
-                    Math.random() * 10
-                );
-            image.height =
-                image.width;
+
+            if (isKeetaLogo) {
+                image.width =
+                    40 +
+                    Math.round(
+                        Math.random() * 14
+                    );
+            } else {
+                image.width =
+                    18 +
+                    Math.round(
+                        Math.random() * 10
+                    );
+                image.height =
+                    image.width;
+            }
 
             logoBox.appendChild(
                 image
