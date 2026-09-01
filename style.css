@@ -5710,3 +5710,58 @@ html[data-theme="soft"] .header-control:hover {
         border-bottom: 1px solid var(--border-color);
     }
 }
+
+
+/* Mobile block rows: preserve operations and network as compact cards */
+@media (max-width: 700px) {
+    .block-table-scroll {
+        overflow-x: visible;
+    }
+
+    .block-directory-table {
+        min-width: 0;
+    }
+
+    .block-directory-header {
+        display: none;
+    }
+
+    .block-directory-row {
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+        gap: 16px 18px;
+        min-height: 0;
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .block-directory-row > span {
+        display: grid;
+        gap: 5px;
+        text-align: left;
+    }
+
+    .block-directory-row > :nth-child(1)::before {
+        content: "Block";
+    }
+
+    .block-directory-row > :nth-child(2)::before {
+        content: "Age";
+    }
+
+    .block-directory-row > :nth-child(3)::before {
+        content: "Operations";
+    }
+
+    .block-directory-row > :nth-child(4)::before {
+        content: "Network";
+    }
+
+    .block-directory-row > span::before {
+        color: var(--secondary-text);
+        font-family: inherit;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+}
