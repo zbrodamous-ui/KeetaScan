@@ -5904,3 +5904,13 @@ html[data-theme="soft"] .header-control:hover {
         text-align: left;
     }
 }
+
+
+/* Let long mobile asset names wrap instead of clipping */
+@media (max-width: 700px) {
+    .asset-directory-name {
+        overflow: visible;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+}
