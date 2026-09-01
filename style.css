@@ -5765,3 +5765,71 @@ html[data-theme="soft"] .header-control:hover {
         text-transform: uppercase;
     }
 }
+
+
+/* Mobile address rows: preserve first-observed and network fields */
+@media (max-width: 700px) {
+    .address-table-scroll {
+        overflow-x: visible;
+    }
+
+    .address-directory-table {
+        min-width: 0;
+    }
+
+    .address-directory-header {
+        display: none;
+    }
+
+    .address-directory-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 16px 18px;
+        min-height: 0;
+        padding: 20px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .address-directory-row > span {
+        display: grid;
+        gap: 5px;
+    }
+
+    .address-directory-value {
+        grid-column: 1 / -1;
+        display: flex !important;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 10px;
+        white-space: normal;
+    }
+
+    .address-directory-value::before {
+        flex-basis: 100%;
+        content: "Address";
+    }
+
+    .address-directory-age::before {
+        content: "First Observed";
+    }
+
+    .address-directory-network::before {
+        content: "Network";
+    }
+
+    .address-directory-row > span::before {
+        color: var(--secondary-text);
+        font-family: inherit;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .address-directory-value a {
+        min-width: 0;
+        flex: 1 1 auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
