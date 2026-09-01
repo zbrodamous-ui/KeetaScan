@@ -5621,3 +5621,79 @@ html[data-theme="soft"] .header-control:hover {
         white-space: nowrap;
     }
 }
+
+
+/* Mobile transaction rows: preserve all useful fields as stacked cards */
+@media (max-width: 700px) {
+    .transaction-table-scroll {
+        overflow-x: visible;
+    }
+
+    .transaction-directory-table {
+        min-width: 0;
+    }
+
+    .transaction-directory-header {
+        display: none;
+    }
+
+    .transaction-directory-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 16px 18px;
+        min-height: 0;
+        padding: 20px;
+    }
+
+    .transaction-directory-row > * {
+        display: grid;
+        gap: 5px;
+        text-align: left;
+    }
+
+    .transaction-directory-row > :nth-child(3),
+    .transaction-directory-row > :nth-child(4),
+    .transaction-directory-row > :nth-child(5) {
+        grid-column: 1 / -1;
+    }
+
+    .transaction-directory-row > :nth-child(1)::before {
+        content: "Block";
+    }
+
+    .transaction-directory-row > :nth-child(2)::before {
+        content: "Age";
+    }
+
+    .transaction-directory-row > :nth-child(3)::before {
+        content: "From";
+    }
+
+    .transaction-directory-row > :nth-child(4)::before {
+        content: "To";
+    }
+
+    .transaction-directory-row > :nth-child(5)::before {
+        content: "Amount";
+    }
+
+    .transaction-directory-row > *::before {
+        color: var(--secondary-text);
+        font-family: inherit;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .transaction-directory-block,
+    .transaction-directory-address a {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .transaction-directory-amount {
+        text-align: left;
+    }
+}
