@@ -5577,3 +5577,9 @@ html[data-theme="clean"] body.detail-page-body .home-navigation {
     border-color: rgba(20, 30, 50, 0.10);
     backdrop-filter: blur(2px);
 }
+
+
+/* Keep the transaction detail title readable over the dark animation */
+html[data-theme="soft"] body.detail-page-body .transaction-detail-shell h1 {
+    color: #ffffff;
+}
