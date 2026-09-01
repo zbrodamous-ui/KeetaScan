@@ -8,7 +8,8 @@
         "addresses-page-body",
         "assets-page-body",
         "analytics-page-body",
-        "status-page-body"
+        "status-page-body",
+        "detail-page-body"
     ];
 
     const isSupportedPage =
