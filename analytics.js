@@ -1353,6 +1353,7 @@ async function loadAnalytics() {
 }
 
 initializeAnalyticsTabs();
+initializeAnalyticsMarketChart();
 loadAnalytics();
 loadMarketAnalytics();
 
