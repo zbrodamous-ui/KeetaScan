@@ -2795,6 +2795,44 @@ html[data-theme="clean"] .asset-page-shell .asset-overview-card {
     .asset-page-shell .asset-detail-row strong {
         text-align: left;
     }
+
+    .asset-page-shell .asset-transfer-scroll {
+        overflow: visible;
+    }
+
+    .asset-page-shell .asset-transfer-table {
+        min-width: 0;
+    }
+
+    .asset-page-shell .asset-transfer-header {
+        display: none;
+    }
+
+    .asset-page-shell .asset-transfer-row {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 18px 20px;
+        padding: 20px 4px;
+        align-items: start;
+    }
+
+    .asset-page-shell .asset-transfer-row > * {
+        min-width: 0;
+        overflow: visible;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        text-overflow: clip;
+    }
+
+    .asset-page-shell .asset-transfer-row > *::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 6px;
+        color: #7c8da3;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
 }
 
 
