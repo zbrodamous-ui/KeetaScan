@@ -77,12 +77,40 @@ let marketChartPoints = [];
 let marketChartVolumes = [];
 let activeMarketRange = "1d";
 
-function runSearch() {
+async function runSearch() {
     const searchText =
         searchInput.value.trim();
 
     if (!searchText) {
         searchInput.focus();
+        return;
+    }
+
+    const selectedType =
+        searchType.value.toLowerCase();
+
+    if (selectedType === "asset") {
+        const assetAddress =
+            await resolveAssetAddress(searchText);
+
+        if (assetAddress) {
+            window.location.assign(
+                `asset.html?asset=${encodeURIComponent(
+                    assetAddress
+                )}`
+            );
+            return;
+        }
+
+        searchInput.setCustomValidity(
+            "No matching asset was found."
+        );
+        searchInput.reportValidity();
+        searchInput.addEventListener(
+            "input",
+            () => searchInput.setCustomValidity(""),
+            { once: true }
+        );
         return;
     }
 
@@ -138,9 +166,6 @@ function runSearch() {
                 searchText
             )}`
     };
-
-    const selectedType =
-        searchType.value.toLowerCase();
 
     const destination =
         routes[selectedType];
