@@ -311,25 +311,28 @@ console.log(
 
             row.innerHTML = `
                 <a
+                    data-label="From"
                     href="address.html?address=${encodeURIComponent(transfer.sender)}"
                 >
                     ${shortAddress(transfer.sender)}
                 </a>
 
                 <a
+                    data-label="To"
                     href="address.html?address=${encodeURIComponent(transfer.recipient)}"
                 >
                     ${shortAddress(transfer.recipient)}
                 </a>
 
               <a
+    data-label="Amount"
     href="transaction.html?block=${encodeURIComponent(transfer.blockHash)}&operation=${transfer.operationIndex}"
     class="asset-transfer-link"
 >
     ${transfer.displayAmount} ${assetName}
 </a>
 
-                <span>
+                <span data-label="Age">
                     ${timeAgo(transfer.date)}
                 </span>
             `; 
