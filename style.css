@@ -5555,3 +5555,25 @@ html[data-theme="clean"] body.status-page-body .home-navigation {
     border-color: rgba(20, 30, 50, 0.10);
     backdrop-filter: blur(2px);
 }
+
+
+/* Animated background on block, transaction, address, and asset details */
+body.detail-page-body {
+    position: relative;
+    isolation: isolate;
+    background: transparent;
+}
+
+html[data-theme="soft"] body.detail-page-body .home-header,
+html[data-theme="soft"] body.detail-page-body .home-navigation {
+    background: rgba(17, 17, 17, 0.22);
+    border-color: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(2px);
+}
+
+html[data-theme="clean"] body.detail-page-body .home-header,
+html[data-theme="clean"] body.detail-page-body .home-navigation {
+    background: rgba(242, 242, 242, 0.22);
+    border-color: rgba(20, 30, 50, 0.10);
+    backdrop-filter: blur(2px);
+}
