@@ -29,13 +29,13 @@
     }
 
     const config = {
-        particleCount: 38,
+        particleCount: 50,
         particleConnect: 110,
-        particleSpeed: 0.12,
-        nodeCount: 10,
-        nodeConnect: 210,
-        streamCount: 12,
-        logoCount: 6
+        particleSpeed: 0.15,
+        nodeCount: 14,
+        nodeConnect: 200,
+        streamCount: 22,
+        logoCount: 12
     };
 
     const particleCanvas =
@@ -107,7 +107,7 @@
             Math.min(
                 centerX,
                 centerY
-            ) * 0.55;
+            ) * 0.45;
 
         return Math.min(
             1,
@@ -259,12 +259,12 @@
                 `kv-stream${Math.random() > 0.5 ? " kv-down" : ""}`;
 
             const duration =
-                12 +
-                Math.random() * 16;
+                8 +
+                Math.random() * 14;
 
             stream.style.cssText = [
                 `left:${4 + Math.random() * 92}%`,
-                `height:${60 + Math.random() * 170}px`,
+                `height:${60 + Math.random() * 200}px`,
                 `--kv-dur:${duration}s`,
                 `--kv-delay:${-Math.random() * duration}s`
             ].join(";");
@@ -329,23 +329,27 @@
                     (
                         Math.random() -
                         0.5
-                    ) * 0.12,
+                    ) * 0.18,
                 velocityY:
                     (
                         Math.random() -
                         0.5
-                    ) * 0.14,
-                rotation:
-                    Math.random() * 360,
+                    ) * 0.22,
+                rotation: 0,
                 rotationVelocity:
                     (
                         Math.random() -
                         0.5
-                    ) * 0.025,
+                    ) * 0.015,
                 phase:
                     Math.random() *
                     Math.PI *
-                    2
+                    2,
+                driftTimer:
+                    Math.random() * 6000,
+                driftInterval:
+                    4000 +
+                    Math.random() * 5000
             });
         }
     }
@@ -359,20 +363,20 @@
                             (
                                 0.04 +
                                 Math.random() *
-                                0.16
+                                0.14
                             )
                         : width *
                             (
-                                0.80 +
+                                0.78 +
                                 Math.random() *
-                                0.16
+                                0.18
                             );
 
                 logo.y =
                     height *
                     (
-                        0.10 +
-                        0.80 *
+                        0.08 +
+                        0.84 *
                         (
                             index /
                             Math.max(
@@ -496,7 +500,7 @@
             particles,
             config.particleConnect,
             palette.line,
-            0.28
+            0.40
         );
 
         particles.forEach(
@@ -518,8 +522,8 @@
                 particleContext.fillStyle =
                     palette.particle;
                 particleContext.globalAlpha =
-                    0.38 +
-                    0.42 *
+                    0.55 +
+                    0.40 *
                     fade;
                 particleContext.shadowBlur =
                     fade > 0.35
@@ -547,7 +551,7 @@
             nodes,
             config.nodeConnect,
             palette.edge,
-            0.20
+            0.26
         );
 
         nodes.forEach((node) => {
@@ -567,8 +571,8 @@
 
             const alpha =
                 (
-                    0.34 +
-                    0.28 *
+                    0.45 +
+                    0.35 *
                     pulse
                 ) *
                 fade;
@@ -591,8 +595,8 @@
             networkContext.globalAlpha =
                 alpha;
             networkContext.shadowBlur =
-                7 +
-                pulse * 7;
+                8 +
+                pulse * 8;
             networkContext.shadowColor =
                 palette.nodeGlow;
             networkContext.fill();
@@ -603,48 +607,113 @@
 
     function updateLogos(time) {
         logos.forEach((logo) => {
-            logo.x +=
-                logo.velocityX;
-            logo.y +=
-                logo.velocityY;
+            logo.driftTimer += 33;
+
+            if (
+                logo.driftTimer >
+                logo.driftInterval
+            ) {
+                logo.driftTimer = 0;
+                logo.driftInterval =
+                    4000 +
+                    Math.random() * 5000;
+                logo.velocityX +=
+                    (
+                        Math.random() -
+                        0.5
+                    ) * 0.12;
+                logo.velocityY +=
+                    (
+                        Math.random() -
+                        0.5
+                    ) * 0.10;
+
+                const speed =
+                    Math.hypot(
+                        logo.velocityX,
+                        logo.velocityY
+                    );
+
+                if (speed > 0.4) {
+                    logo.velocityX *=
+                        0.4 / speed;
+                    logo.velocityY *=
+                        0.4 / speed;
+                }
+
+                logo.rotationVelocity +=
+                    (
+                        Math.random() -
+                        0.5
+                    ) * 0.005;
+
+                if (
+                    Math.abs(
+                        logo.rotationVelocity
+                    ) > 0.04
+                ) {
+                    logo.rotationVelocity *=
+                        0.5;
+                }
+            }
+
+            logo.x += logo.velocityX;
+            logo.y += logo.velocityY;
             logo.rotation +=
                 logo.rotationVelocity;
 
             const minX =
                 logo.side === "left"
                     ? width * 0.02
-                    : width * 0.74;
+                    : width * 0.72;
 
             const maxX =
                 logo.side === "left"
-                    ? width * 0.26
+                    ? width * 0.28
                     : width * 0.98;
 
-            if (
-                logo.x < minX ||
-                logo.x > maxX
-            ) {
-                logo.velocityX *= -1;
-                logo.x =
-                    Math.max(
-                        minX,
-                        Math.min(
-                            maxX,
-                            logo.x
-                        )
-                    );
+            if (logo.x < minX) {
+                logo.x = minX;
+                logo.velocityX =
+                    Math.abs(
+                        logo.velocityX
+                    ) * 0.6;
+            }
+
+            if (logo.x > maxX) {
+                logo.x = maxX;
+                logo.velocityX =
+                    -Math.abs(
+                        logo.velocityX
+                    ) * 0.6;
+            }
+
+            const marginY =
+                height * 0.04;
+
+            if (logo.y < marginY) {
+                logo.y = marginY;
+                logo.velocityY =
+                    Math.abs(
+                        logo.velocityY
+                    ) * 0.8;
             }
 
             if (
-                logo.y < height * 0.04 ||
-                logo.y > height * 0.96
+                logo.y >
+                height - marginY
             ) {
-                logo.velocityY *= -1;
+                logo.y =
+                    height - marginY;
+                logo.velocityY =
+                    -Math.abs(
+                        logo.velocityY
+                    ) * 0.8;
             }
 
             const scale =
                 1 +
-                0.08 *
+                0.10 *
                 Math.sin(
                     time * 0.0006 +
                     logo.phase
