@@ -2833,6 +2833,11 @@ html[data-theme="clean"] .asset-page-shell .asset-overview-card {
         letter-spacing: 0.08em;
         text-transform: uppercase;
     }
+
+    .asset-page-shell .asset-transfer-row > [data-label="From"],
+    .asset-page-shell .asset-transfer-row > [data-label="To"] {
+        grid-column: 1 / -1;
+    }
 }
 
 
