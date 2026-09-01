@@ -146,10 +146,27 @@ function renderActivityChart(activity) {
         column.title =
             `${label}: ${value.toLocaleString()} transfers`;
 
+        column.tabIndex = 0;
+        column.style.setProperty(
+            "--bar-height",
+            `${height}%`
+        );
+
         column.innerHTML = `
             <strong>${value.toLocaleString()}</strong>
 
             <div class="analytics-bar-track">
+                <div
+                    class="analytics-bar-tooltip"
+                    role="tooltip"
+                >
+                    <strong>${label}</strong>
+                    <span>
+                        ${value.toLocaleString()}
+                        transfer${value === 1 ? "" : "s"}
+                    </span>
+                </div>
+
                 <div
                     class="analytics-bar"
                     style="height: ${height}%"
