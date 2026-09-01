@@ -390,7 +390,595 @@ function formatAnalyticsCurrency(
     ).format(number);
 }
 
-async function loadMarketAnalytics() {
+let activeAnalyticsMarketRange = "1d";
+
+function createAnalyticsSvgElement(
+    name,
+    attributes = {}
+) {
+    const element =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            name
+        );
+
+    Object.entries(attributes).forEach(
+        ([key, value]) => {
+            element.setAttribute(
+                key,
+                String(value)
+            );
+        }
+    );
+
+    return element;
+}
+
+function formatAnalyticsChartTime(
+    timestamp,
+    range
+) {
+    const date = new Date(timestamp);
+
+    if (
+        range === "1h" ||
+        range === "1d"
+    ) {
+        return date.toLocaleTimeString(
+            [],
+            {
+                hour: "numeric",
+                minute:
+                    range === "1h"
+                        ? "2-digit"
+                        : undefined
+            }
+        );
+    }
+
+    return date.toLocaleDateString(
+        [],
+        {
+            month: "short",
+            day: "numeric"
+        }
+    );
+}
+
+function renderAnalyticsMarketChart(
+    market,
+    directionColor,
+    range
+) {
+    const svg =
+        document.getElementById(
+            "analyticsMarketChartSvg"
+        );
+
+    const line =
+        document.getElementById(
+            "analyticsMarketLine"
+        );
+
+    const area =
+        document.getElementById(
+            "analyticsMarketArea"
+        );
+
+    const grid =
+        document.getElementById(
+            "analyticsMarketGrid"
+        );
+
+    const axis =
+        document.getElementById(
+            "analyticsMarketAxis"
+        );
+
+    const volumeBars =
+        document.getElementById(
+            "analyticsMarketVolumeBars"
+        );
+
+    const hoverLine =
+        document.getElementById(
+            "analyticsMarketHoverLine"
+        );
+
+    const hoverPoint =
+        document.getElementById(
+            "analyticsMarketHoverPoint"
+        );
+
+    const tooltip =
+        document.getElementById(
+            "analyticsMarketTooltip"
+        );
+
+    const prices =
+        (market.prices || [])
+            .map((point) => ({
+                timestamp:
+                    Number(point?.[0]),
+                price:
+                    Number(point?.[1])
+            }))
+            .filter(
+                (point) =>
+                    Number.isFinite(
+                        point.timestamp
+                    ) &&
+                    Number.isFinite(
+                        point.price
+                    )
+            );
+
+    const volumes =
+        Array.isArray(market.volumes)
+            ? market.volumes
+            : [];
+
+    grid.replaceChildren();
+    axis.replaceChildren();
+    volumeBars.replaceChildren();
+
+    if (prices.length < 2) {
+        line.setAttribute("d", "");
+        area.setAttribute("d", "");
+        return;
+    }
+
+    const bounds = {
+        left: 42,
+        right: 930,
+        top: 28,
+        bottom: 278
+    };
+
+    const width =
+        bounds.right - bounds.left;
+
+    const height =
+        bounds.bottom - bounds.top;
+
+    const priceValues =
+        prices.map(
+            (point) => point.price
+        );
+
+    const minimum =
+        Math.min(...priceValues);
+
+    const maximum =
+        Math.max(...priceValues);
+
+    const priceRange =
+        maximum - minimum || 1;
+
+    const points =
+        prices.map(
+            (point, index) => ({
+                ...point,
+                x:
+                    bounds.left +
+                    (
+                        index /
+                        (prices.length - 1)
+                    ) *
+                    width,
+                y:
+                    bounds.bottom -
+                    (
+                        (
+                            point.price -
+                            minimum
+                        ) /
+                        priceRange
+                    ) *
+                    height
+            })
+        );
+
+    const linePath =
+        points
+            .map(
+                (point, index) =>
+                    `${index === 0 ? "M" : "L"}${point.x.toFixed(
+                        1
+                    )} ${point.y.toFixed(1)}`
+            )
+            .join(" ");
+
+    line.setAttribute(
+        "d",
+        linePath
+    );
+
+    line.style.stroke =
+        directionColor;
+
+    area.setAttribute(
+        "d",
+        `${linePath} L${bounds.right} ${bounds.bottom} L${bounds.left} ${bounds.bottom} Z`
+    );
+
+    document.getElementById(
+        "analyticsMarketGradientStart"
+    ).setAttribute(
+        "stop-color",
+        directionColor
+    );
+
+    document.getElementById(
+        "analyticsMarketGradientEnd"
+    ).setAttribute(
+        "stop-color",
+        directionColor
+    );
+
+    for (let index = 0; index < 4; index += 1) {
+        const ratio =
+            index / 3;
+
+        const y =
+            bounds.top +
+            ratio * height;
+
+        const value =
+            maximum -
+            ratio * priceRange;
+
+        grid.appendChild(
+            createAnalyticsSvgElement(
+                "line",
+                {
+                    x1: bounds.left,
+                    y1: y,
+                    x2: bounds.right,
+                    y2: y
+                }
+            )
+        );
+
+        const label =
+            createAnalyticsSvgElement(
+                "text",
+                {
+                    x: 990,
+                    y: y + 4,
+                    "text-anchor": "end"
+                }
+            );
+
+        label.textContent =
+            formatAnalyticsCurrency(
+                value,
+                value < 1 ? 3 : 2
+            );
+
+        axis.appendChild(label);
+    }
+
+    const timeIndexes = [
+        0,
+        Math.round(
+            (points.length - 1) / 3
+        ),
+        Math.round(
+            ((points.length - 1) * 2) / 3
+        ),
+        points.length - 1
+    ];
+
+    timeIndexes.forEach(
+        (pointIndex, index) => {
+            const point =
+                points[pointIndex];
+
+            const label =
+                createAnalyticsSvgElement(
+                    "text",
+                    {
+                        x: point.x,
+                        y: 324,
+                        "text-anchor":
+                            index === 0
+                                ? "start"
+                                : index === 3
+                                    ? "end"
+                                    : "middle"
+                    }
+                );
+
+            label.textContent =
+                formatAnalyticsChartTime(
+                    point.timestamp,
+                    range
+                );
+
+            axis.appendChild(label);
+        }
+    );
+
+    const volumeValues =
+        volumes
+            .map((point) =>
+                Number(point?.[1])
+            )
+            .filter(Number.isFinite);
+
+    if (volumeValues.length > 1) {
+        const barCount =
+            Math.min(
+                90,
+                volumeValues.length
+            );
+
+        const sampled =
+            Array.from(
+                { length: barCount },
+                (_, index) =>
+                    volumeValues[
+                        Math.round(
+                            (
+                                index /
+                                (barCount - 1)
+                            ) *
+                            (
+                                volumeValues.length -
+                                1
+                            )
+                        )
+                    ]
+            );
+
+        const sorted =
+            [...sampled].sort(
+                (a, b) => a - b
+            );
+
+        const scaleMaximum =
+            sorted[
+                Math.min(
+                    sorted.length - 1,
+                    Math.floor(
+                        sorted.length * 0.9
+                    )
+                )
+            ] || 1;
+
+        sampled.forEach(
+            (volume, index) => {
+                const barHeight =
+                    Math.max(
+                        2,
+                        Math.sqrt(
+                            Math.min(
+                                volume,
+                                scaleMaximum
+                            ) /
+                            scaleMaximum
+                        ) * 38
+                    );
+
+                const bar =
+                    createAnalyticsSvgElement(
+                        "rect",
+                        {
+                            x:
+                                bounds.left +
+                                index *
+                                (
+                                    width /
+                                    barCount
+                                ),
+                            y:
+                                bounds.bottom -
+                                barHeight,
+                            width:
+                                Math.max(
+                                    1,
+                                    width /
+                                    barCount -
+                                    1.5
+                                ),
+                            height:
+                                barHeight
+                        }
+                    );
+
+                bar.style.fill =
+                    directionColor;
+
+                volumeBars.appendChild(
+                    bar
+                );
+            }
+        );
+    }
+
+    hoverPoint.style.fill =
+        directionColor;
+
+    hoverPoint.style.filter =
+        `drop-shadow(0 0 5px ${directionColor}) drop-shadow(0 0 10px ${directionColor})`;
+
+    function hideTooltip() {
+        hoverLine.setAttribute(
+            "hidden",
+            ""
+        );
+        hoverPoint.setAttribute(
+            "hidden",
+            ""
+        );
+        tooltip.hidden = true;
+    }
+
+    svg.onpointermove = (event) => {
+        const rectangle =
+            svg.getBoundingClientRect();
+
+        const pointerX =
+            Math.max(
+                bounds.left,
+                Math.min(
+                    bounds.right,
+                    (
+                        (
+                            event.clientX -
+                            rectangle.left
+                        ) /
+                        rectangle.width
+                    ) *
+                    1000
+                )
+            );
+
+        const pointIndex =
+            Math.max(
+                0,
+                Math.min(
+                    points.length - 1,
+                    Math.round(
+                        (
+                            (
+                                pointerX -
+                                bounds.left
+                            ) /
+                            width
+                        ) *
+                        (
+                            points.length -
+                            1
+                        )
+                    )
+                )
+            );
+
+        const point =
+            points[pointIndex];
+
+        const volumeIndex =
+            volumes.length > 1
+                ? Math.round(
+                    (
+                        pointIndex /
+                        (
+                            points.length -
+                            1
+                        )
+                    ) *
+                    (
+                        volumes.length -
+                        1
+                    )
+                )
+                : 0;
+
+        const volume =
+            Number(
+                volumes[
+                    volumeIndex
+                ]?.[1]
+            );
+
+        hoverLine.setAttribute(
+            "x1",
+            point.x
+        );
+        hoverLine.setAttribute(
+            "x2",
+            point.x
+        );
+        hoverLine.setAttribute(
+            "y1",
+            bounds.top
+        );
+        hoverLine.setAttribute(
+            "y2",
+            bounds.bottom
+        );
+
+        hoverPoint.setAttribute(
+            "cx",
+            point.x
+        );
+        hoverPoint.setAttribute(
+            "cy",
+            point.y
+        );
+
+        document.getElementById(
+            "analyticsMarketTooltipTime"
+        ).textContent =
+            new Date(
+                point.timestamp
+            ).toLocaleString();
+
+        document.getElementById(
+            "analyticsMarketTooltipPrice"
+        ).textContent =
+            formatAnalyticsCurrency(
+                point.price,
+                point.price < 1 ? 6 : 2
+            );
+
+        document.getElementById(
+            "analyticsMarketTooltipVolume"
+        ).textContent =
+            formatAnalyticsCurrency(
+                volume
+            );
+
+        hoverLine.removeAttribute(
+            "hidden"
+        );
+        hoverPoint.removeAttribute(
+            "hidden"
+        );
+        tooltip.hidden = false;
+
+        const stage =
+            svg.parentElement;
+
+        const stageBounds =
+            stage.getBoundingClientRect();
+
+        const tooltipWidth =
+            tooltip.offsetWidth;
+
+        tooltip.style.left =
+            `${Math.max(
+                12,
+                Math.min(
+                    stageBounds.width -
+                    tooltipWidth -
+                    12,
+                    event.clientX -
+                    stageBounds.left +
+                    16
+                )
+            )}px`;
+
+        tooltip.style.top =
+            `${Math.max(
+                12,
+                event.clientY -
+                stageBounds.top -
+                98
+            )}px`;
+    };
+
+    svg.onpointerleave =
+        hideTooltip;
+
+    hideTooltip();
+}
+
+async function loadMarketAnalytics(
+    range = activeAnalyticsMarketRange
+) {
     const status =
         document.getElementById(
             "analyticsMarketStatus"
@@ -399,7 +987,9 @@ async function loadMarketAnalytics() {
     try {
         const response =
             await fetch(
-                "http://localhost:3000/api/market?range=1d",
+                `http://localhost:3000/api/market?range=${encodeURIComponent(
+                    range
+                )}`,
                 {
                     cache: "no-store"
                 }
@@ -483,13 +1073,26 @@ async function loadMarketAnalytics() {
                 2
             );
 
+        const rangeLabel = {
+            "1h": "1H",
+            "1d": "1D",
+            "1w": "1W",
+            "1m": "1M"
+        }[range] || "1D";
+
         status.textContent =
-            `Live · Updated ${timeAgo(
+            `Live · ${rangeLabel} view · Updated ${timeAgo(
                 market.updatedAt
             )}`;
 
         status.style.color =
             directionColor;
+
+        renderAnalyticsMarketChart(
+            market,
+            directionColor,
+            range
+        );
     } catch (error) {
         console.error(
             "Market analytics loading error:",
@@ -501,6 +1104,72 @@ async function loadMarketAnalytics() {
         status.style.color =
             "#b45309";
     }
+}
+
+function initializeAnalyticsMarketChart() {
+    const buttons =
+        document.querySelectorAll(
+            "[data-analytics-market-range]"
+        );
+
+    buttons.forEach((button) => {
+        const selected =
+            button.dataset
+                .analyticsMarketRange ===
+            activeAnalyticsMarketRange;
+
+        button.setAttribute(
+            "aria-pressed",
+            String(selected)
+        );
+
+        button.addEventListener(
+            "click",
+            () => {
+                const range =
+                    button.dataset
+                        .analyticsMarketRange;
+
+                if (
+                    !range ||
+                    range ===
+                        activeAnalyticsMarketRange
+                ) {
+                    return;
+                }
+
+                activeAnalyticsMarketRange =
+                    range;
+
+                buttons.forEach(
+                    (rangeButton) => {
+                        const isSelected =
+                            rangeButton ===
+                            button;
+
+                        rangeButton
+                            .classList
+                            .toggle(
+                                "active",
+                                isSelected
+                            );
+
+                        rangeButton
+                            .setAttribute(
+                                "aria-pressed",
+                                String(
+                                    isSelected
+                                )
+                            );
+                    }
+                );
+
+                loadMarketAnalytics(
+                    range
+                );
+            }
+        );
+    });
 }
 
 function initializeAnalyticsTabs() {
