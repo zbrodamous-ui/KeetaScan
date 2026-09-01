@@ -46,9 +46,22 @@ operationsList.innerHTML = "";
 
 block.operations.forEach((operation, operationIndex) => {
 
-    const operationType =
+    const rawOperationType =
         operation.constructor.name
-            .replace("src_client_BlockOperation", "");
+            .replace(/^.*BlockOperation/, "")
+            .replace(/_/g, " ")
+            .trim();
+
+    const operationType =
+        rawOperationType
+            ? rawOperationType
+                .toLowerCase()
+                .replace(
+                    /\b\w/g,
+                    (character) =>
+                        character.toUpperCase()
+                )
+            : "Operation";
 const recipient =
     operation.to?.publicKeyString?.toString?.() ||
     "Not available";
