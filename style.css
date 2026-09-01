@@ -5508,3 +5508,50 @@ html[data-theme="clean"] body.home-page .home-navigation {
     border-color: rgba(20, 30, 50, 0.10);
     backdrop-filter: blur(2px);
 }
+
+
+/* Shared animated background across KeetaView directory pages */
+body.blocks-page-body,
+body.transactions-page-body,
+body.addresses-page-body,
+body.assets-page-body,
+body.analytics-page-body,
+body.status-page-body {
+    position: relative;
+    isolation: isolate;
+    background: transparent;
+}
+
+html[data-theme="soft"] body.blocks-page-body .home-header,
+html[data-theme="soft"] body.blocks-page-body .home-navigation,
+html[data-theme="soft"] body.transactions-page-body .home-header,
+html[data-theme="soft"] body.transactions-page-body .home-navigation,
+html[data-theme="soft"] body.addresses-page-body .home-header,
+html[data-theme="soft"] body.addresses-page-body .home-navigation,
+html[data-theme="soft"] body.assets-page-body .home-header,
+html[data-theme="soft"] body.assets-page-body .home-navigation,
+html[data-theme="soft"] body.analytics-page-body .home-header,
+html[data-theme="soft"] body.analytics-page-body .home-navigation,
+html[data-theme="soft"] body.status-page-body .home-header,
+html[data-theme="soft"] body.status-page-body .home-navigation {
+    background: rgba(17, 17, 17, 0.22);
+    border-color: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(2px);
+}
+
+html[data-theme="clean"] body.blocks-page-body .home-header,
+html[data-theme="clean"] body.blocks-page-body .home-navigation,
+html[data-theme="clean"] body.transactions-page-body .home-header,
+html[data-theme="clean"] body.transactions-page-body .home-navigation,
+html[data-theme="clean"] body.addresses-page-body .home-header,
+html[data-theme="clean"] body.addresses-page-body .home-navigation,
+html[data-theme="clean"] body.assets-page-body .home-header,
+html[data-theme="clean"] body.assets-page-body .home-navigation,
+html[data-theme="clean"] body.analytics-page-body .home-header,
+html[data-theme="clean"] body.analytics-page-body .home-navigation,
+html[data-theme="clean"] body.status-page-body .home-header,
+html[data-theme="clean"] body.status-page-body .home-navigation {
+    background: rgba(242, 242, 242, 0.22);
+    border-color: rgba(20, 30, 50, 0.10);
+    backdrop-filter: blur(2px);
+}
