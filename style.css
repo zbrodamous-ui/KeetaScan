@@ -2974,6 +2974,7 @@ html[data-theme="clean"] .asset-page-shell .asset-overview-card {
 }
 
 .analytics-bar-track {
+    position: relative;
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -2985,12 +2986,64 @@ html[data-theme="clean"] .asset-page-shell .asset-overview-card {
     width: min(30px, 68%);
     min-height: 4px;
     border-radius: 6px 6px 0 0;
-    background: #5a5a5a;
-    transition: opacity 0.2s ease;
+    background: linear-gradient(
+        180deg,
+        #2392e7,
+        #1676cf
+    );
+    box-shadow: 0 0 0 rgba(22, 118, 207, 0);
+    transition:
+        filter 0.18s ease,
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
 }
 
-.analytics-chart-column:hover .analytics-bar {
-    opacity: 0.72;
+.analytics-bar-tooltip {
+    position: absolute;
+    z-index: 5;
+    left: 50%;
+    bottom: calc(var(--bar-height) + 9px);
+    display: grid;
+    gap: 3px;
+    min-width: 126px;
+    padding: 9px 11px;
+    border: 1px solid #d7dee8;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 8px 24px rgba(32, 45, 62, 0.16);
+    color: #26364b;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, 5px);
+    transition:
+        opacity 0.16s ease,
+        transform 0.16s ease;
+}
+
+.analytics-bar-tooltip strong,
+.analytics-bar-tooltip span {
+    color: inherit;
+    font-size: inherit;
+    white-space: nowrap;
+}
+
+.analytics-chart-column:hover .analytics-bar,
+.analytics-chart-column:focus .analytics-bar {
+    filter: brightness(1.08);
+    transform: scaleX(1.08);
+    box-shadow: 0 0 12px rgba(22, 118, 207, 0.38);
+}
+
+.analytics-chart-column:hover .analytics-bar-tooltip,
+.analytics-chart-column:focus .analytics-bar-tooltip {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
+.analytics-chart-column:focus {
+    outline: none;
 }
 
 .coverage-list {
