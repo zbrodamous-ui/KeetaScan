@@ -329,12 +329,12 @@
                     (
                         Math.random() -
                         0.5
-                    ) * 0.18,
+                    ) * 0.24,
                 velocityY:
                     (
                         Math.random() -
                         0.5
-                    ) * 0.22,
+                    ) * 0.29,
                 rotation: 0,
                 rotationVelocity:
                     (
@@ -621,12 +621,12 @@
                     (
                         Math.random() -
                         0.5
-                    ) * 0.12;
+                    ) * 0.15;
                 logo.velocityY +=
                     (
                         Math.random() -
                         0.5
-                    ) * 0.10;
+                    ) * 0.13;
 
                 const speed =
                     Math.hypot(
@@ -634,11 +634,11 @@
                         logo.velocityY
                     );
 
-                if (speed > 0.4) {
+                if (speed > 0.5) {
                     logo.velocityX *=
-                        0.4 / speed;
+                        0.5 / speed;
                     logo.velocityY *=
-                        0.4 / speed;
+                        0.5 / speed;
                 }
 
                 logo.rotationVelocity +=
