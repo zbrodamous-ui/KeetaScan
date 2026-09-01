@@ -517,6 +517,87 @@ function applyTheme(theme) {
     updateSettingsSelection(safeTheme);
 }
 
+async function resolveAssetAddress(searchValue) {
+    const value = String(searchValue || "").trim();
+
+    if (!value) {
+        return null;
+    }
+
+    if (value.startsWith("keeta_")) {
+        return value;
+    }
+
+    let knownAssets = [];
+
+    try {
+        const saved = JSON.parse(
+            localStorage.getItem("keetascan_known_assets") ||
+            "[]"
+        );
+
+        knownAssets = Array.isArray(saved)
+            ? saved
+            : [];
+    } catch (error) {
+        console.warn("Unable to read known assets:", error);
+    }
+
+    if (knownAssets.length === 0) {
+        return null;
+    }
+
+    const client =
+        KeetaNet.Client.fromNetwork("main");
+
+    const query = value.toLowerCase();
+    const matches = await Promise.all(
+        knownAssets.map(async (address) => {
+            try {
+                const assetInfo =
+                    await client.getAccountInfo(address);
+
+                return {
+                    address,
+                    symbol:
+                        String(assetInfo?.info?.name || "")
+                            .toLowerCase(),
+                    name:
+                        String(assetInfo?.info?.description || "")
+                            .toLowerCase()
+                };
+            } catch (error) {
+                return null;
+            }
+        })
+    );
+
+    const validMatches =
+        matches.filter(Boolean);
+
+    const exactMatch =
+        validMatches.find(
+            (asset) =>
+                asset.symbol === query ||
+                asset.name === query
+        );
+
+    if (exactMatch) {
+        return exactMatch.address;
+    }
+
+    const partialMatches =
+        validMatches.filter(
+            (asset) =>
+                asset.symbol.includes(query) ||
+                asset.name.includes(query)
+        );
+
+    return partialMatches.length === 1
+        ? partialMatches[0].address
+        : null;
+}
+
 function initializeDetailSearch() {
     const form =
         document.getElementById("detailSearchForm");
@@ -531,13 +612,38 @@ function initializeDetailSearch() {
     const input =
         document.getElementById("detailSearchInput");
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const value = input.value.trim();
 
         if (!value) {
             input.focus();
+            return;
+        }
+
+        if (type.value.toLowerCase() === "asset") {
+            const assetAddress =
+                await resolveAssetAddress(value);
+
+            if (assetAddress) {
+                window.location.assign(
+                    `asset.html?asset=${encodeURIComponent(
+                        assetAddress
+                    )}`
+                );
+                return;
+            }
+
+            input.setCustomValidity(
+                "No matching asset was found."
+            );
+            input.reportValidity();
+            input.addEventListener(
+                "input",
+                () => input.setCustomValidity(""),
+                { once: true }
+            );
             return;
         }
 
