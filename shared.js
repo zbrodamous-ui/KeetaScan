@@ -622,6 +622,35 @@ function initializeDetailSearch() {
             return;
         }
 
+        if (type.value.toLowerCase() === "transaction") {
+            const selectedTransaction =
+                value.match(
+                    /^([0-9a-f]{64})(?::(\d+))?$/i
+                );
+
+            if (selectedTransaction) {
+                window.location.assign(
+                    `transaction.html?block=${encodeURIComponent(
+                        selectedTransaction[1]
+                    )}&operation=${encodeURIComponent(
+                        selectedTransaction[2] || "0"
+                    )}`
+                );
+                return;
+            }
+
+            input.setCustomValidity(
+                "Enter a 64-character block hash, optionally followed by :operation."
+            );
+            input.reportValidity();
+            input.addEventListener(
+                "input",
+                () => input.setCustomValidity(""),
+                { once: true }
+            );
+            return;
+        }
+
         if (type.value.toLowerCase() === "asset") {
             const assetAddress =
                 await resolveAssetAddress(value);
