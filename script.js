@@ -89,6 +89,35 @@ async function runSearch() {
     const selectedType =
         searchType.value.toLowerCase();
 
+    if (selectedType === "transaction") {
+        const selectedTransaction =
+            searchText.match(
+                /^([0-9a-f]{64})(?::(\d+))?$/i
+            );
+
+        if (selectedTransaction) {
+            window.location.assign(
+                `transaction.html?block=${encodeURIComponent(
+                    selectedTransaction[1]
+                )}&operation=${encodeURIComponent(
+                    selectedTransaction[2] || "0"
+                )}`
+            );
+            return;
+        }
+
+        searchInput.setCustomValidity(
+            "Enter a 64-character block hash, optionally followed by :operation."
+        );
+        searchInput.reportValidity();
+        searchInput.addEventListener(
+            "input",
+            () => searchInput.setCustomValidity(""),
+            { once: true }
+        );
+        return;
+    }
+
     if (selectedType === "asset") {
         const assetAddress =
             await resolveAssetAddress(searchText);
