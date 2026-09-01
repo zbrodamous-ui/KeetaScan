@@ -83,8 +83,7 @@ async function loadAddress() {
         const balancesList =
             document.getElementById("balancesList");
 
-        addressTitle.textContent =
-            `Address ${address.slice(0, 16)}...`;
+        addressTitle.textContent = "Address";
 
         addressDetails.innerHTML = `
             <div class="detail-label">Address</div>
