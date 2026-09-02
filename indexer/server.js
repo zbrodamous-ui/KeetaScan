@@ -535,7 +535,7 @@ if (
                         WHERE sender IS NOT NULL
                         GROUP BY sender
                         ORDER BY total DESC
-                        LIMIT 8
+                        LIMIT 100
                     `).all();
 
                 const topRecipients =
@@ -547,7 +547,7 @@ if (
                         WHERE recipient IS NOT NULL
                         GROUP BY recipient
                         ORDER BY total DESC
-                        LIMIT 8
+                        LIMIT 100
                     `).all();
 
                 const tokenActivity =
@@ -559,7 +559,7 @@ if (
                         WHERE token IS NOT NULL
                         GROUP BY token
                         ORDER BY transfers DESC
-                        LIMIT 8
+                        LIMIT 100
                     `).all();
 
                 const activityNewestFirst =
@@ -585,7 +585,7 @@ if (
                             timestamp
                         FROM transfers
                         ORDER BY timestamp DESC
-                        LIMIT 8
+                        LIMIT 100
                     `).all();
 
                 sendJson(
