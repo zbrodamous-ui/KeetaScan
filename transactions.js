@@ -262,16 +262,52 @@ async function loadTransactionsPage() {
         }
 
         const transfers = await response.json();
-        allTransactions = await Promise.all(transfers.map(prepareTransfer));
-        allTransactions.sort(
-            (first, second) =>
-                new Date(second.timestamp).getTime() -
-                new Date(first.timestamp).getTime()
-        );
+
+        allTransactions = transfers
+            .map((transfer) => ({
+                ...transfer,
+                displayAmount: BigInt(transfer.amount).toLocaleString(),
+                tokenName: shortValue(transfer.token, 8, 6)
+            }))
+            .sort(
+                (first, second) =>
+                    new Date(second.timestamp).getTime() -
+                    new Date(first.timestamp).getTime()
+            );
 
         filteredTransactions = [...allTransactions];
         currentPage = 1;
         renderCurrentPage();
+
+        const firstPageTransfers =
+            allTransactions.slice(0, rowsPerPage);
+
+        await Promise.all(
+            firstPageTransfers.map(async (transfer) => {
+                Object.assign(
+                    transfer,
+                    await prepareTransfer(transfer)
+                );
+            })
+        );
+
+        renderCurrentPage();
+
+        Promise.all(
+            allTransactions.slice(rowsPerPage).map(async (transfer) => {
+                Object.assign(
+                    transfer,
+                    await prepareTransfer(transfer)
+                );
+            })
+        ).then(() => {
+            filterTransactions();
+        }).catch((error) => {
+            console.warn(
+                "Some token details could not be loaded:",
+                error
+            );
+        });
     } catch (error) {
         console.error("Error loading transactions page:", error);
         allTransactions = [];
