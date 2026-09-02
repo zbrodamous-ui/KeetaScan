@@ -3128,6 +3128,34 @@ html[data-theme="clean"] .asset-page-shell .asset-overview-card {
 .analytics-ranked-list,
 .analytics-transfer-list {
     min-height: 300px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+}
+
+.analytics-ranked-list {
+    height: 416px;
+}
+
+.analytics-transfer-list {
+    height: 520px;
+}
+
+.analytics-ranked-list::-webkit-scrollbar,
+.analytics-transfer-list::-webkit-scrollbar {
+    width: 10px;
+}
+
+.analytics-ranked-list::-webkit-scrollbar-track,
+.analytics-transfer-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.analytics-ranked-list::-webkit-scrollbar-thumb,
+.analytics-transfer-list::-webkit-scrollbar-thumb {
+    background: #c3cbd5;
+    border: 3px solid #ffffff;
+    border-radius: 999px;
 }
 
 .analytics-ranked-row {
