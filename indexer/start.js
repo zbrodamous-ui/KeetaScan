@@ -1,35 +1,48 @@
 import { spawn } from "node:child_process";
 
-const commands = [
-    {
-        name: "API",
-        args: ["indexer/server.js"]
-    },
-    {
-        name: "Indexer",
-        args: [
-            "indexer/indexer.js",
-            "--watch"
-        ]
-    }
-];
-
 let shuttingDown = false;
+const children = [];
 
-const children =
-    commands.map((command) => {
-        console.log(
-            `Starting KeetaView ${command.name}...`
-        );
+function startService(name, args) {
+    console.log(
+        `Starting KeetaView ${name}...`
+    );
 
-        return spawn(
+    const child =
+        spawn(
             process.execPath,
-            command.args,
+            args,
             {
                 stdio: "inherit"
             }
         );
+
+    children.push(child);
+
+    child.on("error", (error) => {
+        console.error(
+            `${name} failed to start:`,
+            error
+        );
+
+        shutdown(1);
     });
+
+    child.on("exit", (code) => {
+        if (
+            !shuttingDown &&
+            code !== 0
+        ) {
+            console.error(
+                `${name} stopped unexpectedly with code ${code}.`
+            );
+
+            shutdown(code || 1);
+        }
+    });
+
+    return child;
+}
 
 function shutdown(exitCode = 0) {
     if (shuttingDown) {
@@ -54,29 +67,23 @@ function shutdown(exitCode = 0) {
     ).unref();
 }
 
-children.forEach((child, index) => {
-    child.on("error", (error) => {
-        console.error(
-            `${commands[index].name} failed to start:`,
-            error
-        );
+startService(
+    "Indexer",
+    [
+        "indexer/indexer.js",
+        "--watch"
+    ]
+);
 
-        shutdown(1);
-    });
+await new Promise(
+    (resolve) =>
+        setTimeout(resolve, 1500)
+);
 
-    child.on("exit", (code) => {
-        if (
-            !shuttingDown &&
-            code !== 0
-        ) {
-            console.error(
-                `${commands[index].name} stopped unexpectedly with code ${code}.`
-            );
-
-            shutdown(code || 1);
-        }
-    });
-});
+startService(
+    "API",
+    ["indexer/server.js"]
+);
 
 process.on(
     "SIGINT",
