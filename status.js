@@ -19,6 +19,10 @@ const databaseIndicator =
     document.getElementById("databaseIndicator");
 const apiState = document.getElementById("apiState");
 const databaseState = document.getElementById("databaseState");
+const marketIndicator =
+    document.getElementById("marketIndicator");
+const marketState =
+    document.getElementById("marketState");
 
 function formatNumber(value) {
     const number = Number(value);
@@ -41,6 +45,7 @@ function formatDate(value) {
 }
 
 function setServiceState(indicator, label, online, text) {
+    indicator.classList.remove("pending");
     indicator.classList.toggle("online", online);
     indicator.classList.toggle("offline", !online);
     label.textContent = text;
@@ -51,6 +56,60 @@ function setCheckingState() {
     systemStatus.querySelector("strong").textContent = "Checking API…";
     refreshStatusButton.disabled = true;
     refreshStatusButton.textContent = "Checking…";
+}
+
+async function checkMarketFeed() {
+    marketIndicator.classList.remove(
+        "online",
+        "offline"
+    );
+    marketIndicator.classList.add("pending");
+    marketState.textContent = "Checking";
+
+    try {
+        const response =
+            await fetch(
+                "http://localhost:3000/api/market?range=1d",
+                {
+                    cache: "no-store"
+                }
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                "Market feed did not respond."
+            );
+        }
+
+        const market =
+            await response.json();
+
+        const connected =
+            Number.isFinite(
+                Number(market.price)
+            );
+
+        setServiceState(
+            marketIndicator,
+            marketState,
+            connected,
+            connected
+                ? "Connected"
+                : "Unavailable"
+        );
+    } catch (error) {
+        setServiceState(
+            marketIndicator,
+            marketState,
+            false,
+            "Unavailable"
+        );
+
+        console.warn(
+            "Market feed check failed:",
+            error
+        );
+    }
 }
 
 function setOnlineState() {
@@ -71,13 +130,18 @@ function setOfflineState(error) {
         false,
         "Unavailable"
     );
+    setServiceState(
+        marketIndicator,
+        marketState,
+        false,
+        "Unavailable"
+    );
 
     statusMessage.classList.add("error");
     statusMessage.innerHTML = `
         <strong>KeetaView could not reach the local API</strong>
         <p>
-            Start it with <code>node indexer/server.js</code>, then press
-            Refresh. The rest of the site can still open, but indexed
+            Start it with <code>npm start</code>, then press Refresh. The rest of the site can still open, but indexed
             lists will not update until the API is available.
         </p>
     `;
@@ -131,6 +195,7 @@ async function loadStatus() {
 
         renderStatus(status, analytics);
         setOnlineState();
+        await checkMarketFeed();
     } catch (error) {
         setOfflineState(error);
         fields.lastChecked.textContent = formatKeetaDate(new Date());
