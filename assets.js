@@ -251,6 +251,7 @@ async function loadAssetsPage() {
     renderAssets();
 
     const firstPageAssets = assets.slice(0, pageSize);
+    const remainingAssets = assets.slice(pageSize);
 
     await Promise.all(
         firstPageAssets.map(async (asset) => {
@@ -272,7 +273,7 @@ async function loadAssetsPage() {
     saveCachedAssetDetails();
 
     Promise.all(
-        assets.slice(pageSize).map(async (asset) => {
+        remainingAssets.map(async (asset) => {
             Object.assign(
                 asset,
                 await loadAsset(asset.address)
