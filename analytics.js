@@ -24,12 +24,53 @@ function formatIndexedDate(value) {
     return formatKeetaDate(value);
 }
 
+let activeAnalyticsTokenRequests = 0;
+const analyticsTokenRequestQueue = [];
+const maximumAnalyticsTokenRequests = 8;
+
+function runAnalyticsTokenQueue() {
+    while (
+        activeAnalyticsTokenRequests <
+            maximumAnalyticsTokenRequests &&
+        analyticsTokenRequestQueue.length
+    ) {
+        const request =
+            analyticsTokenRequestQueue.shift();
+
+        activeAnalyticsTokenRequests += 1;
+
+        request.task()
+            .then(request.resolve)
+            .catch(request.reject)
+            .finally(() => {
+                activeAnalyticsTokenRequests -= 1;
+                runAnalyticsTokenQueue();
+            });
+    }
+}
+
+function queueAnalyticsTokenRequest(task) {
+    return new Promise(
+        (resolve, reject) => {
+            analyticsTokenRequestQueue.push({
+                task,
+                resolve,
+                reject
+            });
+
+            runAnalyticsTokenQueue();
+        }
+    );
+}
+
 async function getAnalyticsToken(tokenAddress) {
     if (analyticsTokenCache.has(tokenAddress)) {
-        return analyticsTokenCache.get(tokenAddress);
+        return await analyticsTokenCache.get(
+            tokenAddress
+        );
     }
 
-    let result = {
+    const fallback = {
         name:
             shortAnalyticsValue(
                 tokenAddress,
@@ -39,48 +80,68 @@ async function getAnalyticsToken(tokenAddress) {
         decimals: 0
     };
 
-    try {
-        const tokenAccount =
-            KeetaNet.lib.Account
-                .fromPublicKeyString(
-                    tokenAddress
-                );
+    const request =
+        queueAnalyticsTokenRequest(
+            async () => {
+                try {
+                    const tokenAccount =
+                        KeetaNet.lib.Account
+                            .fromPublicKeyString(
+                                tokenAddress
+                            );
 
-        const tokenInfo =
-            await analyticsClient.getAccountInfo(
-                tokenAccount
-            );
+                    const tokenInfo =
+                        await analyticsClient
+                            .getAccountInfo(
+                                tokenAccount
+                            );
 
-        let decimals = 0;
+                    let decimals = 0;
 
-        if (tokenInfo?.info?.metadata) {
-            const metadata =
-                JSON.parse(
-                    atob(
-                        tokenInfo.info.metadata
-                    )
-                );
+                    if (
+                        tokenInfo?.info?.metadata
+                    ) {
+                        const metadata =
+                            JSON.parse(
+                                atob(
+                                    tokenInfo
+                                        .info
+                                        .metadata
+                                )
+                            );
 
-            decimals =
-                Number(
-                    metadata.decimalPlaces ||
-                    0
-                );
-        }
+                        decimals =
+                            Number(
+                                metadata
+                                    .decimalPlaces ||
+                                0
+                            );
+                    }
 
-        result = {
-            name:
-                tokenInfo?.info?.name ||
-                result.name,
-            decimals
-        };
-    } catch (error) {
-        console.warn(
-            "Unable to resolve analytics token:",
-            tokenAddress,
-            error
+                    return {
+                        name:
+                            tokenInfo?.info?.name ||
+                            fallback.name,
+                        decimals
+                    };
+                } catch (error) {
+                    console.warn(
+                        "Unable to resolve analytics token:",
+                        tokenAddress,
+                        error
+                    );
+
+                    return fallback;
+                }
+            }
         );
-    }
+
+    analyticsTokenCache.set(
+        tokenAddress,
+        request
+    );
+
+    const result = await request;
 
     analyticsTokenCache.set(
         tokenAddress,
@@ -224,7 +285,7 @@ function renderRankedAccounts(
     });
 }
 
-async function renderTokenActivity(entries) {
+function renderTokenActivity(entries) {
     const list =
         document.getElementById(
             "tokenActivity"
@@ -238,48 +299,53 @@ async function renderTokenActivity(entries) {
         return;
     }
 
-    const tokenDetails =
-        await Promise.all(
-            entries.map(
-                entry =>
-                    getAnalyticsToken(
-                        entry.token
-                    )
-            )
-        );
-
     entries.forEach((entry, index) => {
-        const token =
-            tokenDetails[index];
-
         const row =
             document.createElement("div");
 
         row.className =
             "analytics-ranked-row";
 
+        const link =
+            document.createElement("a");
+
+        link.href =
+            `asset.html?asset=${encodeURIComponent(
+                entry.token
+            )}`;
+
+        link.textContent =
+            shortAnalyticsValue(
+                entry.token,
+                8,
+                4
+            );
+
         row.innerHTML = `
             <span class="analytics-rank">#${index + 1}</span>
-
-            <a href="asset.html?asset=${encodeURIComponent(
-                entry.token
-            )}">
-                ${token.name}
-            </a>
-
-            <strong>
-                ${Number(
-                    entry.transfers
-                ).toLocaleString()}
-                transfers
-            </strong>
         `;
 
+        row.appendChild(link);
+
+        const total =
+            document.createElement("strong");
+
+        total.textContent =
+            `${Number(
+                entry.transfers
+            ).toLocaleString()} transfers`;
+
+        row.appendChild(total);
         list.appendChild(row);
+
+        getAnalyticsToken(entry.token)
+            .then((token) => {
+                link.textContent = token.name;
+            });
     });
 }
 
-async function renderRecentTransfers(transfers) {
+function renderRecentTransfers(transfers) {
     const list =
         document.getElementById(
             "analyticsRecentTransfers"
@@ -293,36 +359,7 @@ async function renderRecentTransfers(transfers) {
         return;
     }
 
-    const tokenDetails =
-        await Promise.all(
-            transfers.map(
-                transfer =>
-                    getAnalyticsToken(
-                        transfer.token
-                    )
-            )
-        );
-
-    transfers.forEach((transfer, index) => {
-        const token =
-            tokenDetails[index];
-
-        let amount =
-            transfer.amount;
-
-        try {
-            amount =
-                formatTokenAmount(
-                    transfer.amount,
-                    token.decimals
-                );
-        } catch (error) {
-            console.warn(
-                "Unable to format indexed transfer:",
-                error
-            );
-        }
-
+    transfers.forEach((transfer) => {
         const row =
             document.createElement("a");
 
@@ -362,11 +399,43 @@ async function renderRecentTransfers(transfers) {
             </span>
 
             <span class="analytics-transfer-amount">
-                ${amount} ${token.name}
+                ${transfer.amount}
+                ${shortAnalyticsValue(
+                    transfer.token,
+                    8,
+                    4
+                )}
             </span>
         `;
 
         list.appendChild(row);
+
+        const amountElement =
+            row.querySelector(
+                ".analytics-transfer-amount"
+            );
+
+        getAnalyticsToken(transfer.token)
+            .then((token) => {
+                let amount =
+                    transfer.amount;
+
+                try {
+                    amount =
+                        formatTokenAmount(
+                            transfer.amount,
+                            token.decimals
+                        );
+                } catch (error) {
+                    console.warn(
+                        "Unable to format indexed transfer:",
+                        error
+                    );
+                }
+
+                amountElement.textContent =
+                    `${amount} ${token.name}`;
+            });
     });
 }
 
