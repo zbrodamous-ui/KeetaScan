@@ -1,6 +1,7 @@
 const client = KeetaNet.Client.fromNetwork("main");
 
 const pageSize = 20;
+const assetDetailsCacheKey = "keetaview_asset_details";
 let assets = [];
 let filteredAssets = [];
 let currentPage = 1;
@@ -25,6 +26,43 @@ function loadKnownAssets() {
         console.error("Could not read known assets:", error);
         return [];
     }
+}
+
+function loadCachedAssetDetails() {
+    try {
+        const saved = localStorage.getItem(assetDetailsCacheKey);
+        const parsed = saved ? JSON.parse(saved) : {};
+
+        return parsed && typeof parsed === "object"
+            ? parsed
+            : {};
+    } catch (error) {
+        return {};
+    }
+}
+
+function saveCachedAssetDetails() {
+    try {
+        const details = Object.fromEntries(
+            assets.map((asset) => [asset.address, asset])
+        );
+
+        localStorage.setItem(
+            assetDetailsCacheKey,
+            JSON.stringify(details)
+        );
+    } catch (error) {
+        console.warn("Could not cache asset details:", error);
+    }
+}
+
+function createAssetFallback(address) {
+    return {
+        address,
+        symbol: "Unknown",
+        name: "Loading asset details…",
+        supply: "—"
+    };
 }
 
 function shortAddress(address) {
@@ -155,12 +193,8 @@ function filterAssets() {
 }
 
 async function loadAsset(address) {
-    const fallback = {
-        address,
-        symbol: "Unknown",
-        name: "Unnamed asset",
-        supply: "—"
-    };
+    const fallback = createAssetFallback(address);
+    fallback.name = "Unnamed asset";
 
     try {
         const assetInfo = await client.getAccountInfo(address);
@@ -206,19 +240,60 @@ async function loadAssetsPage() {
         return;
     }
 
-    assetResultCount.textContent =
-        `Loading ${knownAssets.length.toLocaleString()} assets…`;
+    const cachedDetails = loadCachedAssetDetails();
 
-    assets = await Promise.all(knownAssets.map(loadAsset));
+    assets = knownAssets.map(
+        (address) =>
+            cachedDetails[address] ||
+            createAssetFallback(address)
+    );
+    filteredAssets = [...assets];
+    renderAssets();
+
+    const firstPageAssets = assets.slice(0, pageSize);
+
+    await Promise.all(
+        firstPageAssets.map(async (asset) => {
+            Object.assign(
+                asset,
+                await loadAsset(asset.address)
+            );
+        })
+    );
+
     assets.sort((first, second) =>
         first.symbol.localeCompare(second.symbol, undefined, {
             numeric: true,
             sensitivity: "base"
         })
     );
-
     filteredAssets = [...assets];
     renderAssets();
+    saveCachedAssetDetails();
+
+    Promise.all(
+        assets.slice(pageSize).map(async (asset) => {
+            Object.assign(
+                asset,
+                await loadAsset(asset.address)
+            );
+        })
+    ).then(() => {
+        assets.sort((first, second) =>
+            first.symbol.localeCompare(second.symbol, undefined, {
+                numeric: true,
+                sensitivity: "base"
+            })
+        );
+        filteredAssets = [...assets];
+        renderAssets();
+        saveCachedAssetDetails();
+    }).catch((error) => {
+        console.warn(
+            "Some asset details could not be loaded:",
+            error
+        );
+    });
 }
 
 assetFilter.addEventListener("input", filterAssets);
