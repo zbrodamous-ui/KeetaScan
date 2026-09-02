@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "node indexer/server.js",
     "indexer": "node indexer/indexer.js",
-    "indexer:watch": "node indexer/indexer.js --watch"
+    "indexer:watch": "node indexer/indexer.js --watch",
+    "start": "node indexer/start.js"
   },
   "repository": {
     "type": "git",
