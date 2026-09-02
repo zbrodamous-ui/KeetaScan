@@ -64,9 +64,22 @@ async function getTokenDisplay(tokenAddress, rawAmount) {
     if (!tokenInfo) {
         const tokenAccount =
             KeetaNet.lib.Account.fromPublicKeyString(tokenAddress);
-        tokenInfo = await client.getAccountInfo(tokenAccount);
-        tokenInfoCache.set(tokenAddress, tokenInfo);
+
+        tokenInfo =
+            client.getAccountInfo(tokenAccount);
+
+        tokenInfoCache.set(
+            tokenAddress,
+            tokenInfo
+        );
     }
+
+    tokenInfo = await tokenInfo;
+
+    tokenInfoCache.set(
+        tokenAddress,
+        tokenInfo
+    );
 
     let decimalPlaces = 0;
 
