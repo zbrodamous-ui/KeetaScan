@@ -9,6 +9,10 @@ const database =
         }
     );
 
+database.exec(`
+    PRAGMA busy_timeout = 5000;
+`);
+
 const port = 3000;
 
 const marketCache = new Map();
