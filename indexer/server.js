@@ -292,6 +292,78 @@ const offset =
             }
 
             if (
+                request.method === "GET" &&
+                url.pathname === "/api/transaction"
+            ) {
+                const blockHash =
+                    url.searchParams.get("block");
+
+                const operationIndex =
+                    Number(
+                        url.searchParams.get(
+                            "operation"
+                        )
+                    );
+
+                if (
+                    !blockHash ||
+                    !Number.isInteger(operationIndex) ||
+                    operationIndex < 0
+                ) {
+                    sendJson(
+                        response,
+                        400,
+                        {
+                            error:
+                                "A block hash and operation index are required."
+                        }
+                    );
+
+                    return;
+                }
+
+                const transfer =
+                    database.prepare(`
+                        SELECT
+                            block_hash,
+                            operation_index,
+                            sender,
+                            recipient,
+                            token,
+                            amount,
+                            timestamp
+                        FROM transfers
+                        WHERE block_hash = ?
+                          AND operation_index = ?
+                        LIMIT 1
+                    `).get(
+                        blockHash,
+                        operationIndex
+                    );
+
+                if (!transfer) {
+                    sendJson(
+                        response,
+                        404,
+                        {
+                            error:
+                                "Indexed transaction not found."
+                        }
+                    );
+
+                    return;
+                }
+
+                sendJson(
+                    response,
+                    200,
+                    transfer
+                );
+
+                return;
+            }
+
+            if (
     request.method === "GET" &&
     url.pathname === "/api/transfers"
 ) {
