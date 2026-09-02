@@ -17,6 +17,11 @@ const stateFile =
 const database =
     new DatabaseSync(databaseFile);
 
+database.exec(`
+    PRAGMA journal_mode = WAL;
+    PRAGMA busy_timeout = 5000;
+`);
+
     database.exec(`
     CREATE TABLE IF NOT EXISTS blocks (
         hash TEXT PRIMARY KEY,
