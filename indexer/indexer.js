@@ -211,6 +211,82 @@ return true;
 }
 
 
+async function refreshLatestHistory() {
+    const refreshStart =
+        performance.now();
+
+    const history =
+        await client.getHistory(
+            null,
+            {
+                depth: 100
+            }
+        );
+
+    if (history.length === 0) {
+        console.log(
+            "No latest history entries were returned."
+        );
+
+        return false;
+    }
+
+    const orderedHistory =
+        [...history].sort(
+            (first, second) =>
+                first.voteStaple.timestamp() -
+                second.voteStaple.timestamp()
+        );
+
+    for (const entry of orderedHistory) {
+        await processHistoryEntry(entry);
+    }
+
+    const newestEntry =
+        orderedHistory[
+            orderedHistory.length - 1
+        ];
+
+    const newestBlocks =
+        newestEntry.voteStaple.blocks;
+
+    const newestBlock =
+        newestBlocks[
+            newestBlocks.length - 1
+        ];
+
+    if (newestBlock?.hash) {
+        state.lastIndexedBlockHash =
+            newestBlock.hash.toString();
+    }
+
+    state.lastTipRefreshAt =
+        new Date().toISOString();
+
+    fs.writeFileSync(
+        stateFile,
+        JSON.stringify(state, null, 2)
+    );
+
+    console.log(
+        "Latest network history refreshed.",
+        {
+            entries: history.length,
+            latestTimestamp:
+                newestEntry.voteStaple
+                    .timestamp()
+                    .toISOString(),
+            milliseconds:
+                Math.round(
+                    performance.now() -
+                    refreshStart
+                )
+        }
+    );
+
+    return true;
+}
+
 async function processHistoryEntry(entry) {
     const blocks =
         entry.voteStaple.blocks;
@@ -370,8 +446,16 @@ console.log(
 
 await testConnection();
 
+const watchMode =
+    process.argv.includes("--watch");
+
 const requestedBatchCount =
-    Number(process.argv[2]);
+    Number(
+        process.argv.find(
+            (argument) =>
+                /^\d+$/.test(argument)
+        )
+    );
 
 const batchesToIndex =
     Number.isInteger(requestedBatchCount) &&
@@ -379,25 +463,56 @@ const batchesToIndex =
         ? requestedBatchCount
         : 5;
 
+await refreshLatestHistory();
+
 for (
     let batchNumber = 1;
     batchNumber <= batchesToIndex;
     batchNumber++
 ) {
     console.log(
-        `Indexing batch ${batchNumber} of ${batchesToIndex}...`
+        `Backfilling batch ${batchNumber} of ${batchesToIndex}...`
     );
 
-   const historyFound =
-    await testHistoryFetch();
+    const historyFound =
+        await testHistoryFetch();
 
-if (!historyFound) {
+    if (!historyFound) {
+        console.log(
+            "Indexer reached the end of historical data."
+        );
+
+        break;
+    }
+}
+
+if (watchMode) {
+    const refreshInterval =
+        60 * 1000;
+
     console.log(
-        "Indexer reached the end of history."
+        "Live indexer is watching for new history every 60 seconds."
     );
 
-    break;
+    while (true) {
+        await new Promise(
+            (resolve) =>
+                setTimeout(
+                    resolve,
+                    refreshInterval
+                )
+        );
+
+        try {
+            await refreshLatestHistory();
+        } catch (error) {
+            console.error(
+                "Latest history refresh failed:",
+                error
+            );
+        }
+    }
 }
-}
+
 database.close();
 process.exit(0);
