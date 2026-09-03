@@ -3226,13 +3226,16 @@ function createSettingsPanel() {
     panel.id = "settingsPanel";
     panel.className = "settings-panel";
     panel.hidden = true;
-    panel.setAttribute("aria-label", "KeetaView settings");
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-modal", "true");
+    panel.setAttribute("aria-labelledby", "settingsPanelTitle");
+    panel.setAttribute("aria-hidden", "true");
 
     panel.innerHTML = `
         <header class="settings-panel-header">
             <div>
                 <p class="home-eyebrow">KEETAVIEW</p>
-                <h2>Settings</h2>
+                <h2 id="settingsPanelTitle">Settings</h2>
             </div>
 
             <button
@@ -3465,6 +3468,7 @@ function openSettingsPanel() {
 
     syncSettingsControls();
     panel.hidden = false;
+    panel.setAttribute("aria-hidden", "false");
     document.body.classList.add("settings-open");
 
     if (settingsButton) {
@@ -3489,11 +3493,34 @@ function closeSettingsPanel() {
     }
 
     panel.hidden = true;
+    panel.setAttribute("aria-hidden", "true");
     document.body.classList.remove("settings-open");
 
     if (settingsButton) {
         settingsButton.setAttribute("aria-expanded", "false");
         settingsButton.focus();
+    }
+}
+
+function initializeAccessibility() {
+    const main = document.querySelector("main");
+
+    if (main) {
+        if (!main.id) {
+            main.id = "mainContent";
+        }
+
+        main.setAttribute("tabindex", "-1");
+
+        if (!document.querySelector(".skip-link")) {
+            const skipLink =
+                document.createElement("a");
+            skipLink.className = "skip-link";
+            skipLink.href = `#${main.id}`;
+            skipLink.textContent =
+                "Skip to main content";
+            document.body.prepend(skipLink);
+        }
     }
 }
 
@@ -3531,11 +3558,53 @@ function initializeSettings() {
     });
 
     document.addEventListener("keydown", (event) => {
-        if (
-            event.key === "Escape" &&
-            !document.getElementById("settingsPanel")?.hidden
-        ) {
+        const panel =
+            document.getElementById("settingsPanel");
+
+        if (!panel || panel.hidden) {
+            return;
+        }
+
+        if (event.key === "Escape") {
             closeSettingsPanel();
+            return;
+        }
+
+        if (event.key !== "Tab") {
+            return;
+        }
+
+        const focusable =
+            [...panel.querySelectorAll(
+                "button:not([disabled]), select:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex='-1'])"
+            )].filter(
+                (element) =>
+                    !element.hidden &&
+                    element.getClientRects().length > 0
+            );
+
+        if (!focusable.length) {
+            event.preventDefault();
+            panel.focus();
+            return;
+        }
+
+        const first = focusable[0];
+        const last =
+            focusable[focusable.length - 1];
+
+        if (
+            event.shiftKey &&
+            document.activeElement === first
+        ) {
+            event.preventDefault();
+            last.focus();
+        } else if (
+            !event.shiftKey &&
+            document.activeElement === last
+        ) {
+            event.preventDefault();
+            first.focus();
         }
     });
 }
@@ -3813,6 +3882,7 @@ function initializeDetailSearch() {
 }
 
 applyDisplayPreferences(getSavedPreferences());
+initializeAccessibility();
 initializeThemeToggle();
 initializeSettings();
 initializeTranslations();
