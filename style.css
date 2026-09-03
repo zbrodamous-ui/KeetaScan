@@ -1199,11 +1199,42 @@ html[data-theme="light"] #richList a {
 }
 
 .home-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
     color: #172033;
     font-size: 1.45rem;
     font-weight: 700;
     text-decoration: none;
     white-space: nowrap;
+}
+
+.home-brand-mark {
+    display: block;
+    width: 2rem;
+    height: 1.5rem;
+    flex: 0 0 auto;
+    overflow: visible;
+}
+
+.home-brand-mark .brand-eye-outline,
+.home-brand-mark .brand-eye-k {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.home-brand-mark .brand-eye-outline {
+    stroke-width: 3;
+}
+
+.home-brand-mark .brand-eye-k {
+    stroke-width: 2.5;
+}
+
+.home-brand-mark .brand-eye-pupil {
+    fill: #268cf0;
 }
 
 .home-brand span {
