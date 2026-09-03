@@ -1,17 +1,35 @@
 import fs from "fs";
+import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import * as KeetaNet from "@keetanetwork/keetanet-client";
 
 const client =
     KeetaNet.Client.fromNetwork("main");
 
+const dataDirectory =
+    process.env.KEETAVIEW_DATA_DIR ||
+    "./indexer";
+
+fs.mkdirSync(
+    dataDirectory,
+    {
+        recursive: true
+    }
+);
+
 const stateFile =
-    "indexer/state.json";
+    path.join(
+        dataDirectory,
+        "state.json"
+    );
 
-    const databaseFile =
-    "./indexer/keetascan.db";
+const databaseFile =
+    path.join(
+        dataDirectory,
+        "keetascan.db"
+    );
 
-    const databaseAlreadyExisted =
+const databaseAlreadyExisted =
     fs.existsSync(databaseFile);
 
 const database =
