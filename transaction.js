@@ -39,7 +39,7 @@ function formatTokenAmount(
 
 async function getTransactionData() {
     const response =
-        await fetch(
+        await fetchKeetaView(
             `http://localhost:3000/api/transaction?block=${encodeURIComponent(
                 blockHash
             )}&operation=${encodeURIComponent(
