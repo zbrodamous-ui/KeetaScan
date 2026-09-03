@@ -959,7 +959,7 @@ async function loadMarketData(
 
     try {
         const response =
-            await fetch(
+            await fetchKeetaView(
                 `http://localhost:3000/api/market?range=${encodeURIComponent(
                     range
                 )}&currency=${encodeURIComponent(
@@ -1151,13 +1151,13 @@ async function loadHomepage() {
             transfersResponse
         ] =
             await Promise.all([
-                fetch(
+                fetchKeetaView(
                     "http://localhost:3000/api/status"
                 ),
-                fetch(
+                fetchKeetaView(
                     "http://localhost:3000/api/blocks?limit=6&offset=0"
                 ),
-                fetch(
+                fetchKeetaView(
                     "http://localhost:3000/api/transfers?limit=6"
                 )
             ]);
