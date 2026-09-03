@@ -291,7 +291,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "La solicitud tardó demasiado. Inténtalo de nuevo.",
         "KeetaView could not reach the local API.": "KeetaView no pudo conectarse con la API local.",
         "A KeetaView service is temporarily unavailable.": "Un servicio de KeetaView no está disponible temporalmente.",
-        "KeetaView could not reach the network service.": "KeetaView no pudo conectarse con el servicio de red."
+        "KeetaView could not reach the network service.": "KeetaView no pudo conectarse con el servicio de red.",
+        "Skip to main content": "Saltar al contenido principal",
+        "Open settings": "Abrir configuración",
+        "Close settings": "Cerrar configuración"
     },
     fr: {
         "Home": "Accueil",
@@ -497,7 +500,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "La requête a pris trop de temps. Réessayez.",
         "KeetaView could not reach the local API.": "KeetaView n’a pas pu joindre l’API locale.",
         "A KeetaView service is temporarily unavailable.": "Un service KeetaView est temporairement indisponible.",
-        "KeetaView could not reach the network service.": "KeetaView n’a pas pu joindre le service réseau."
+        "KeetaView could not reach the network service.": "KeetaView n’a pas pu joindre le service réseau.",
+        "Skip to main content": "Aller au contenu principal",
+        "Open settings": "Ouvrir les paramètres",
+        "Close settings": "Fermer les paramètres"
     },
     pt: {
         "Home": "Início",
@@ -703,7 +709,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "A solicitação demorou muito. Tente novamente.",
         "KeetaView could not reach the local API.": "O KeetaView não conseguiu acessar a API local.",
         "A KeetaView service is temporarily unavailable.": "Um serviço do KeetaView está temporariamente indisponível.",
-        "KeetaView could not reach the network service.": "O KeetaView não conseguiu acessar o serviço de rede."
+        "KeetaView could not reach the network service.": "O KeetaView não conseguiu acessar o serviço de rede.",
+        "Skip to main content": "Ir para o conteúdo principal",
+        "Open settings": "Abrir configurações",
+        "Close settings": "Fechar configurações"
     },
     de: {
         "Home": "Startseite",
@@ -909,7 +918,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "Die Anfrage dauerte zu lange. Bitte versuchen Sie es erneut.",
         "KeetaView could not reach the local API.": "KeetaView konnte die lokale API nicht erreichen.",
         "A KeetaView service is temporarily unavailable.": "Ein KeetaView-Dienst ist vorübergehend nicht verfügbar.",
-        "KeetaView could not reach the network service.": "KeetaView konnte den Netzwerkdienst nicht erreichen."
+        "KeetaView could not reach the network service.": "KeetaView konnte den Netzwerkdienst nicht erreichen.",
+        "Skip to main content": "Zum Hauptinhalt springen",
+        "Open settings": "Einstellungen öffnen",
+        "Close settings": "Einstellungen schließen"
     },
     "zh-CN": {
         "Home": "首页",
@@ -1115,7 +1127,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "请求时间过长，请重试。",
         "KeetaView could not reach the local API.": "KeetaView 无法连接本地 API。",
         "A KeetaView service is temporarily unavailable.": "KeetaView 服务暂时不可用。",
-        "KeetaView could not reach the network service.": "KeetaView 无法连接网络服务。"
+        "KeetaView could not reach the network service.": "KeetaView 无法连接网络服务。",
+        "Skip to main content": "跳至主要内容",
+        "Open settings": "打开设置",
+        "Close settings": "关闭设置"
     },
     hi: {
         "Home": "होम",
@@ -1321,7 +1336,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "अनुरोध में बहुत समय लगा। कृपया पुनः प्रयास करें।",
         "KeetaView could not reach the local API.": "KeetaView स्थानीय API तक नहीं पहुँच सका।",
         "A KeetaView service is temporarily unavailable.": "KeetaView की एक सेवा अस्थायी रूप से उपलब्ध नहीं है।",
-        "KeetaView could not reach the network service.": "KeetaView नेटवर्क सेवा तक नहीं पहुँच सका।"
+        "KeetaView could not reach the network service.": "KeetaView नेटवर्क सेवा तक नहीं पहुँच सका।",
+        "Skip to main content": "मुख्य सामग्री पर जाएँ",
+        "Open settings": "सेटिंग्स खोलें",
+        "Close settings": "सेटिंग्स बंद करें"
     },
     ar: {
         "Home": "الرئيسية",
@@ -1527,7 +1545,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "استغرق الطلب وقتًا طويلًا. حاول مرة أخرى.",
         "KeetaView could not reach the local API.": "تعذر على KeetaView الوصول إلى واجهة API المحلية.",
         "A KeetaView service is temporarily unavailable.": "إحدى خدمات KeetaView غير متاحة مؤقتًا.",
-        "KeetaView could not reach the network service.": "تعذر على KeetaView الوصول إلى خدمة الشبكة."
+        "KeetaView could not reach the network service.": "تعذر على KeetaView الوصول إلى خدمة الشبكة.",
+        "Skip to main content": "انتقل إلى المحتوى الرئيسي",
+        "Open settings": "فتح الإعدادات",
+        "Close settings": "إغلاق الإعدادات"
     },
     ja: {
         "Home": "ホーム",
@@ -1733,7 +1754,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "リクエストがタイムアウトしました。もう一度お試しください。",
         "KeetaView could not reach the local API.": "KeetaViewはローカルAPIに接続できませんでした。",
         "A KeetaView service is temporarily unavailable.": "KeetaViewサービスは一時的に利用できません。",
-        "KeetaView could not reach the network service.": "KeetaViewはネットワークサービスに接続できませんでした。"
+        "KeetaView could not reach the network service.": "KeetaViewはネットワークサービスに接続できませんでした。",
+        "Skip to main content": "メインコンテンツへ移動",
+        "Open settings": "設定を開く",
+        "Close settings": "設定を閉じる"
     },
     ko: {
         "Home": "홈",
@@ -1939,7 +1963,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "요청 시간이 초과되었습니다. 다시 시도해 주세요.",
         "KeetaView could not reach the local API.": "KeetaView가 로컬 API에 연결할 수 없습니다.",
         "A KeetaView service is temporarily unavailable.": "KeetaView 서비스를 일시적으로 사용할 수 없습니다.",
-        "KeetaView could not reach the network service.": "KeetaView가 네트워크 서비스에 연결할 수 없습니다."
+        "KeetaView could not reach the network service.": "KeetaView가 네트워크 서비스에 연결할 수 없습니다.",
+        "Skip to main content": "주요 콘텐츠로 건너뛰기",
+        "Open settings": "설정 열기",
+        "Close settings": "설정 닫기"
     },
     id: {
         "Home": "Beranda",
@@ -2145,7 +2172,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "Permintaan memerlukan waktu terlalu lama. Silakan coba lagi.",
         "KeetaView could not reach the local API.": "KeetaView tidak dapat menjangkau API lokal.",
         "A KeetaView service is temporarily unavailable.": "Layanan KeetaView sementara tidak tersedia.",
-        "KeetaView could not reach the network service.": "KeetaView tidak dapat menjangkau layanan jaringan."
+        "KeetaView could not reach the network service.": "KeetaView tidak dapat menjangkau layanan jaringan.",
+        "Skip to main content": "Lewati ke konten utama",
+        "Open settings": "Buka pengaturan",
+        "Close settings": "Tutup pengaturan"
     },
     ru: {
         "Home": "Главная",
@@ -2351,7 +2381,10 @@ const keetaViewTranslations = {
         "The request took too long. Please try again.": "Запрос занял слишком много времени. Попробуйте снова.",
         "KeetaView could not reach the local API.": "KeetaView не удалось связаться с локальным API.",
         "A KeetaView service is temporarily unavailable.": "Сервис KeetaView временно недоступен.",
-        "KeetaView could not reach the network service.": "KeetaView не удалось связаться с сетевым сервисом."
+        "KeetaView could not reach the network service.": "KeetaView не удалось связаться с сетевым сервисом.",
+        "Skip to main content": "Перейти к основному содержимому",
+        "Open settings": "Открыть настройки",
+        "Close settings": "Закрыть настройки"
     }
 };
 
