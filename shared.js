@@ -2624,6 +2624,56 @@ function translateKeetaView(root = document.body) {
             if (dynamicTranslation !== trimmed) {
                 node.nodeValue = original.replace(trimmed, dynamicTranslation);
             }
+        } else if (language === "id") {
+            let dynamicTranslation = trimmed
+                .replace(/\b(\d+) min ago\b/g, "$1 menit lalu")
+                .replace(/\b(\d+) mins ago\b/g, "$1 menit lalu")
+                .replace(/\b1 hour ago\b/g, "1 jam lalu")
+                .replace(/\b(\d+) hours ago\b/g, "$1 jam lalu")
+                .replace(/\b1 operation\b/g, "1 operasi")
+                .replace(/\b(\d+) operations\b/g, "$1 operasi")
+                .replace(/\bLive\b/g, "Langsung")
+                .replace(/\bUpdated\b/g, "Diperbarui")
+                .replace(/\bover 24 hours\b/g, "selama 24 jam")
+                .replace(/\b1D view\b/g, "tampilan 1 hari")
+                .replace(/\b(\d+) assets\b/g, "$1 aset")
+                .replace(/\b1 asset\b/g, "1 aset")
+                .replace(/\b(\d[\d,]*) transfers\b/g, "$1 transfer")
+                .replace(/\b1 transfer\b/g, "1 transfer")
+                .replace(/\b(\d[\d,]*) accounts\b/g, "$1 akun")
+                .replace(/\b1 account\b/g, "1 akun")
+                .replace(/(\d+)–(\d+) of ([\d,]+) loaded/g, "$1–$2 dari $3 dimuat")
+                .replace(/Page (\d+) of (\d+)/g, "Halaman $1 dari $2")
+                .replace(/(\d+)–(\d+) of ([\d,]+)/g, "$1–$2 dari $3")
+                .replace(/(\d+) matching on this page/g, "$1 cocok di halaman ini");
+            if (dynamicTranslation !== trimmed) {
+                node.nodeValue = original.replace(trimmed, dynamicTranslation);
+            }
+        } else if (language === "ru") {
+            let dynamicTranslation = trimmed
+                .replace(/\b(\d+) min ago\b/g, "$1 мин. назад")
+                .replace(/\b(\d+) mins ago\b/g, "$1 мин. назад")
+                .replace(/\b1 hour ago\b/g, "1 час назад")
+                .replace(/\b(\d+) hours ago\b/g, "$1 ч. назад")
+                .replace(/\b1 operation\b/g, "1 операция")
+                .replace(/\b(\d+) operations\b/g, "$1 операций")
+                .replace(/\bLive\b/g, "В реальном времени")
+                .replace(/\bUpdated\b/g, "Обновлено")
+                .replace(/\bover 24 hours\b/g, "за 24 часа")
+                .replace(/\b1D view\b/g, "за 1 день")
+                .replace(/\b(\d+) assets\b/g, "$1 активов")
+                .replace(/\b1 asset\b/g, "1 актив")
+                .replace(/\b(\d[\d,]*) transfers\b/g, "$1 переводов")
+                .replace(/\b1 transfer\b/g, "1 перевод")
+                .replace(/\b(\d[\d,]*) accounts\b/g, "$1 аккаунтов")
+                .replace(/\b1 account\b/g, "1 аккаунт")
+                .replace(/(\d+)–(\d+) of ([\d,]+) loaded/g, "Загружено $1–$2 из $3")
+                .replace(/Page (\d+) of (\d+)/g, "Страница $1 из $2")
+                .replace(/(\d+)–(\d+) of ([\d,]+)/g, "$1–$2 из $3")
+                .replace(/(\d+) matching on this page/g, "$1 совпадений на этой странице");
+            if (dynamicTranslation !== trimmed) {
+                node.nodeValue = original.replace(trimmed, dynamicTranslation);
+            }
         }
     };
 
