@@ -93,10 +93,10 @@ async function loadBlocksPage() {
     try {
         const offset = (currentPage - 1) * blocksPerPage;
         const [blocksResponse, statusResponse] = await Promise.all([
-            fetch(
+            fetchKeetaView(
                 `http://localhost:3000/api/blocks?limit=${blocksPerPage}&offset=${offset}`
             ),
-            fetch("http://localhost:3000/api/status")
+            fetchKeetaView("http://localhost:3000/api/status")
         ]);
 
         if (!blocksResponse.ok || !statusResponse.ok) {
