@@ -167,7 +167,69 @@ const keetaViewTranslations = {
         "24h Volume": "Volumen de 24 h",
         "Circulating Supply": "Suministro circulante",
         "All-Time High": "Máximo histórico",
-        "Market data provided by": "Datos de mercado proporcionados por"
+        "Market data provided by": "Datos de mercado proporcionados por",
+        "KEETAVIEW SYSTEM": "SISTEMA KEETAVIEW",
+        "Check the local API, indexed database, and latest stored activity.": "Comprueba la API local, la base de datos indexada y la actividad almacenada más reciente.",
+        "Local API online": "API local en línea",
+        "Total Operations": "Operaciones totales",
+        "Blocks stored locally": "Bloques almacenados localmente",
+        "Token movements stored": "Movimientos de tokens almacenados",
+        "Observed addresses": "Direcciones observadas",
+        "Unique observed addresses": "Direcciones únicas observadas",
+        "Operations across indexed blocks": "Operaciones en los bloques indexados",
+        "Operations per indexed block": "Operaciones por bloque indexado",
+        "LOCAL SERVICES": "SERVICIOS LOCALES",
+        "Service Health": "Estado de los servicios",
+        "Local indexed explorer data": "Datos locales indexados del explorador",
+        "Verified Market Feed": "Fuente de mercado verificada",
+        "CoinGecko KTA market data": "Datos de mercado de KTA de CoinGecko",
+        "DATABASE COVERAGE": "COBERTURA DE LA BASE DE DATOS",
+        "DATABASE RANGE": "RANGO DE LA BASE DE DATOS",
+        "Indexed Range": "Rango indexado",
+        "Index Coverage": "Cobertura del índice",
+        "First Indexed Activity": "Primera actividad indexada",
+        "Latest Indexed Activity": "Última actividad indexada",
+        "Average Operations": "Promedio de operaciones",
+        "Last Status Check": "Última comprobación de estado",
+        "Local index disclosure": "Aviso sobre el índice local",
+        "KeetaView displays information stored by this local index. These totals are not guaranteed to represent the entire network.": "KeetaView muestra información almacenada por este índice local. No se garantiza que estos totales representen toda la red.",
+        "INDEXED ACTIVITY": "ACTIVIDAD INDEXADA",
+        "Transfers by Day": "Transferencias por día",
+        "Latest 14 indexed days": "Últimos 14 días indexados",
+        "These figures describe this local KeetaView index, not guaranteed network-wide totals.": "Estas cifras describen este índice local de KeetaView y no representan necesariamente los totales de toda la red.",
+        "TRANSFER ACTIVITY": "ACTIVIDAD DE TRANSFERENCIAS",
+        "Most Active Senders": "Remitentes más activos",
+        "Most Active Recipients": "Destinatarios más activos",
+        "Up to 100 indexed results": "Hasta 100 resultados indexados",
+        "ASSET MOVEMENT": "MOVIMIENTO DE ACTIVOS",
+        "Most Active Assets": "Activos más activos",
+        "LATEST INDEXED": "ÚLTIMOS INDEXADOS",
+        "Recent Transfers": "Transferencias recientes",
+        "KEETAVIEW ASSETS": "ACTIVOS DE KEETAVIEW",
+        "Known Assets": "Activos conocidos",
+        "Assets discovered and remembered by this KeetaView browser.": "Activos descubiertos y recordados por este navegador de KeetaView.",
+        "Filter assets": "Filtrar activos",
+        "Symbol, name, or address": "Símbolo, nombre o dirección",
+        "DISCOVERED ON KEETA": "DESCUBIERTOS EN KEETA",
+        "Asset Directory": "Directorio de activos",
+        "Name": "Nombre",
+        "Supply": "Suministro",
+        "Browse accounts observed by this local KeetaView index.": "Explora las cuentas observadas por este índice local de KeetaView.",
+        "Filter this page": "Filtrar esta página",
+        "Keeta address": "Dirección de Keeta",
+        "OBSERVED ACCOUNTS": "CUENTAS OBSERVADAS",
+        "Address Directory": "Directorio de direcciones",
+        "First Observed": "Observada por primera vez",
+        "Network": "Red",
+        "Mainnet": "Red principal",
+        "Copy": "Copiar",
+        "Copied": "Copiado",
+        "Browse the latest token movements stored by KeetaView.": "Explora los movimientos de tokens más recientes almacenados por KeetaView.",
+        "Token Transfers": "Transferencias de tokens",
+        "Age": "Antigüedad",
+        "From": "De",
+        "To": "Para",
+        "Amount": "Cantidad"
     }
 };
 
@@ -202,7 +264,21 @@ function translateKeetaView(root = document.body) {
                 .replace(/\bLive\b/g, "En vivo")
                 .replace(/\bUpdated\b/g, "Actualizado")
                 .replace(/\bover 24 hours\b/g, "en 24 horas")
-                .replace(/\b1D view\b/g, "vista de 1D");
+                .replace(/\b1D view\b/g, "vista de 1D")
+                .replace(/\b(\d+) assets\b/g, "$1 activos")
+                .replace(/\b1 asset\b/g, "1 activo")
+                .replace(/\b(\d[\d,]*) transfers\b/g, "$1 transferencias")
+                .replace(/\b1 transfer\b/g, "1 transferencia")
+                .replace(/\b(\d[\d,]*) accounts\b/g, "$1 cuentas")
+                .replace(/\b1 account\b/g, "1 cuenta")
+                .replace(
+                    /(\d+)–(\d+) of ([\d,]+) loaded/g,
+                    "$1–$2 de $3 cargados"
+                )
+                .replace(
+                    /Page (\d+) of (\d+)/g,
+                    "Página $1 de $2"
+                );
 
             if (dynamicTranslation !== trimmed) {
                 node.nodeValue = original.replace(
