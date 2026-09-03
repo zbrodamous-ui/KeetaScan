@@ -276,7 +276,13 @@ const keetaViewTranslations = {
         "Unknown Asset": "Activo desconocido",
         "Unable to load asset": "No se pudo cargar el activo",
         "No recent transfers found.": "No se encontraron transferencias recientes.",
-        "Unable to load recent transfers.": "No se pudieron cargar las transferencias recientes."
+        "Unable to load recent transfers.": "No se pudieron cargar las transferencias recientes.",
+        "Block hash": "Hash del bloque",
+        "INDEXED MAINNET": "RED PRINCIPAL INDEXADA",
+        "Loading blocks…": "Cargando bloques…",
+        "No blocks on this page match that hash.": "Ningún bloque de esta página coincide con ese hash.",
+        "No indexed blocks are available.": "No hay bloques indexados disponibles.",
+        "Unable to load blocks. Make sure the KeetaView API server is running.": "No se pudieron cargar los bloques. Comprueba que la API de KeetaView esté funcionando."
     },
     fr: {
         "Home": "Accueil",
@@ -367,6 +373,8 @@ const keetaViewTranslations = {
         "Network": "Réseau",
         "Loading blocks…": "Chargement des blocs…",
         "Unable to load blocks. Make sure the KeetaView API server is running.": "Impossible de charger les blocs. Vérifiez que l’API KeetaView est en cours d’exécution.",
+        "No blocks on this page match that hash.": "Aucun bloc de cette page ne correspond à ce hash.",
+        "No indexed blocks are available.": "Aucun bloc indexé n’est disponible.",
         "KEETAVIEW SYSTEM": "SYSTÈME KEETAVIEW",
         "Check the local API, indexed database, and latest stored activity.": "Vérifiez l’API locale, la base indexée et la dernière activité enregistrée.",
         "Local API online": "API locale en ligne",
@@ -520,6 +528,14 @@ function translateKeetaView(root = document.body) {
                 .replace(
                     /Page (\d+) of (\d+)/g,
                     "Página $1 de $2"
+                )
+                .replace(
+                    /(\d+)–(\d+) of ([\d,]+)/g,
+                    "$1–$2 de $3"
+                )
+                .replace(
+                    /(\d+) matching on this page/g,
+                    "$1 coincidentes en esta página"
                 );
 
             if (dynamicTranslation !== trimmed) {
@@ -553,6 +569,14 @@ function translateKeetaView(root = document.body) {
                 .replace(
                     /Page (\d+) of (\d+)/g,
                     "Page $1 sur $2"
+                )
+                .replace(
+                    /(\d+)–(\d+) of ([\d,]+)/g,
+                    "$1–$2 sur $3"
+                )
+                .replace(
+                    /(\d+) matching on this page/g,
+                    "$1 correspondances sur cette page"
                 );
 
             if (dynamicTranslation !== trimmed) {
