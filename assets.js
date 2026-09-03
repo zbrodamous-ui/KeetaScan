@@ -118,23 +118,23 @@ function createAssetRow(asset) {
     const row = document.createElement("a");
     row.className = "asset-directory-row";
     row.href = assetUrl(asset.address);
-    row.setAttribute("aria-label", `Open ${asset.symbol} asset details`);
+    row.setAttribute("aria-label", `Open ${escapeKeetaHtml(asset.symbol)} asset details`);
 
     row.innerHTML = `
         <span class="asset-directory-symbol">
-            ${asset.symbol}
+            ${escapeKeetaHtml(asset.symbol)}
         </span>
 
         <span class="asset-directory-name">
-            ${asset.name}
+            ${escapeKeetaHtml(asset.name)}
         </span>
 
-        <span class="asset-directory-address" title="${asset.address}">
-            ${shortAddress(asset.address)}
+        <span class="asset-directory-address" title="${escapeKeetaHtml(asset.address)}">
+            ${escapeKeetaHtml(shortAddress(asset.address))}
         </span>
 
         <span class="asset-directory-supply">
-            ${asset.supply} ${asset.symbol === "Unknown" ? "" : asset.symbol}
+            ${escapeKeetaHtml(asset.supply)} ${asset.symbol === "Unknown" ? "" : escapeKeetaHtml(asset.symbol)}
         </span>
     `;
 
