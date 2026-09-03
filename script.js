@@ -399,6 +399,23 @@ async function createTransferRow(
     return row;
 }
 
+function getMarketCurrency() {
+    const currency =
+        getSavedPreferences().currency
+            ?.toUpperCase();
+
+    return [
+        "USD",
+        "EUR",
+        "GBP",
+        "CAD",
+        "AUD",
+        "JPY"
+    ].includes(currency)
+        ? currency
+        : "USD";
+}
+
 function formatMarketCurrency(
     value,
     maximumFractionDigits = 0
@@ -413,7 +430,7 @@ function formatMarketCurrency(
         undefined,
         {
             style: "currency",
-            currency: "USD",
+            currency: getMarketCurrency(),
             maximumFractionDigits
         }
     ).format(number);
@@ -945,6 +962,8 @@ async function loadMarketData(
             await fetch(
                 `http://localhost:3000/api/market?range=${encodeURIComponent(
                     range
+                )}&currency=${encodeURIComponent(
+                    getMarketCurrency().toLowerCase()
                 )}`,
                 {
                     cache: "no-store"
