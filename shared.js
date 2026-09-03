@@ -2815,6 +2815,47 @@ function showKeetaViewServiceNotice(message) {
     ).textContent = message;
 }
 
+async function withKeetaViewTimeout(
+    promise,
+    timeout = 12000
+) {
+    let timer;
+
+    try {
+        return await Promise.race([
+            Promise.resolve(promise),
+            new Promise((_, reject) => {
+                timer = window.setTimeout(
+                    () => reject(
+                        new KeetaViewRequestError(
+                            "The request took too long. Please try again.",
+                            "timeout"
+                        )
+                    ),
+                    timeout
+                );
+            })
+        ]);
+    } catch (error) {
+        const requestError =
+            error instanceof KeetaViewRequestError
+                ? error
+                : new KeetaViewRequestError(
+                    "KeetaView could not reach the network service.",
+                    "network",
+                    error
+                );
+
+        showKeetaViewServiceNotice(
+            requestError.message
+        );
+
+        throw requestError;
+    } finally {
+        window.clearTimeout(timer);
+    }
+}
+
 async function fetchKeetaView(
     resource,
     options = {}
