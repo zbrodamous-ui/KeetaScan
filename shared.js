@@ -90,7 +90,11 @@ const defaultKeetaViewPreferences = {
     language: "en",
     currency: "usd",
     addressFormat: "middle",
-    timeZone: "local"
+    timeZone: "local",
+    timeFormat: "12",
+    dateFormat: "local",
+    refreshRate: "60000",
+    numberFormat: "full"
 };
 
 function getSavedPreferences() {
@@ -125,6 +129,16 @@ function applyDisplayPreferences(preferences) {
         safeAddressFormat;
     document.documentElement.dataset.timeZone =
         safeTimeZone;
+    document.documentElement.dataset.timeFormat =
+        preferences.timeFormat === "24" ? "24" : "12";
+    document.documentElement.dataset.dateFormat =
+        ["local", "mdy", "dmy"].includes(preferences.dateFormat)
+            ? preferences.dateFormat
+            : "local";
+    document.documentElement.dataset.numberFormat =
+        preferences.numberFormat === "compact"
+            ? "compact"
+            : "full";
 }
 
 function formatKeetaIdentifier(
@@ -168,12 +182,51 @@ function formatKeetaDate(value) {
         document.documentElement.dataset.timeZone ||
         getSavedPreferences().timeZone;
 
-    return timeZone === "utc"
-        ? date.toLocaleString(undefined, {
-            timeZone: "UTC",
-            timeZoneName: "short"
-        })
-        : date.toLocaleString();
+    const preferences = getSavedPreferences();
+    const hour12 = preferences.timeFormat !== "24";
+    const dateFormat = preferences.dateFormat;
+    const options = {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12
+    };
+
+    if (timeZone === "utc") {
+        options.timeZone = "UTC";
+        options.timeZoneName = "short";
+    }
+
+    if (dateFormat === "mdy") {
+        options.month = "numeric";
+        options.day = "numeric";
+        options.year = "numeric";
+    } else if (dateFormat === "dmy") {
+        options.day = "numeric";
+        options.month = "numeric";
+        options.year = "numeric";
+    } else {
+        options.dateStyle = "short";
+        delete options.hour;
+        delete options.minute;
+        delete options.second;
+        delete options.hour12;
+
+        return `${date.toLocaleDateString(undefined, options)} ${date.toLocaleTimeString(undefined, {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12,
+            ...(timeZone === "utc"
+                ? { timeZone: "UTC", timeZoneName: "short" }
+                : {})
+        })}`;
+    }
+
+    return new Intl.DateTimeFormat(
+        dateFormat === "dmy" ? "en-GB" : "en-US",
+        options
+    ).format(date);
 }
 
 function syncSettingsControls() {
@@ -193,6 +246,16 @@ function syncSettingsControls() {
         preferences.addressFormat;
     panel.querySelector("#settingsTimeZone").value =
         preferences.timeZone;
+    panel.querySelector("#settingsTheme").value =
+        getSavedTheme();
+    panel.querySelector("#settingsTimeFormat").value =
+        preferences.timeFormat;
+    panel.querySelector("#settingsDateFormat").value =
+        preferences.dateFormat;
+    panel.querySelector("#settingsRefreshRate").value =
+        preferences.refreshRate;
+    panel.querySelector("#settingsNumberFormat").value =
+        preferences.numberFormat;
 }
 
 function getSavedTheme() {
@@ -255,6 +318,7 @@ function createSettingsPanel() {
 
                     <select id="settingsLanguage">
                         <option value="en">English</option>
+                        <option value="es">Español</option>
                     </select>
                 </label>
 
@@ -265,7 +329,24 @@ function createSettingsPanel() {
                     </span>
 
                     <select id="settingsCurrency">
-                        <option value="usd">United States Dollar</option>
+                        <option value="usd">USD — United States Dollar</option>
+                        <option value="eur">EUR — Euro</option>
+                        <option value="gbp">GBP — British Pound</option>
+                        <option value="cad">CAD — Canadian Dollar</option>
+                        <option value="aud">AUD — Australian Dollar</option>
+                        <option value="jpy">JPY — Japanese Yen</option>
+                    </select>
+                </label>
+
+                <label class="settings-preference-row">
+                    <span>
+                        <strong>Theme</strong>
+                        <small>Choose the site appearance</small>
+                    </span>
+
+                    <select id="settingsTheme">
+                        <option value="soft">Soft Gray</option>
+                        <option value="clean">Clean White</option>
                     </select>
                 </label>
 
@@ -294,6 +375,56 @@ function createSettingsPanel() {
                     <select id="settingsTimeZone">
                         <option value="local">Local time</option>
                         <option value="utc">UTC</option>
+                    </select>
+                </label>
+
+                <label class="settings-preference-row">
+                    <span>
+                        <strong>Time Format</strong>
+                        <small>Choose a 12-hour or 24-hour clock</small>
+                    </span>
+
+                    <select id="settingsTimeFormat">
+                        <option value="12">12-hour</option>
+                        <option value="24">24-hour</option>
+                    </select>
+                </label>
+
+                <label class="settings-preference-row">
+                    <span>
+                        <strong>Date Format</strong>
+                        <small>Choose how calendar dates appear</small>
+                    </span>
+
+                    <select id="settingsDateFormat">
+                        <option value="local">Use device format</option>
+                        <option value="mdy">Month / Day / Year</option>
+                        <option value="dmy">Day / Month / Year</option>
+                    </select>
+                </label>
+
+                <label class="settings-preference-row">
+                    <span>
+                        <strong>Refresh Rate</strong>
+                        <small>Choose how often live information refreshes</small>
+                    </span>
+
+                    <select id="settingsRefreshRate">
+                        <option value="30000">Every 30 seconds</option>
+                        <option value="60000">Every minute</option>
+                        <option value="manual">Manual only</option>
+                    </select>
+                </label>
+
+                <label class="settings-preference-row">
+                    <span>
+                        <strong>Number Display</strong>
+                        <small>Show complete or shortened large numbers</small>
+                    </span>
+
+                    <select id="settingsNumberFormat">
+                        <option value="full">Full (22,457)</option>
+                        <option value="compact">Compact (22.5K)</option>
                     </select>
                 </label>
             </div>
@@ -326,8 +457,20 @@ function createSettingsPanel() {
                 addressFormat:
                     panel.querySelector("#settingsAddressFormat").value,
                 timeZone:
-                    panel.querySelector("#settingsTimeZone").value
+                    panel.querySelector("#settingsTimeZone").value,
+                timeFormat:
+                    panel.querySelector("#settingsTimeFormat").value,
+                dateFormat:
+                    panel.querySelector("#settingsDateFormat").value,
+                refreshRate:
+                    panel.querySelector("#settingsRefreshRate").value,
+                numberFormat:
+                    panel.querySelector("#settingsNumberFormat").value
             };
+
+            saveAndApplyTheme(
+                panel.querySelector("#settingsTheme").value
+            );
 
             localStorage.setItem(
                 "keetaViewPreferences",
@@ -340,9 +483,8 @@ function createSettingsPanel() {
             status.textContent = "Preferences saved.";
 
             window.setTimeout(() => {
-                status.textContent =
-                    "Preferences are saved on this browser.";
-            }, 1800);
+                window.location.reload();
+            }, 500);
         });
 
     panel
