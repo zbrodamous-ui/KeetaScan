@@ -277,6 +277,88 @@ const keetaViewTranslations = {
         "Unable to load asset": "No se pudo cargar el activo",
         "No recent transfers found.": "No se encontraron transferencias recientes.",
         "Unable to load recent transfers.": "No se pudieron cargar las transferencias recientes."
+    },
+    fr: {
+        "Home": "Accueil",
+        "Blocks": "Blocs",
+        "Transactions": "Transactions",
+        "Addresses": "Adresses",
+        "Assets": "Actifs",
+        "Analytics": "Analyses",
+        "Status": "État",
+        "Search": "Rechercher",
+        "Transaction": "Transaction",
+        "Address": "Adresse",
+        "Block": "Bloc",
+        "Asset": "Actif",
+        "Settings": "Paramètres",
+        "Language": "Langue",
+        "Choose desired language": "Choisissez la langue",
+        "Currency": "Devise",
+        "Choose desired currency": "Choisissez la devise",
+        "Theme": "Thème",
+        "Choose the site appearance": "Choisissez l’apparence du site",
+        "Soft Gray": "Gris doux",
+        "Clean White": "Blanc épuré",
+        "Address Display": "Affichage des adresses",
+        "Choose address truncation format": "Choisissez le format abrégé des adresses",
+        "Date & Time": "Date et heure",
+        "Display times locally or in UTC": "Affichez l’heure locale ou UTC",
+        "Local time": "Heure locale",
+        "Time Format": "Format de l’heure",
+        "Choose a 12-hour or 24-hour clock": "Choisissez une horloge de 12 ou 24 heures",
+        "12-hour": "12 heures",
+        "24-hour": "24 heures",
+        "Date Format": "Format de la date",
+        "Choose how calendar dates appear": "Choisissez l’affichage des dates",
+        "Use device format": "Utiliser le format de l’appareil",
+        "Month / Day / Year": "Mois / Jour / Année",
+        "Day / Month / Year": "Jour / Mois / Année",
+        "Refresh Rate": "Fréquence d’actualisation",
+        "Choose how often live information refreshes": "Choisissez la fréquence d’actualisation",
+        "Every 30 seconds": "Toutes les 30 secondes",
+        "Every minute": "Toutes les minutes",
+        "Manual only": "Manuel uniquement",
+        "Number Display": "Affichage des nombres",
+        "Show complete or shortened large numbers": "Afficher les grands nombres en entier ou en abrégé",
+        "Full (22,457)": "Complet (22 457)",
+        "Compact (22.5K)": "Compact (22,5 k)",
+        "Preferences are saved on this browser.": "Les préférences sont enregistrées dans ce navigateur.",
+        "Preferences saved.": "Préférences enregistrées.",
+        "Save Preferences": "Enregistrer les préférences",
+        "Previous": "Précédent",
+        "Next": "Suivant",
+        "Refresh": "Actualiser",
+        "Loading…": "Chargement…",
+        "Not available": "Indisponible",
+        "Online": "En ligne",
+        "Available": "Disponible",
+        "Connected": "Connecté",
+        "Not connected": "Non connecté",
+        "View all Blocks →": "Voir tous les blocs →",
+        "View all Transactions →": "Voir toutes les transactions →",
+        "Search address, transaction, block, or asset": "Rechercher une adresse, une transaction, un bloc ou un actif",
+        "Filter loaded transactions": "Filtrer les transactions chargées",
+        "Block, address, or asset": "Bloc, adresse ou actif",
+        "KTA MARKET": "MARCHÉ KTA",
+        "Live market chart": "Graphique du marché en direct",
+        "KEETAVIEW INDEX": "INDEX KEETAVIEW",
+        "Network Snapshot": "Aperçu du réseau",
+        "Indexed Blocks": "Blocs indexés",
+        "Indexed Transfers": "Transferts indexés",
+        "Indexed Accounts": "Comptes indexés",
+        "Recent Avg. Operations": "Moyenne récente des opérations",
+        "These totals reflect the blocks currently indexed by this KeetaView database.": "Ces totaux reflètent les blocs actuellement indexés par cette base de données KeetaView.",
+        "View Analytics →": "Voir les analyses →",
+        "MAINNET": "RÉSEAU PRINCIPAL",
+        "Latest Blocks": "Blocs récents",
+        "INDEXED": "INDEXÉ",
+        "Latest Transactions": "Transactions récentes",
+        "Market Cap": "Capitalisation",
+        "24h Volume": "Volume sur 24 h",
+        "Circulating Supply": "Offre en circulation",
+        "All-Time High": "Plus haut historique",
+        "Market data provided by": "Données de marché fournies par"
     }
 };
 
@@ -326,6 +408,25 @@ function translateKeetaView(root = document.body) {
                     /Page (\d+) of (\d+)/g,
                     "Página $1 de $2"
                 );
+
+            if (dynamicTranslation !== trimmed) {
+                node.nodeValue = original.replace(
+                    trimmed,
+                    dynamicTranslation
+                );
+            }
+        } else if (language === "fr") {
+            let dynamicTranslation = trimmed
+                .replace(/\b(\d+) min ago\b/g, "il y a $1 min")
+                .replace(/\b(\d+) mins ago\b/g, "il y a $1 min")
+                .replace(/\b1 hour ago\b/g, "il y a 1 heure")
+                .replace(/\b(\d+) hours ago\b/g, "il y a $1 heures")
+                .replace(/\b1 operation\b/g, "1 opération")
+                .replace(/\b(\d+) operations\b/g, "$1 opérations")
+                .replace(/\bLive\b/g, "En direct")
+                .replace(/\bUpdated\b/g, "Actualisé")
+                .replace(/\bover 24 hours\b/g, "sur 24 heures")
+                .replace(/\b1D view\b/g, "vue 1 j");
 
             if (dynamicTranslation !== trimmed) {
                 node.nodeValue = original.replace(
