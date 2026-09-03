@@ -2739,6 +2739,166 @@ const defaultKeetaViewPreferences = {
     numberFormat: "full"
 };
 
+class KeetaViewRequestError extends Error {
+    constructor(message, code, cause) {
+        super(message);
+        this.name = "KeetaViewRequestError";
+        this.code = code;
+        this.cause = cause;
+    }
+}
+
+function hideKeetaViewServiceNotice() {
+    document
+        .getElementById("keetaViewServiceNotice")
+        ?.remove();
+}
+
+function showKeetaViewServiceNotice(message) {
+    let notice =
+        document.getElementById(
+            "keetaViewServiceNotice"
+        );
+
+    if (!notice) {
+        notice = document.createElement("aside");
+        notice.id = "keetaViewServiceNotice";
+        notice.setAttribute("role", "alert");
+        notice.style.cssText = [
+            "position:fixed",
+            "left:50%",
+            "bottom:24px",
+            "transform:translateX(-50%)",
+            "z-index:10000",
+            "display:flex",
+            "align-items:center",
+            "gap:16px",
+            "max-width:min(560px,calc(100vw - 32px))",
+            "padding:14px 16px",
+            "border:1px solid #d5dce5",
+            "border-radius:14px",
+            "background:#ffffff",
+            "color:#1d2939",
+            "box-shadow:0 12px 36px rgba(15,23,42,.2)",
+            "font:600 14px/1.4 system-ui,sans-serif"
+        ].join(";");
+
+        const text =
+            document.createElement("span");
+        text.dataset.noticeMessage = "true";
+
+        const retry =
+            document.createElement("button");
+        retry.type = "button";
+        retry.textContent = "Retry";
+        retry.style.cssText = [
+            "flex:none",
+            "padding:8px 12px",
+            "border:1px solid #c8d2df",
+            "border-radius:9px",
+            "background:#f8fafc",
+            "color:#1d2939",
+            "font:inherit",
+            "cursor:pointer"
+        ].join(";");
+        retry.addEventListener(
+            "click",
+            () => window.location.reload()
+        );
+
+        notice.append(text, retry);
+        document.body.appendChild(notice);
+    }
+
+    notice.querySelector(
+        "[data-notice-message]"
+    ).textContent = message;
+}
+
+async function fetchKeetaView(
+    resource,
+    options = {}
+) {
+    const timeout =
+        Number(options.timeout) || 12000;
+    const controller =
+        new AbortController();
+    const timer =
+        window.setTimeout(
+            () => controller.abort(),
+            timeout
+        );
+
+    try {
+        if (!navigator.onLine) {
+            throw new KeetaViewRequestError(
+                "You appear to be offline.",
+                "offline"
+            );
+        }
+
+        const response = await fetch(
+            resource,
+            {
+                ...options,
+                signal: controller.signal
+            }
+        );
+
+        if (response.status >= 500) {
+            showKeetaViewServiceNotice(
+                "A KeetaView service is temporarily unavailable."
+            );
+        } else {
+            hideKeetaViewServiceNotice();
+        }
+
+        return response;
+    } catch (error) {
+        let requestError;
+
+        if (error instanceof KeetaViewRequestError) {
+            requestError = error;
+        } else if (
+            error?.name === "AbortError"
+        ) {
+            requestError =
+                new KeetaViewRequestError(
+                    "The request took too long. Please try again.",
+                    "timeout",
+                    error
+                );
+        } else {
+            requestError =
+                new KeetaViewRequestError(
+                    "KeetaView could not reach the local API.",
+                    "network",
+                    error
+                );
+        }
+
+        showKeetaViewServiceNotice(
+            requestError.message
+        );
+
+        throw requestError;
+    } finally {
+        window.clearTimeout(timer);
+    }
+}
+
+window.addEventListener(
+    "offline",
+    () => showKeetaViewServiceNotice(
+        "You appear to be offline."
+    )
+);
+
+window.addEventListener(
+    "online",
+    () => window.location.reload()
+);
+
 function getSavedPreferences() {
     try {
         const saved = JSON.parse(
