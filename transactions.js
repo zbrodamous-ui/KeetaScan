@@ -255,7 +255,7 @@ async function loadTransactionsPage() {
 
     try {
         const response =
-            await fetch("http://localhost:3000/api/transfers?limit=100");
+            await fetchKeetaView("http://localhost:3000/api/transfers?limit=100");
 
         if (!response.ok) {
             throw new Error(`API request failed: ${response.status}`);
