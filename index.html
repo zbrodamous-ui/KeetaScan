@@ -85,7 +85,7 @@
                     <h1>Live market chart</h1>
                 </div>
 
-                <div class="chart-ranges" aria-label="Market chart range">
+                <div class="chart-ranges" role="group" aria-label="Market chart range">
                     <button type="button" data-market-range="1h">
                         1H
                     </button>
@@ -108,7 +108,7 @@
             <div class="market-placeholder">
                 <div>
                     <strong id="marketPrice">Loading KTA market data…</strong>
-                    <p id="marketStatus">
+                    <p id="marketStatus" role="status" aria-live="polite">
                         Connecting to the verified CoinGecko feed.
                     </p>
                 </div>
