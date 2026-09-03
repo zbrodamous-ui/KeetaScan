@@ -3110,6 +3110,15 @@ function applyDisplayPreferences(preferences) {
             : "full";
 }
 
+function escapeKeetaHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
 function formatKeetaIdentifier(
     value,
     beginningLength = 12,
