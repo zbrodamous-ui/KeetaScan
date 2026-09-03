@@ -229,7 +229,54 @@ const keetaViewTranslations = {
         "Age": "Antigüedad",
         "From": "De",
         "To": "Para",
-        "Amount": "Cantidad"
+        "Amount": "Cantidad",
+        "← Back to Search": "← Volver a la búsqueda",
+        "← Back to Assets": "← Volver a los activos",
+        "Block Details": "Detalles del bloque",
+        "Loading block...": "Cargando bloque...",
+        "Operations": "Operaciones",
+        "Loading operations...": "Cargando operaciones...",
+        "No block selected": "No se seleccionó ningún bloque",
+        "Search for a block or return to the Blocks page.": "Busca un bloque o vuelve a la página de bloques.",
+        "No operations to display.": "No hay operaciones para mostrar.",
+        "Operation": "Operación",
+        "Hash": "Hash",
+        "Time": "Hora",
+        "Version": "Versión",
+        "Previous Block": "Bloque anterior",
+        "Recipient:": "Destinatario:",
+        "Token:": "Token:",
+        "Amount:": "Cantidad:",
+        "Transaction Hash": "Hash de transacción",
+        "Waiting for search data": "Esperando datos de búsqueda",
+        "Success": "Correcta",
+        "Fee": "Comisión",
+        "Unavailable": "No disponible",
+        "Unable to load transaction": "No se pudo cargar la transacción",
+        "Address Details": "Detalles de la dirección",
+        "Loading address...": "Cargando dirección...",
+        "Balances": "Saldos",
+        "Loading balances...": "Cargando saldos...",
+        "Recent Activity": "Actividad reciente",
+        "Type": "Tipo",
+        "Not set": "No establecido",
+        "Description": "Descripción",
+        "Head Block Height": "Altura del bloque principal",
+        "Token Balance": "Saldo del token",
+        "Balance:": "Saldo:",
+        "Transfer": "Transferencia",
+        "No address was provided. Search for an address from the homepage.": "No se proporcionó ninguna dirección. Busca una dirección desde la página de inicio.",
+        "KEETA NETWORK ASSET": "ACTIVO DE LA RED KEETA",
+        "Loading Asset...": "Cargando activo...",
+        "Network Asset Supply": "Suministro del activo de red",
+        "Decimals": "Decimales",
+        "Loading recent transfers...": "Cargando transferencias recientes...",
+        "No asset provided": "No se proporcionó ningún activo",
+        "Asset information unavailable": "Información del activo no disponible",
+        "Unknown Asset": "Activo desconocido",
+        "Unable to load asset": "No se pudo cargar el activo",
+        "No recent transfers found.": "No se encontraron transferencias recientes.",
+        "Unable to load recent transfers.": "No se pudieron cargar las transferencias recientes."
     }
 };
 
@@ -311,9 +358,9 @@ function translateKeetaView(root = document.body) {
     }
 
     root.querySelectorAll?.(
-        "[placeholder], [aria-label], [title]"
+        "[placeholder], [aria-label], [title], [data-label]"
     ).forEach((element) => {
-        ["placeholder", "aria-label", "title"].forEach((attribute) => {
+        ["placeholder", "aria-label", "title", "data-label"].forEach((attribute) => {
             const value = element.getAttribute(attribute);
 
             if (value && translations[value]) {
