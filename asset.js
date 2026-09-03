@@ -60,8 +60,10 @@ async function loadAsset() {
 
     try {
         const assetInfo =
-            await client.getAccountInfo(
-                assetAddress
+            await withKeetaViewTimeout(
+                client.getAccountInfo(
+                    assetAddress
+                )
             );
 
         if (!assetInfo?.info) {
@@ -118,8 +120,10 @@ async function loadAsset() {
                 decimalPlaces
             );
 const rawTotalSupply =
-    await client.getTokenSupply(
-        assetAddress
+    await withKeetaViewTimeout(
+        client.getTokenSupply(
+            assetAddress
+        )
     );
 
 const totalSupply =
@@ -132,11 +136,6 @@ const totalSupply =
 ).textContent =
     `${totalSupply} ${assetInfo.info.name || ""}`;
 
-console.log(
-    "OFFICIAL TOKEN SUPPLY:",
-    totalSupply,
-    assetInfo.info.name
-);
 
             
 await loadRecentTransfers(
@@ -174,24 +173,14 @@ async function loadRecentTransfers(
         );
 
     try {
-        const fetchStart =
-    performance.now();
         const history =
-            await client.getHistory(
-                null,
-                { depth: 500 }
+            await withKeetaViewTimeout(
+                client.getHistory(
+                    null,
+                    { depth: 500 }
+                )
             );
 
-            const fetchEnd =
-    performance.now();
-
-console.log(
-    "HISTORY FETCH BENCHMARK:",
-    {
-        milliseconds:
-            fetchEnd - fetchStart
-    }
-);
         const latestBlocks =
             history
                 .flatMap(
@@ -204,21 +193,12 @@ console.log(
                 );
 
         const matchingTransfers = [];
-const scanStart = performance.now();
-
-let blocksScanned = 0;
-let operationsScanned = 0;
-
 for (const block of latestBlocks) {
-    blocksScanned++;
-
     for (
         let operationIndex = 0;
         operationIndex < block.operations.length;
         operationIndex++
     ) {
-        operationsScanned++;
-
         const operation =
             block.operations[operationIndex];
                 if (!operation.token) {
@@ -283,16 +263,6 @@ for (const block of latestBlocks) {
             }
         }
 
-const scanEnd = performance.now();
-
-console.log(
-    "ASSET SCAN BENCHMARK:",
-    {
-        blocksScanned,
-        operationsScanned,
-        milliseconds: scanEnd - scanStart
-    }
-);
 
         transfersList.innerHTML = "";
 
