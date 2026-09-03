@@ -131,6 +131,13 @@ async function sendStaticFile(
                 : decodeURIComponent(
                     pathname.slice(1)
                 );
+
+        if (
+            !path.extname(requestedFile) &&
+            /^[A-Za-z0-9_-]+$/.test(requestedFile)
+        ) {
+            requestedFile += ".html";
+        }
     } catch {
         return false;
     }
@@ -214,12 +221,19 @@ const server =
 
             if (
                 request.method === "GET" &&
-                url.pathname === "/index.html"
+                url.pathname.endsWith(".html")
             ) {
+                const cleanPath =
+                    url.pathname === "/index.html"
+                        ? "/"
+                        : url.pathname.slice(0, -5);
+
                 response.writeHead(
                     308,
                     {
-                        Location: "/",
+                        Location:
+                            cleanPath +
+                            url.search,
                         "Cache-Control": "no-store"
                     }
                 );
