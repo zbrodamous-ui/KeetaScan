@@ -2958,6 +2958,25 @@ async function withKeetaViewTimeout(
     }
 }
 
+function resolveKeetaViewResource(resource) {
+    if (typeof resource !== "string") {
+        return resource;
+    }
+
+    const isLocalPage =
+        location.hostname === "localhost" ||
+        location.hostname === "127.0.0.1";
+
+    if (isLocalPage) {
+        return resource;
+    }
+
+    return resource.replace(
+        /^http:\/\/(?:localhost|127\.0\.0\.1):3000/,
+        location.origin
+    );
+}
+
 async function fetchKeetaView(
     resource,
     options = {}
@@ -2981,7 +3000,9 @@ async function fetchKeetaView(
         }
 
         const response = await fetch(
-            resource,
+            resolveKeetaViewResource(
+                resource
+            ),
             {
                 ...options,
                 signal: controller.signal
