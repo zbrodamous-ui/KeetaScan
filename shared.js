@@ -285,7 +285,13 @@ const keetaViewTranslations = {
         "Unable to load blocks. Make sure the KeetaView API server is running.": "No se pudieron cargar los bloques. Comprueba que la API de KeetaView esté funcionando.",
         "Send": "Enviar",
         "KeetaView displays information stored by this local index.": "KeetaView muestra información almacenada por este índice local.",
-        "These totals are not guaranteed to represent the entire network.": "No se garantiza que estos totales representen toda la red."
+        "These totals are not guaranteed to represent the entire network.": "No se garantiza que estos totales representen toda la red.",
+        "Retry": "Reintentar",
+        "You appear to be offline.": "Parece que no tienes conexión.",
+        "The request took too long. Please try again.": "La solicitud tardó demasiado. Inténtalo de nuevo.",
+        "KeetaView could not reach the local API.": "KeetaView no pudo conectarse con la API local.",
+        "A KeetaView service is temporarily unavailable.": "Un servicio de KeetaView no está disponible temporalmente.",
+        "KeetaView could not reach the network service.": "KeetaView no pudo conectarse con el servicio de red."
     },
     fr: {
         "Home": "Accueil",
@@ -485,7 +491,13 @@ const keetaViewTranslations = {
         "Unable to load recent transfers.": "Impossible de charger les transferts récents.",
         "Send": "Envoi",
         "KeetaView displays information stored by this local index.": "KeetaView affiche les informations stockées par cet index local.",
-        "These totals are not guaranteed to represent the entire network.": "Ces totaux ne représentent pas nécessairement l’ensemble du réseau."
+        "These totals are not guaranteed to represent the entire network.": "Ces totaux ne représentent pas nécessairement l’ensemble du réseau.",
+        "Retry": "Réessayer",
+        "You appear to be offline.": "Vous semblez être hors ligne.",
+        "The request took too long. Please try again.": "La requête a pris trop de temps. Réessayez.",
+        "KeetaView could not reach the local API.": "KeetaView n’a pas pu joindre l’API locale.",
+        "A KeetaView service is temporarily unavailable.": "Un service KeetaView est temporairement indisponible.",
+        "KeetaView could not reach the network service.": "KeetaView n’a pas pu joindre le service réseau."
     },
     pt: {
         "Home": "Início",
@@ -685,7 +697,13 @@ const keetaViewTranslations = {
         "Unable to load recent transfers.": "Não foi possível carregar as transferências recentes.",
         "Send": "Envio",
         "KeetaView displays information stored by this local index.": "O KeetaView exibe informações armazenadas por este índice local.",
-        "These totals are not guaranteed to represent the entire network.": "Não há garantia de que estes totais representem toda a rede."
+        "These totals are not guaranteed to represent the entire network.": "Não há garantia de que estes totais representem toda a rede.",
+        "Retry": "Tentar novamente",
+        "You appear to be offline.": "Parece que você está offline.",
+        "The request took too long. Please try again.": "A solicitação demorou muito. Tente novamente.",
+        "KeetaView could not reach the local API.": "O KeetaView não conseguiu acessar a API local.",
+        "A KeetaView service is temporarily unavailable.": "Um serviço do KeetaView está temporariamente indisponível.",
+        "KeetaView could not reach the network service.": "O KeetaView não conseguiu acessar o serviço de rede."
     },
     de: {
         "Home": "Startseite",
@@ -885,7 +903,13 @@ const keetaViewTranslations = {
         "Unable to load recent transfers.": "Neueste Übertragungen konnten nicht geladen werden.",
         "Send": "Senden",
         "KeetaView displays information stored by this local index.": "KeetaView zeigt Informationen aus diesem lokalen Index an.",
-        "These totals are not guaranteed to represent the entire network.": "Diese Summen stellen nicht garantiert das gesamte Netzwerk dar."
+        "These totals are not guaranteed to represent the entire network.": "Diese Summen stellen nicht garantiert das gesamte Netzwerk dar.",
+        "Retry": "Erneut versuchen",
+        "You appear to be offline.": "Sie scheinen offline zu sein.",
+        "The request took too long. Please try again.": "Die Anfrage dauerte zu lange. Bitte versuchen Sie es erneut.",
+        "KeetaView could not reach the local API.": "KeetaView konnte die lokale API nicht erreichen.",
+        "A KeetaView service is temporarily unavailable.": "Ein KeetaView-Dienst ist vorübergehend nicht verfügbar.",
+        "KeetaView could not reach the network service.": "KeetaView konnte den Netzwerkdienst nicht erreichen."
     },
     "zh-CN": {
         "Home": "首页",
@@ -1085,7 +1109,13 @@ const keetaViewTranslations = {
         "Unable to load recent transfers.": "无法加载近期转账。",
         "Send": "发送",
         "KeetaView displays information stored by this local index.": "KeetaView 显示此本地索引存储的信息。",
-        "These totals are not guaranteed to represent the entire network.": "这些总数不保证代表整个网络。"
+        "These totals are not guaranteed to represent the entire network.": "这些总数不保证代表整个网络。",
+        "Retry": "重试",
+        "You appear to be offline.": "您似乎已离线。",
+        "The request took too long. Please try again.": "请求时间过长，请重试。",
+        "KeetaView could not reach the local API.": "KeetaView 无法连接本地 API。",
+        "A KeetaView service is temporarily unavailable.": "KeetaView 服务暂时不可用。",
+        "KeetaView could not reach the network service.": "KeetaView 无法连接网络服务。"
     },
     hi: {
         "Home": "होम",
@@ -1285,7 +1315,13 @@ const keetaViewTranslations = {
         "Unable to load recent transfers.": "हाल के ट्रांसफ़र लोड नहीं हो सके।",
         "Send": "भेजें",
         "KeetaView displays information stored by this local index.": "KeetaView इस स्थानीय इंडेक्स में संग्रहीत जानकारी दिखाता है।",
-        "These totals are not guaranteed to represent the entire network.": "ये कुल आँकड़े पूरे नेटवर्क का प्रतिनिधित्व करने की गारंटी नहीं देते।"
+        "These totals are not guaranteed to represent the entire network.": "ये कुल आँकड़े पूरे नेटवर्क का प्रतिनिधित्व करने की गारंटी नहीं देते।",
+        "Retry": "पुनः प्रयास करें",
+        "You appear to be offline.": "लगता है आप ऑफ़लाइन हैं।",
+        "The request took too long. Please try again.": "अनुरोध में बहुत समय लगा। कृपया पुनः प्रयास करें।",
+        "KeetaView could not reach the local API.": "KeetaView स्थानीय API तक नहीं पहुँच सका।",
+        "A KeetaView service is temporarily unavailable.": "KeetaView की एक सेवा अस्थायी रूप से उपलब्ध नहीं है।",
+        "KeetaView could not reach the network service.": "KeetaView नेटवर्क सेवा तक नहीं पहुँच सका।"
     },
     ar: {
         "Home": "الرئيسية",
@@ -1485,7 +1521,13 @@ const keetaViewTranslations = {
         "Unable to load recent transfers.": "تعذر تحميل التحويلات الأخيرة.",
         "Send": "إرسال",
         "KeetaView displays information stored by this local index.": "يعرض KeetaView المعلومات المحفوظة في هذا الفهرس المحلي.",
-        "These totals are not guaranteed to represent the entire network.": "لا يُضمن أن تمثل هذه الإجماليات الشبكة بأكملها."
+        "These totals are not guaranteed to represent the entire network.": "لا يُضمن أن تمثل هذه الإجماليات الشبكة بأكملها.",
+        "Retry": "إعادة المحاولة",
+        "You appear to be offline.": "يبدو أنك غير متصل بالإنترنت.",
+        "The request took too long. Please try again.": "استغرق الطلب وقتًا طويلًا. حاول مرة أخرى.",
+        "KeetaView could not reach the local API.": "تعذر على KeetaView الوصول إلى واجهة API المحلية.",
+        "A KeetaView service is temporarily unavailable.": "إحدى خدمات KeetaView غير متاحة مؤقتًا.",
+        "KeetaView could not reach the network service.": "تعذر على KeetaView الوصول إلى خدمة الشبكة."
     },
     ja: {
         "Home": "ホーム",
@@ -1685,7 +1727,13 @@ const keetaViewTranslations = {
         "Unknown Asset": "不明なアセット",
         "Unable to load asset": "アセットを読み込めません",
         "No recent transfers found.": "最近の送金は見つかりませんでした。",
-        "Unable to load recent transfers.": "最近の送金を読み込めません。"
+        "Unable to load recent transfers.": "最近の送金を読み込めません。",
+        "Retry": "再試行",
+        "You appear to be offline.": "オフラインのようです。",
+        "The request took too long. Please try again.": "リクエストがタイムアウトしました。もう一度お試しください。",
+        "KeetaView could not reach the local API.": "KeetaViewはローカルAPIに接続できませんでした。",
+        "A KeetaView service is temporarily unavailable.": "KeetaViewサービスは一時的に利用できません。",
+        "KeetaView could not reach the network service.": "KeetaViewはネットワークサービスに接続できませんでした。"
     },
     ko: {
         "Home": "홈",
@@ -1885,7 +1933,13 @@ const keetaViewTranslations = {
         "Unknown Asset": "알 수 없는 자산",
         "Unable to load asset": "자산을 불러올 수 없음",
         "No recent transfers found.": "최근 전송을 찾을 수 없습니다.",
-        "Unable to load recent transfers.": "최근 전송을 불러올 수 없습니다."
+        "Unable to load recent transfers.": "최근 전송을 불러올 수 없습니다.",
+        "Retry": "다시 시도",
+        "You appear to be offline.": "오프라인 상태인 것 같습니다.",
+        "The request took too long. Please try again.": "요청 시간이 초과되었습니다. 다시 시도해 주세요.",
+        "KeetaView could not reach the local API.": "KeetaView가 로컬 API에 연결할 수 없습니다.",
+        "A KeetaView service is temporarily unavailable.": "KeetaView 서비스를 일시적으로 사용할 수 없습니다.",
+        "KeetaView could not reach the network service.": "KeetaView가 네트워크 서비스에 연결할 수 없습니다."
     },
     id: {
         "Home": "Beranda",
@@ -2085,7 +2139,13 @@ const keetaViewTranslations = {
         "Unknown Asset": "Aset Tidak Dikenal",
         "Unable to load asset": "Tidak dapat memuat aset",
         "No recent transfers found.": "Tidak ada transfer terbaru ditemukan.",
-        "Unable to load recent transfers.": "Tidak dapat memuat transfer terbaru."
+        "Unable to load recent transfers.": "Tidak dapat memuat transfer terbaru.",
+        "Retry": "Coba lagi",
+        "You appear to be offline.": "Sepertinya Anda sedang offline.",
+        "The request took too long. Please try again.": "Permintaan memerlukan waktu terlalu lama. Silakan coba lagi.",
+        "KeetaView could not reach the local API.": "KeetaView tidak dapat menjangkau API lokal.",
+        "A KeetaView service is temporarily unavailable.": "Layanan KeetaView sementara tidak tersedia.",
+        "KeetaView could not reach the network service.": "KeetaView tidak dapat menjangkau layanan jaringan."
     },
     ru: {
         "Home": "Главная",
@@ -2285,7 +2345,13 @@ const keetaViewTranslations = {
         "Unknown Asset": "Неизвестный актив",
         "Unable to load asset": "Не удалось загрузить актив",
         "No recent transfers found.": "Недавние переводы не найдены.",
-        "Unable to load recent transfers.": "Не удалось загрузить недавние переводы."
+        "Unable to load recent transfers.": "Не удалось загрузить недавние переводы.",
+        "Retry": "Повторить",
+        "You appear to be offline.": "Похоже, вы не в сети.",
+        "The request took too long. Please try again.": "Запрос занял слишком много времени. Попробуйте снова.",
+        "KeetaView could not reach the local API.": "KeetaView не удалось связаться с локальным API.",
+        "A KeetaView service is temporarily unavailable.": "Сервис KeetaView временно недоступен.",
+        "KeetaView could not reach the network service.": "KeetaView не удалось связаться с сетевым сервисом."
     }
 };
 
@@ -2791,6 +2857,7 @@ function showKeetaViewServiceNotice(message) {
             document.createElement("button");
         retry.type = "button";
         retry.textContent = "Retry";
+        retry.dataset.keetaTranslate = "true";
         retry.style.cssText = [
             "flex:none",
             "padding:8px 12px",
@@ -2813,6 +2880,8 @@ function showKeetaViewServiceNotice(message) {
     notice.querySelector(
         "[data-notice-message]"
     ).textContent = message;
+
+    translateKeetaView(notice);
 }
 
 async function withKeetaViewTimeout(
