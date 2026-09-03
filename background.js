@@ -303,34 +303,14 @@
             const image =
                 document.createElement("img");
 
-            const isKeetaLogo =
-                index % 2 === 1;
-
-            image.className =
-                `kv-logo ${isKeetaLogo
-                    ? "kv-logo-keeta"
-                    : "kv-logo-keetaview"}`;
-            image.src =
-                isKeetaLogo
-                    ? "keeta-logo.svg"
-                    : "favicon.svg";
+            image.className = "kv-logo kv-logo-keeta";
+            image.src = "keeta-logo.svg";
             image.alt = "";
-
-            if (isKeetaLogo) {
-                image.width =
-                    40 +
-                    Math.round(
-                        Math.random() * 14
-                    );
-            } else {
-                image.width =
-                    18 +
-                    Math.round(
-                        Math.random() * 10
-                    );
-                image.height =
-                    image.width;
-            }
+            image.width =
+                38 +
+                Math.round(
+                    Math.random() * 18
+                );
 
             logoBox.appendChild(
                 image
