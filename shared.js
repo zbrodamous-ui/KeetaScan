@@ -3954,7 +3954,25 @@ function initializeDetailSearch() {
     });
 }
 
+function initializeBrandMarks() {
+    document.querySelectorAll(".home-brand").forEach((brand) => {
+        if (brand.querySelector(".home-brand-mark")) {
+            return;
+        }
+
+        brand.insertAdjacentHTML(
+            "afterbegin",
+            `<svg class="home-brand-mark" viewBox="0 0 64 44" aria-hidden="true" focusable="false">
+                <path class="brand-eye-outline" d="M3 22C11 9 21 4 32 4s21 5 29 18c-8 13-18 18-29 18S11 35 3 22Z"/>
+                <path class="brand-eye-k" d="M19 13v18m0-9 10-9m-10 9 10 9"/>
+                <circle class="brand-eye-pupil" cx="37" cy="22" r="6"/>
+            </svg>`
+        );
+    });
+}
+
 applyDisplayPreferences(getSavedPreferences());
+initializeBrandMarks();
 initializeAccessibility();
 initializeThemeToggle();
 initializeSettings();
