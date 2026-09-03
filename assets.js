@@ -197,7 +197,9 @@ async function loadAsset(address) {
     fallback.name = "Unnamed asset";
 
     try {
-        const assetInfo = await client.getAccountInfo(address);
+        const assetInfo = await withKeetaViewTimeout(
+            client.getAccountInfo(address)
+        );
 
         if (!assetInfo?.info) {
             return fallback;
