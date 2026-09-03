@@ -135,10 +135,10 @@ async function loadAddressesPage() {
     try {
         const offset = (currentPage - 1) * addressesPerPage;
         const [accountsResponse, statusResponse] = await Promise.all([
-            fetch(
+            fetchKeetaView(
                 `http://localhost:3000/api/accounts?limit=${addressesPerPage}&offset=${offset}`
             ),
-            fetch("http://localhost:3000/api/status")
+            fetchKeetaView("http://localhost:3000/api/status")
         ]);
 
         if (!accountsResponse.ok || !statusResponse.ok) {
