@@ -1,9 +1,30 @@
 import http from "node:http";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { DatabaseSync } from "node:sqlite";
+
+const dataDirectory =
+    process.env.KEETAVIEW_DATA_DIR ||
+    "./indexer";
+
+const databaseFile =
+    path.join(
+        dataDirectory,
+        "keetascan.db"
+    );
+
+const projectRoot =
+    fileURLToPath(
+        new URL(
+            "../",
+            import.meta.url
+        )
+    );
 
 const database =
     new DatabaseSync(
-        "./indexer/keetascan.db",
+        databaseFile,
         {
             readOnly: true
         }
@@ -13,7 +34,17 @@ database.exec(`
     PRAGMA busy_timeout = 5000;
 `);
 
-const port = 3000;
+const port =
+    Number(process.env.PORT) ||
+    3000;
+
+const host =
+    process.env.HOST ||
+    (
+        process.env.RAILWAY_ENVIRONMENT
+            ? "0.0.0.0"
+            : "127.0.0.1"
+    );
 
 const marketCache = new Map();
 
@@ -75,6 +106,87 @@ function sendJson(
     response.end(
         JSON.stringify(data)
     );
+}
+
+const staticContentTypes = {
+    ".html": "text/html; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".svg": "image/svg+xml",
+    ".png": "image/png",
+    ".ico": "image/x-icon",
+    ".webp": "image/webp"
+};
+
+async function sendStaticFile(
+    pathname,
+    response
+) {
+    let requestedFile;
+
+    try {
+        requestedFile =
+            pathname === "/"
+                ? "index.html"
+                : decodeURIComponent(
+                    pathname.slice(1)
+                );
+    } catch {
+        return false;
+    }
+
+    if (
+        !/^[A-Za-z0-9._-]+\.(?:html|js|css|svg|png|ico|webp)$/.test(
+            requestedFile
+        )
+    ) {
+        return false;
+    }
+
+    const filePath =
+        path.join(
+            projectRoot,
+            requestedFile
+        );
+
+    try {
+        const file =
+            await fs.promises.readFile(
+                filePath
+            );
+        const extension =
+            path.extname(
+                requestedFile
+            ).toLowerCase();
+
+        response.writeHead(
+            200,
+            {
+                "Content-Type":
+                    staticContentTypes[extension] ||
+                    "application/octet-stream",
+                "Cache-Control":
+                    extension === ".html"
+                        ? "no-cache"
+                        : "public, max-age=3600",
+                "X-Content-Type-Options":
+                    "nosniff",
+                "Referrer-Policy":
+                    "strict-origin-when-cross-origin",
+                "X-Frame-Options":
+                    "DENY"
+            }
+        );
+        response.end(file);
+
+        return true;
+    } catch (error) {
+        if (error?.code === "ENOENT") {
+            return false;
+        }
+
+        throw error;
+    }
 }
 
 const server =
@@ -734,6 +846,16 @@ if (
                 return;
             }
 
+            if (
+                request.method === "GET" &&
+                await sendStaticFile(
+                    url.pathname,
+                    response
+                )
+            ) {
+                return;
+            }
+
             sendJson(
                 response,
                 404,
@@ -747,10 +869,10 @@ if (
 
 server.listen(
     port,
-    "127.0.0.1",
+    host,
     () => {
         console.log(
-            `KeetaView API running at http://127.0.0.1:${port}`
+            `KeetaView running at http://${host}:${port}`
         );
     }
 );
