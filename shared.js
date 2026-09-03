@@ -1344,8 +1344,8 @@ const keetaViewTranslations = {
         "Available": "متاح",
         "Connected": "متصل",
         "Not connected": "غير متصل",
-        "View all Blocks →": "عرض جميع الكتل ←",
-        "View all Transactions →": "عرض جميع المعاملات ←",
+        "View all Blocks →": "عرض جميع الكتل →",
+        "View all Transactions →": "عرض جميع المعاملات →",
         "Search address, transaction, block, or asset": "ابحث عن عنوان أو معاملة أو كتلة أو أصل",
         "Filter loaded transactions": "تصفية المعاملات المحملة",
         "Block, address, or asset": "كتلة أو عنوان أو أصل",
@@ -1358,7 +1358,7 @@ const keetaViewTranslations = {
         "Indexed Accounts": "الحسابات المفهرسة",
         "Recent Avg. Operations": "متوسط العمليات الأخيرة",
         "These totals reflect the blocks currently indexed by this KeetaView database.": "تعكس هذه الإجماليات الكتل المفهرسة حاليًا في قاعدة بيانات KeetaView.",
-        "View Analytics →": "عرض التحليلات ←",
+        "View Analytics →": "عرض التحليلات →",
         "MAINNET": "الشبكة الرئيسية",
         "Latest Blocks": "أحدث الكتل",
         "INDEXED": "مفهرس",
@@ -1437,8 +1437,8 @@ const keetaViewTranslations = {
         "From": "من",
         "To": "إلى",
         "Amount": "المبلغ",
-        "← Back to Search": "العودة إلى البحث →",
-        "← Back to Assets": "العودة إلى الأصول →",
+        "← Back to Search": "← العودة إلى البحث",
+        "← Back to Assets": "← العودة إلى الأصول",
         "Block Details": "تفاصيل الكتلة",
         "Loading block...": "جارٍ تحميل الكتلة...",
         "Loading operations...": "جارٍ تحميل العمليات...",
@@ -1884,8 +1884,9 @@ function applyDisplayPreferences(preferences) {
             : "en";
 
     document.documentElement.lang = safeLanguage;
-    document.documentElement.dir =
-        safeLanguage === "ar" ? "rtl" : "ltr";
+    // Keep the explorer shell consistent for hashes, addresses, tables, and navigation.
+    // Arabic text still uses its natural bidirectional rendering inside the LTR layout.
+    document.documentElement.dir = "ltr";
     document.documentElement.dataset.language =
         safeLanguage;
     document.documentElement.dataset.addressFormat =
