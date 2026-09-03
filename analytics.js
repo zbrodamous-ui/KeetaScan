@@ -1055,7 +1055,7 @@ async function loadMarketAnalytics(
 
     try {
         const response =
-            await fetch(
+            await fetchKeetaView(
                 `http://localhost:3000/api/market?range=${encodeURIComponent(
                     range
                 )}`,
@@ -1327,7 +1327,7 @@ function showAnalyticsError(error) {
 async function loadAnalytics() {
     try {
         const response =
-            await fetch(
+            await fetchKeetaView(
                 "http://localhost:3000/api/analytics"
             );
 
