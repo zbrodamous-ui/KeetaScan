@@ -214,6 +214,21 @@ const server =
 
             if (
                 request.method === "GET" &&
+                url.pathname === "/index.html"
+            ) {
+                response.writeHead(
+                    308,
+                    {
+                        Location: "/",
+                        "Cache-Control": "no-store"
+                    }
+                );
+                response.end();
+                return;
+            }
+
+            if (
+                request.method === "GET" &&
                 url.pathname === "/api/market"
             ) {
                 const requestedRange =
