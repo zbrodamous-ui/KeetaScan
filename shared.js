@@ -3962,10 +3962,11 @@ function initializeBrandMarks() {
 
         brand.insertAdjacentHTML(
             "afterbegin",
-            `<svg class="home-brand-mark" viewBox="0 0 64 44" aria-hidden="true" focusable="false">
-                <path class="brand-eye-outline" d="M3 22C11 9 21 4 32 4s21 5 29 18c-8 13-18 18-29 18S11 35 3 22Z"/>
-                <path class="brand-eye-k" d="M19 13v18m0-9 10-9m-10 9 10 9"/>
-                <circle class="brand-eye-pupil" cx="37" cy="22" r="6"/>
+            `<svg class="home-brand-mark" viewBox="0 0 100 60" aria-hidden="true" focusable="false">
+                <path class="brand-eye-outline" d="M5 30C18 12 33 5 50 5s32 7 45 25C82 48 67 55 50 55S18 48 5 30Z"/>
+                <path class="brand-eye-k" d="M28 17v27m0-14 14-13M28 30l20 19"/>
+                <path class="brand-eye-k" d="m45 39 7 9 15-14"/>
+                <circle class="brand-eye-pupil" cx="54" cy="27" r="9"/>
             </svg>`
         );
     });
