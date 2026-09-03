@@ -1,3 +1,11 @@
+const apiEndpoint =
+    document.getElementById("apiEndpoint");
+
+if (apiEndpoint) {
+    apiEndpoint.textContent =
+        location.origin;
+}
+
 const systemStatus = document.getElementById("systemStatus");
 const refreshStatusButton = document.getElementById("refreshStatus");
 const statusMessage = document.getElementById("statusMessage");
@@ -114,7 +122,7 @@ async function checkMarketFeed() {
 
 function setOnlineState() {
     systemStatus.dataset.state = "online";
-    systemStatus.querySelector("strong").textContent = "Local API online";
+    systemStatus.querySelector("strong").textContent = "KeetaView API online";
     setServiceState(apiIndicator, apiState, true, "Online");
     setServiceState(databaseIndicator, databaseState, true, "Available");
     statusMessage.classList.remove("error");
@@ -122,7 +130,7 @@ function setOnlineState() {
 
 function setOfflineState(error) {
     systemStatus.dataset.state = "offline";
-    systemStatus.querySelector("strong").textContent = "Local API offline";
+    systemStatus.querySelector("strong").textContent = "KeetaView API offline";
     setServiceState(apiIndicator, apiState, false, "Offline");
     setServiceState(
         databaseIndicator,
