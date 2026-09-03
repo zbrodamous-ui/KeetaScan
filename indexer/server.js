@@ -19,19 +19,57 @@ const marketCache = new Map();
 
 const marketCacheDuration = 60 * 1000;
 
+function isAllowedLocalOrigin(origin) {
+    if (!origin) {
+        return false;
+    }
+
+    try {
+        const parsedOrigin =
+            new URL(origin);
+
+        return (
+            (
+                parsedOrigin.hostname === "localhost" ||
+                parsedOrigin.hostname === "127.0.0.1"
+            ) &&
+            (
+                parsedOrigin.protocol === "http:" ||
+                parsedOrigin.protocol === "https:"
+            )
+        );
+    } catch {
+        return false;
+    }
+}
+
 function sendJson(
     response,
     statusCode,
     data
 ) {
+    const headers = {
+        "Content-Type":
+            "application/json; charset=utf-8",
+        "Cache-Control":
+            "no-store",
+        "X-Content-Type-Options":
+            "nosniff",
+        "Referrer-Policy":
+            "no-referrer",
+        "Content-Security-Policy":
+            "default-src 'none'; frame-ancestors 'none'"
+    };
+
+    if (response.keetaViewAllowedOrigin) {
+        headers["Access-Control-Allow-Origin"] =
+            response.keetaViewAllowedOrigin;
+        headers.Vary = "Origin";
+    }
+
     response.writeHead(
         statusCode,
-        {
-            "Content-Type":
-                "application/json",
-            "Access-Control-Allow-Origin":
-                "*"
-        }
+        headers
     );
 
     response.end(
@@ -42,10 +80,20 @@ function sendJson(
 const server =
     http.createServer(
         async (request, response) => {
+            const requestOrigin =
+                request.headers.origin;
+
+            response.keetaViewAllowedOrigin =
+                isAllowedLocalOrigin(
+                    requestOrigin
+                )
+                    ? requestOrigin
+                    : null;
+
             const url =
                 new URL(
                     request.url,
-                    `http://${request.headers.host}`
+                    "http://127.0.0.1"
                 );
 
             if (
@@ -699,9 +747,10 @@ if (
 
 server.listen(
     port,
+    "127.0.0.1",
     () => {
         console.log(
-            `KeetaScan API running at http://localhost:${port}`
+            `KeetaView API running at http://127.0.0.1:${port}`
         );
     }
 );
