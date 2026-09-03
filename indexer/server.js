@@ -166,7 +166,11 @@ async function sendStaticFile(
                     staticContentTypes[extension] ||
                     "application/octet-stream",
                 "Cache-Control":
-                    extension === ".html"
+                    (
+                        extension === ".html" ||
+                        extension === ".js" ||
+                        extension === ".css"
+                    )
                         ? "no-cache"
                         : "public, max-age=3600",
                 "X-Content-Type-Options":
