@@ -90,8 +90,32 @@ const server =
                 const settings =
                     rangeSettings[range];
 
+                const supportedCurrencies = [
+                    "usd",
+                    "eur",
+                    "gbp",
+                    "cad",
+                    "aud",
+                    "jpy"
+                ];
+
+                const requestedCurrency =
+                    url.searchParams.get(
+                        "currency"
+                    )?.toLowerCase() || "usd";
+
+                const currency =
+                    supportedCurrencies.includes(
+                        requestedCurrency
+                    )
+                        ? requestedCurrency
+                        : "usd";
+
+                const cacheKey =
+                    `${range}:${currency}`;
+
                 const cached =
-                    marketCache.get(range);
+                    marketCache.get(cacheKey);
 
                 if (
                     cached?.data &&
@@ -116,7 +140,7 @@ const server =
                             "https://api.coingecko.com/api/v3/coins/keeta?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false"
                         ),
                         fetch(
-                            `https://api.coingecko.com/api/v3/coins/keeta/market_chart?vs_currency=usd&days=${settings.days}`
+                            `https://api.coingecko.com/api/v3/coins/keeta/market_chart?vs_currency=${currency}&days=${settings.days}`
                         )
                     ]);
 
@@ -168,23 +192,24 @@ const server =
 
                     const marketData = {
                         range,
+                        currency,
                         price:
-                            market.current_price?.usd ??
+                            market.current_price?.[currency] ??
                             null,
                         priceChange24h:
                             market.price_change_percentage_24h ??
                             null,
                         marketCap:
-                            market.market_cap?.usd ??
+                            market.market_cap?.[currency] ??
                             null,
                         volume24h:
-                            market.total_volume?.usd ??
+                            market.total_volume?.[currency] ??
                             null,
                         circulatingSupply:
                             market.circulating_supply ??
                             null,
                         allTimeHigh:
-                            market.ath?.usd ??
+                            market.ath?.[currency] ??
                             null,
                         prices,
                         volumes,
@@ -196,7 +221,7 @@ const server =
                     };
 
                     marketCache.set(
-                        range,
+                        cacheKey,
                         {
                             data:
                                 marketData,
