@@ -171,7 +171,7 @@ const addressActivityList =
 addressActivityList.innerHTML = "";
 
 const response =
-    await fetch(
+    await fetchKeetaView(
         `http://localhost:3000/api/transfers?limit=100&address=${encodeURIComponent(
             address
         )}`
