@@ -148,7 +148,26 @@ const keetaViewTranslations = {
         "View all Transactions →": "Ver todas las transacciones →",
         "Search address, transaction, block, or asset": "Buscar dirección, transacción, bloque o activo",
         "Filter loaded transactions": "Filtrar transacciones cargadas",
-        "Block, address, or asset": "Bloque, dirección o activo"
+        "Block, address, or asset": "Bloque, dirección o activo",
+        "KTA MARKET": "MERCADO KTA",
+        "Live market chart": "Gráfico de mercado en vivo",
+        "KEETAVIEW INDEX": "ÍNDICE KEETAVIEW",
+        "Network Snapshot": "Resumen de la red",
+        "Indexed Blocks": "Bloques indexados",
+        "Indexed Transfers": "Transferencias indexadas",
+        "Indexed Accounts": "Cuentas indexadas",
+        "Recent Avg. Operations": "Promedio reciente de operaciones",
+        "These totals reflect the blocks currently indexed by this KeetaView database.": "Estos totales reflejan los bloques actualmente indexados por esta base de datos de KeetaView.",
+        "View Analytics →": "Ver analítica →",
+        "MAINNET": "RED PRINCIPAL",
+        "Latest Blocks": "Bloques recientes",
+        "INDEXED": "INDEXADO",
+        "Latest Transactions": "Transacciones recientes",
+        "Market Cap": "Capitalización de mercado",
+        "24h Volume": "Volumen de 24 h",
+        "Circulating Supply": "Suministro circulante",
+        "All-Time High": "Máximo histórico",
+        "Market data provided by": "Datos de mercado proporcionados por"
     }
 };
 
@@ -167,11 +186,31 @@ function translateKeetaView(root = document.body) {
         const trimmed = original.trim();
         const translated = translations[trimmed];
 
-        if (!translated) {
+        if (translated) {
+            node.nodeValue = original.replace(trimmed, translated);
             return;
         }
 
-        node.nodeValue = original.replace(trimmed, translated);
+        if (language === "es") {
+            let dynamicTranslation = trimmed
+                .replace(/\b(\d+) min ago\b/g, "hace $1 min")
+                .replace(/\b(\d+) mins ago\b/g, "hace $1 min")
+                .replace(/\b1 hour ago\b/g, "hace 1 hora")
+                .replace(/\b(\d+) hours ago\b/g, "hace $1 horas")
+                .replace(/\b1 operation\b/g, "1 operación")
+                .replace(/\b(\d+) operations\b/g, "$1 operaciones")
+                .replace(/\bLive\b/g, "En vivo")
+                .replace(/\bUpdated\b/g, "Actualizado")
+                .replace(/\bover 24 hours\b/g, "en 24 horas")
+                .replace(/\b1D view\b/g, "vista de 1D");
+
+            if (dynamicTranslation !== trimmed) {
+                node.nodeValue = original.replace(
+                    trimmed,
+                    dynamicTranslation
+                );
+            }
+        }
     };
 
     if (root.nodeType === Node.TEXT_NODE) {
