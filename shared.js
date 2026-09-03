@@ -3536,6 +3536,16 @@ function closeSettingsPanel() {
 }
 
 function initializeAccessibility() {
+    const activeNavigationLink =
+        document.querySelector(
+            ".home-navigation a.active"
+        );
+
+    activeNavigationLink?.setAttribute(
+        "aria-current",
+        "page"
+    );
+
     const main = document.querySelector("main");
 
     if (main) {
