@@ -86,6 +86,145 @@ const keetaScanThemeNames = {
 };
 
 
+const keetaViewTranslations = {
+    es: {
+        "Home": "Inicio",
+        "Blocks": "Bloques",
+        "Transactions": "Transacciones",
+        "Addresses": "Direcciones",
+        "Assets": "Activos",
+        "Analytics": "Analítica",
+        "Status": "Estado",
+        "Search": "Buscar",
+        "Transaction": "Transacción",
+        "Address": "Dirección",
+        "Block": "Bloque",
+        "Asset": "Activo",
+        "Settings": "Configuración",
+        "Language": "Idioma",
+        "Choose desired language": "Elige el idioma",
+        "Currency": "Moneda",
+        "Choose desired currency": "Elige la moneda",
+        "Theme": "Tema",
+        "Choose the site appearance": "Elige la apariencia del sitio",
+        "Soft Gray": "Gris suave",
+        "Clean White": "Blanco limpio",
+        "Address Display": "Formato de dirección",
+        "Choose address truncation format": "Elige cómo abreviar las direcciones",
+        "Date & Time": "Fecha y hora",
+        "Display times locally or in UTC": "Muestra la hora local o UTC",
+        "Local time": "Hora local",
+        "Time Format": "Formato de hora",
+        "Choose a 12-hour or 24-hour clock": "Elige un reloj de 12 o 24 horas",
+        "12-hour": "12 horas",
+        "24-hour": "24 horas",
+        "Date Format": "Formato de fecha",
+        "Choose how calendar dates appear": "Elige cómo se muestran las fechas",
+        "Use device format": "Usar formato del dispositivo",
+        "Month / Day / Year": "Mes / Día / Año",
+        "Day / Month / Year": "Día / Mes / Año",
+        "Refresh Rate": "Frecuencia de actualización",
+        "Choose how often live information refreshes": "Elige cada cuánto se actualiza la información",
+        "Every 30 seconds": "Cada 30 segundos",
+        "Every minute": "Cada minuto",
+        "Manual only": "Solo manual",
+        "Number Display": "Formato de números",
+        "Show complete or shortened large numbers": "Muestra números grandes completos o abreviados",
+        "Full (22,457)": "Completo (22.457)",
+        "Compact (22.5K)": "Compacto (22,5 mil)",
+        "Preferences are saved on this browser.": "Las preferencias se guardan en este navegador.",
+        "Preferences saved.": "Preferencias guardadas.",
+        "Save Preferences": "Guardar preferencias",
+        "Previous": "Anterior",
+        "Next": "Siguiente",
+        "Refresh": "Actualizar",
+        "Loading…": "Cargando…",
+        "Not available": "No disponible",
+        "Online": "En línea",
+        "Available": "Disponible",
+        "Connected": "Conectado",
+        "Not connected": "No conectado",
+        "View all Blocks →": "Ver todos los bloques →",
+        "View all Transactions →": "Ver todas las transacciones →",
+        "Search address, transaction, block, or asset": "Buscar dirección, transacción, bloque o activo",
+        "Filter loaded transactions": "Filtrar transacciones cargadas",
+        "Block, address, or asset": "Bloque, dirección o activo"
+    }
+};
+
+function translateKeetaView(root = document.body) {
+    const language =
+        document.documentElement.dataset.language ||
+        getSavedPreferences().language;
+    const translations = keetaViewTranslations[language];
+
+    if (!translations || !root) {
+        return;
+    }
+
+    const translateTextNode = (node) => {
+        const original = node.nodeValue;
+        const trimmed = original.trim();
+        const translated = translations[trimmed];
+
+        if (!translated) {
+            return;
+        }
+
+        node.nodeValue = original.replace(trimmed, translated);
+    };
+
+    if (root.nodeType === Node.TEXT_NODE) {
+        translateTextNode(root);
+        return;
+    }
+
+    const walker = document.createTreeWalker(
+        root,
+        NodeFilter.SHOW_TEXT
+    );
+
+    while (walker.nextNode()) {
+        const parent = walker.currentNode.parentElement;
+
+        if (
+            parent &&
+            !["SCRIPT", "STYLE", "NOSCRIPT"].includes(parent.tagName)
+        ) {
+            translateTextNode(walker.currentNode);
+        }
+    }
+
+    root.querySelectorAll?.(
+        "[placeholder], [aria-label], [title]"
+    ).forEach((element) => {
+        ["placeholder", "aria-label", "title"].forEach((attribute) => {
+            const value = element.getAttribute(attribute);
+
+            if (value && translations[value]) {
+                element.setAttribute(attribute, translations[value]);
+            }
+        });
+    });
+}
+
+function initializeTranslations() {
+    translateKeetaView();
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                translateKeetaView(node);
+            });
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+}
+
 const defaultKeetaViewPreferences = {
     language: "en",
     currency: "usd",
@@ -902,6 +1041,7 @@ function initializeDetailSearch() {
 applyDisplayPreferences(getSavedPreferences());
 initializeThemeToggle();
 initializeSettings();
+initializeTranslations();
 initializeDetailSearch();
 
 
