@@ -282,7 +282,10 @@ const keetaViewTranslations = {
         "Loading blocks…": "Cargando bloques…",
         "No blocks on this page match that hash.": "Ningún bloque de esta página coincide con ese hash.",
         "No indexed blocks are available.": "No hay bloques indexados disponibles.",
-        "Unable to load blocks. Make sure the KeetaView API server is running.": "No se pudieron cargar los bloques. Comprueba que la API de KeetaView esté funcionando."
+        "Unable to load blocks. Make sure the KeetaView API server is running.": "No se pudieron cargar los bloques. Comprueba que la API de KeetaView esté funcionando.",
+        "Send": "Enviar",
+        "KeetaView displays information stored by this local index.": "KeetaView muestra información almacenada por este índice local.",
+        "These totals are not guaranteed to represent the entire network.": "No se garantiza que estos totales representen toda la red."
     },
     fr: {
         "Home": "Accueil",
@@ -479,7 +482,10 @@ const keetaViewTranslations = {
         "Unknown Asset": "Actif inconnu",
         "Unable to load asset": "Impossible de charger l’actif",
         "No recent transfers found.": "Aucun transfert récent trouvé.",
-        "Unable to load recent transfers.": "Impossible de charger les transferts récents."
+        "Unable to load recent transfers.": "Impossible de charger les transferts récents.",
+        "Send": "Envoi",
+        "KeetaView displays information stored by this local index.": "KeetaView affiche les informations stockées par cet index local.",
+        "These totals are not guaranteed to represent the entire network.": "Ces totaux ne représentent pas nécessairement l’ensemble du réseau."
     },
     pt: {
         "Home": "Início",
@@ -676,7 +682,10 @@ const keetaViewTranslations = {
         "Unknown Asset": "Ativo desconhecido",
         "Unable to load asset": "Não foi possível carregar o ativo",
         "No recent transfers found.": "Nenhuma transferência recente encontrada.",
-        "Unable to load recent transfers.": "Não foi possível carregar as transferências recentes."
+        "Unable to load recent transfers.": "Não foi possível carregar as transferências recentes.",
+        "Send": "Envio",
+        "KeetaView displays information stored by this local index.": "O KeetaView exibe informações armazenadas por este índice local.",
+        "These totals are not guaranteed to represent the entire network.": "Não há garantia de que estes totais representem toda a rede."
     },
     de: {
         "Home": "Startseite",
@@ -873,7 +882,10 @@ const keetaViewTranslations = {
         "Unknown Asset": "Unbekanntes Asset",
         "Unable to load asset": "Asset konnte nicht geladen werden",
         "No recent transfers found.": "Keine aktuellen Übertragungen gefunden.",
-        "Unable to load recent transfers.": "Neueste Übertragungen konnten nicht geladen werden."
+        "Unable to load recent transfers.": "Neueste Übertragungen konnten nicht geladen werden.",
+        "Send": "Senden",
+        "KeetaView displays information stored by this local index.": "KeetaView zeigt Informationen aus diesem lokalen Index an.",
+        "These totals are not guaranteed to represent the entire network.": "Diese Summen stellen nicht garantiert das gesamte Netzwerk dar."
     },
     "zh-CN": {
         "Home": "首页",
@@ -1070,7 +1082,10 @@ const keetaViewTranslations = {
         "Unknown Asset": "未知资产",
         "Unable to load asset": "无法加载资产",
         "No recent transfers found.": "未找到近期转账。",
-        "Unable to load recent transfers.": "无法加载近期转账。"
+        "Unable to load recent transfers.": "无法加载近期转账。",
+        "Send": "发送",
+        "KeetaView displays information stored by this local index.": "KeetaView 显示此本地索引存储的信息。",
+        "These totals are not guaranteed to represent the entire network.": "这些总数不保证代表整个网络。"
     },
     hi: {
         "Home": "होम",
@@ -1267,7 +1282,10 @@ const keetaViewTranslations = {
         "Unknown Asset": "अज्ञात एसेट",
         "Unable to load asset": "एसेट लोड नहीं हो सका",
         "No recent transfers found.": "कोई हाल का ट्रांसफ़र नहीं मिला।",
-        "Unable to load recent transfers.": "हाल के ट्रांसफ़र लोड नहीं हो सके।"
+        "Unable to load recent transfers.": "हाल के ट्रांसफ़र लोड नहीं हो सके।",
+        "Send": "भेजें",
+        "KeetaView displays information stored by this local index.": "KeetaView इस स्थानीय इंडेक्स में संग्रहीत जानकारी दिखाता है।",
+        "These totals are not guaranteed to represent the entire network.": "ये कुल आँकड़े पूरे नेटवर्क का प्रतिनिधित्व करने की गारंटी नहीं देते।"
     },
     ar: {
         "Home": "الرئيسية",
@@ -1464,7 +1482,10 @@ const keetaViewTranslations = {
         "Unknown Asset": "أصل غير معروف",
         "Unable to load asset": "تعذر تحميل الأصل",
         "No recent transfers found.": "لم يتم العثور على تحويلات حديثة.",
-        "Unable to load recent transfers.": "تعذر تحميل التحويلات الأخيرة."
+        "Unable to load recent transfers.": "تعذر تحميل التحويلات الأخيرة.",
+        "Send": "إرسال",
+        "KeetaView displays information stored by this local index.": "يعرض KeetaView المعلومات المحفوظة في هذا الفهرس المحلي.",
+        "These totals are not guaranteed to represent the entire network.": "لا يُضمن أن تمثل هذه الإجماليات الشبكة بأكملها."
     }
 };
 
