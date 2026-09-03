@@ -68,7 +68,7 @@ async function checkMarketFeed() {
 
     try {
         const response =
-            await fetch(
+            await fetchKeetaView(
                 "http://localhost:3000/api/market?range=1d",
                 {
                     cache: "no-store"
@@ -176,10 +176,10 @@ async function loadStatus() {
 
     try {
         const [statusResponse, analyticsResponse] = await Promise.all([
-            fetch("http://localhost:3000/api/status", {
+            fetchKeetaView("http://localhost:3000/api/status", {
                 cache: "no-store"
             }),
-            fetch("http://localhost:3000/api/analytics", {
+            fetchKeetaView("http://localhost:3000/api/analytics", {
                 cache: "no-store"
             })
         ]);
