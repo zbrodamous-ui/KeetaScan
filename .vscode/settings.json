@@ -4,8 +4,6 @@
         "**/*.scss",
         "**/*.sass",
         "**/*.ts",
-        "indexer/*.db",
-        "indexer/*.db-*",
-        "indexer/state.json"
+        "**/indexer/**"
     ]
 }
