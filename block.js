@@ -1,19 +1,7 @@
 const client = KeetaNet.Client.fromNetwork("main");
-console.log(
-    "Client methods:",
-    Object.getOwnPropertyNames(
-        Object.getPrototypeOf(client)
-    )
-);
-console.log(
-    "getHistory function:",
-    client.getHistory.toString()
-);
 const params = new URLSearchParams(window.location.search);
 
 const blockHash = params.get("hash");
-
-console.log("Selected block hash:", blockHash);
 
 async function loadBlock() {
     const blockTitle =
@@ -39,7 +27,9 @@ async function loadBlock() {
     }
 
     try {
-const block = await client.getBlock(blockHash);
+const block = await withKeetaViewTimeout(
+    client.getBlock(blockHash)
+);
 
 // Fill in the block overview and operations.
 operationsList.innerHTML = "";
