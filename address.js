@@ -87,21 +87,21 @@ async function loadAddress() {
 
         addressDetails.innerHTML = `
             <div class="detail-label">Address</div>
-            <div class="detail-value">${address}</div>
+            <div class="detail-value">${escapeKeetaHtml(address)}</div>
 
             <div class="detail-label">Name</div>
             <div class="detail-value">
-                ${accountInfo.info.name || "Not set"}
+                ${escapeKeetaHtml(accountInfo.info.name || "Not set")}
             </div>
 
             <div class="detail-label">Description</div>
             <div class="detail-value">
-                ${accountInfo.info.description || "Not set"}
+                ${escapeKeetaHtml(accountInfo.info.description || "Not set")}
             </div>
 
             <div class="detail-label">Head Block Height</div>
             <div class="detail-value">
-                ${accountInfo.currentHeadBlockHeight ?? "Not available"}
+                ${escapeKeetaHtml(accountInfo.currentHeadBlockHeight ?? "Not available")}
             </div>
         `;
 
@@ -153,12 +153,12 @@ let formattedBalance =
 
                 <p>
                     <strong>Token:</strong>
-                   ${tokenName}
+                   ${escapeKeetaHtml(tokenName)}
                 </p>
 
                 <p>
                     <strong>Balance:</strong>
-                    ${formattedBalance}
+                    ${escapeKeetaHtml(formattedBalance)}
                 </p>
             `;
 
@@ -245,7 +245,7 @@ if (transfers.length === 0) {
                 <a href="block.html?hash=${encodeURIComponent(
                     transfer.block_hash
                 )}">
-                    ${transfer.block_hash.slice(0, 8)}...
+                    ${escapeKeetaHtml(transfer.block_hash.slice(0, 8))}...
                 </a>
             </span>
 
@@ -259,13 +259,13 @@ if (transfers.length === 0) {
 
             <span>Transfer</span>
 
-            <span>${shortSender}</span>
+            <span>${escapeKeetaHtml(shortSender)}</span>
 
-            <span>${shortRecipient}</span>
+            <span>${escapeKeetaHtml(shortRecipient)}</span>
 
             <span>
-                ${tokenDisplay.amount}
-                ${tokenDisplay.name}
+                ${escapeKeetaHtml(tokenDisplay.amount)}
+                ${escapeKeetaHtml(tokenDisplay.name)}
             </span>
         `;
 
