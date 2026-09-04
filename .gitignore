@@ -1,2 +1,4 @@
 ﻿node_modules/
 indexer/*.db
+/indexer/keetascan.db-wal
+/indexer/keetascan.db-shm
