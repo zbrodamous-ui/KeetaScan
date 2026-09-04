@@ -875,17 +875,17 @@ body {
 .whale-row a {
     color: var(--link-color);
 }
- :root {
+:root {
     color-scheme: dark;
 
-    --page-background: #1b2230;
-    --surface-background: #252f40;
-    --surface-secondary: #2d394d;
-    --border-color: #3a4960;
+    --page-background: #000000;
+    --surface-background: #080808;
+    --surface-secondary: #111111;
+    --border-color: #2a2a2a;
 
-    --primary-text: #f1f5fb;
-    --secondary-text: #b4c0d1;
-    --link-color: #71b7ff;
+    --primary-text: #ffffff;
+    --secondary-text: #b8b8b8;
+    --link-color: #5aa9ff;
 
     --row-hover: rgba(255, 255, 255, 0.06);
 }
@@ -893,7 +893,7 @@ body {
 html[data-theme="light"] {
     color-scheme: light;
 
-    --page-background: #eef2f7;
+    --page-background: #000000;
     --surface-background: #f8fafc;
     --surface-secondary: #e4ebf5;
     --border-color: #c9d3e2;
@@ -2143,7 +2143,7 @@ html[data-theme="clean"] .home-panel {
 
 
 /* ==========================
-   Final Soft Gray Appearance
+   Final Dark Mode Appearance
 ========================== */
 
 :root,
@@ -2401,7 +2401,7 @@ html[data-theme="clean"] .detail-shell .operation-card {
 }
 
 
-/* Final Soft Gray canvas selection */
+/* Final Dark Mode canvas selection */
 
 html[data-theme="soft"] {
     --page-background: #5a5a5a;
@@ -2422,7 +2422,7 @@ html[data-theme="soft"] .detail-back-link:hover {
 }
 
 
-/* Soft Gray top navigation */
+/* Dark Mode top navigation */
 
 html[data-theme="soft"] .home-header,
 html[data-theme="soft"] .home-navigation {
@@ -6114,4 +6114,543 @@ html[data-theme="soft"] :where(
 ):focus-visible {
     outline-color: #7cc4ff;
 }
+/* True black Clean appearance */
+html[data-theme="soft"] {
+    --page-background: #000000;
+    --surface-background: #000000;
+    --surface-secondary: #0a0a0a;
+    --border-color: #2a2a2a;
+    --primary-text: #ffffff;
+    --secondary-text: #b8b8b8;
+    --link-color: #5aa9ff;
 
+        --kv-bg-a: #000000;
+    --kv-bg-b: #000000;
+    --kv-bg-c: #000000;
+}
+
+html[data-theme="soft"] .home-header,
+html[data-theme="soft"] .home-navigation,
+html[data-theme="soft"] .main-nav,
+html[data-theme="soft"] .home-panel,
+html[data-theme="soft"] .market-panel,
+html[data-theme="soft"] .home-panel-header,
+html[data-theme="soft"] .home-panel-footer,
+html[data-theme="soft"] .home-list-row {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff;
+
+        --row-hover: rgba(255, 255, 255, 0.07);
+}
+
+html[data-theme="soft"] .home-panel h1,
+html[data-theme="soft"] .home-panel h2,
+html[data-theme="soft"] .home-panel strong {
+    color: #ffffff;
+}
+
+html[data-theme="soft"] .home-panel p,
+html[data-theme="soft"] .home-panel span {
+    color: #b8b8b8;
+}
+/* Match the full Dark Mode canvas */
+html[data-theme="soft"],
+html[data-theme="soft"] body,
+html[data-theme="soft"] .home-page,
+html[data-theme="soft"] .detail-page-body {
+    background-color: #000000 !important;
+    background: #000000 !important;
+}
+/* Blocks and detail pages in Dark Mode */
+html[data-theme="soft"] .listing-hero,
+html[data-theme="soft"] .listing-panel,
+html[data-theme="soft"] .detail-shell,
+html[data-theme="soft"] .details-card,
+html[data-theme="soft"] .block-card,
+html[data-theme="soft"] .operation-card {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .listing-panel-header,
+html[data-theme="soft"] .listing-table-header,
+html[data-theme="soft"] .listing-row,
+html[data-theme="soft"] .detail-row {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+}
+
+html[data-theme="soft"] .listing-hero h1,
+html[data-theme="soft"] .listing-panel h1,
+html[data-theme="soft"] .listing-panel h2,
+html[data-theme="soft"] .detail-shell h1,
+html[data-theme="soft"] .detail-shell h2,
+html[data-theme="soft"] .detail-shell h3,
+html[data-theme="soft"] .detail-value,
+html[data-theme="soft"] .operation-card strong {
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .listing-hero p,
+html[data-theme="soft"] .detail-label,
+html[data-theme="soft"] .operation-card span,
+html[data-theme="soft"] .operation-card p {
+    color: #b8b8b8 !important;
+}
+/* Blocks directory Dark Mode */
+html[data-theme="soft"] .blocks-title-card,
+html[data-theme="soft"] .blocks-list-card,
+html[data-theme="soft"] .blocks-card-header,
+html[data-theme="soft"] .block-directory-table,
+html[data-theme="soft"] .block-directory-header,
+html[data-theme="soft"] .block-directory-row {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .blocks-title-card h1,
+html[data-theme="soft"] .blocks-title-card p,
+html[data-theme="soft"] .blocks-card-header h2,
+html[data-theme="soft"] .blocks-card-header p,
+html[data-theme="soft"] .block-directory-header span,
+html[data-theme="soft"] .block-directory-row span,
+html[data-theme="soft"] .block-result-count {
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .blocks-title-card .home-eyebrow {
+    color: #b8b8b8 !important;
+}
+
+html[data-theme="soft"] .block-filter span {
+    color: #b8b8b8 !important;
+}
+
+html[data-theme="soft"] .block-filter input {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .block-filter input::placeholder {
+    color: #777777 !important;
+}
+/* Clickable block links in Dark Mode */
+html[data-theme="soft"] .block-directory-row span:first-child,
+html[data-theme="soft"] .block-directory-row a {
+    color: #5aa9ff !important;
+}
+
+/* Blocks pagination in Dark Mode */
+html[data-theme="soft"] .pagination-controls,
+html[data-theme="soft"] .blocks-pagination,
+html[data-theme="soft"] .blocks-card-footer {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #b8b8b8 !important;
+}
+
+html[data-theme="soft"] .pagination-controls button,
+html[data-theme="soft"] .blocks-pagination button,
+html[data-theme="soft"] .blocks-card-footer button {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .pagination-controls button:disabled,
+html[data-theme="soft"] .blocks-pagination button:disabled,
+html[data-theme="soft"] .blocks-card-footer button:disabled {
+    color: #666666 !important;
+}
+/* Exact Blocks pagination Dark Mode */
+html[data-theme="soft"] .block-pagination {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #b8b8b8 !important;
+}
+
+html[data-theme="soft"] .block-pagination button {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .block-pagination button:disabled {
+    color: #666666 !important;
+}
+/* Transactions directory Dark Mode */
+html[data-theme="soft"] .transactions-title-card,
+html[data-theme="soft"] .transactions-list-card,
+html[data-theme="soft"] .transactions-card-header,
+html[data-theme="soft"] .transaction-directory-table,
+html[data-theme="soft"] .transaction-directory-header,
+html[data-theme="soft"] .transaction-directory-row,
+html[data-theme="soft"] .transaction-pagination {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .transactions-title-card h1,
+html[data-theme="soft"] .transactions-title-card p,
+html[data-theme="soft"] .transactions-card-header h2,
+html[data-theme="soft"] .transactions-card-header p,
+html[data-theme="soft"] .transaction-directory-header span,
+html[data-theme="soft"] .transaction-directory-row span {
+    color: #ffffff !important;
+}
+
+/* Keep clickable transaction data blue */
+html[data-theme="soft"] .transaction-directory-row a {
+    color: #5aa9ff !important;
+}
+
+html[data-theme="soft"] .transaction-filter span {
+    color: #b8b8b8 !important;
+}
+
+html[data-theme="soft"] .transaction-filter input {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .transaction-filter input::placeholder {
+    color: #777777 !important;
+}
+
+html[data-theme="soft"] .transaction-pagination button {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .transaction-pagination button:disabled {
+    color: #666666 !important;
+}
+/* Addresses directory Dark Mode */
+html[data-theme="soft"] .addresses-title-card,
+html[data-theme="soft"] .addresses-list-card,
+html[data-theme="soft"] .addresses-card-header,
+html[data-theme="soft"] .address-directory-table,
+html[data-theme="soft"] .address-directory-header,
+html[data-theme="soft"] .address-directory-row,
+html[data-theme="soft"] .address-pagination {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .addresses-title-card h1,
+html[data-theme="soft"] .addresses-card-header h2,
+html[data-theme="soft"] .address-directory-header span,
+html[data-theme="soft"] .address-directory-row span {
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .addresses-title-card > div > p:not(.home-eyebrow),
+html[data-theme="soft"] .addresses-title-card .home-eyebrow,
+html[data-theme="soft"] .address-result-count,
+html[data-theme="soft"] .address-filter span {
+    color: #b8b8b8 !important;
+}
+
+/* Clickable addresses */
+html[data-theme="soft"] .address-directory-row a {
+    color: #5aa9ff !important;
+}
+
+/* Address filter */
+html[data-theme="soft"] .address-filter input {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .address-filter input::placeholder {
+    color: #777777 !important;
+}
+
+/* Copy and pagination buttons */
+html[data-theme="soft"] .address-directory-row button,
+html[data-theme="soft"] .address-pagination button {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+/* Address-detail activity table */
+html[data-theme="soft"] .activity-table,
+html[data-theme="soft"] .activity-table-header,
+html[data-theme="soft"] #addressActivityList,
+html[data-theme="soft"] #addressActivityList > * {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+/* Assets directory Dark Mode */
+html[data-theme="soft"] .assets-title-card,
+html[data-theme="soft"] .assets-list-card,
+html[data-theme="soft"] .assets-card-header,
+html[data-theme="soft"] .asset-directory-table,
+html[data-theme="soft"] .asset-directory-header,
+html[data-theme="soft"] .asset-directory-row {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .assets-title-card h1,
+html[data-theme="soft"] .assets-card-header h2,
+html[data-theme="soft"] .asset-directory-header span,
+html[data-theme="soft"] .asset-directory-row span {
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .assets-title-card > div > p:not(.home-eyebrow),
+html[data-theme="soft"] .assets-title-card .home-eyebrow,
+html[data-theme="soft"] .assets-card-header .home-eyebrow,
+html[data-theme="soft"] .asset-result-count,
+html[data-theme="soft"] .asset-filter span {
+    color: #b8b8b8 !important;
+}
+
+/* Clickable asset addresses and names */
+html[data-theme="soft"] .asset-directory-row a {
+    color: #5aa9ff !important;
+}
+
+/* Asset filter */
+html[data-theme="soft"] .asset-filter input {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .asset-filter input::placeholder {
+    color: #777777 !important;
+}
+
+/* Asset detail Dark Mode */
+html[data-theme="soft"] .asset-detail-card,
+html[data-theme="soft"] .asset-detail-header,
+html[data-theme="soft"] .asset-overview-card,
+html[data-theme="soft"] .asset-transfers,
+html[data-theme="soft"] .asset-transfer-table,
+html[data-theme="soft"] .asset-transfer-header,
+html[data-theme="soft"] #assetTransfersList,
+html[data-theme="soft"] #assetTransfersList > * {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+/* Clickable asset symbol */
+html[data-theme="soft"] .asset-directory-row span:first-child {
+    color: #5aa9ff !important;
+}
+
+/* Asset pagination Dark Mode */
+html[data-theme="soft"] .asset-pagination {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #b8b8b8 !important;
+}
+
+html[data-theme="soft"] .asset-pagination button {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .asset-pagination button:disabled {
+    color: #666666 !important;
+}
+html[data-theme="soft"] .asset-detail-header h1,
+html[data-theme="soft"] .asset-transfers h2,
+html[data-theme="soft"] .asset-detail-row strong {
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .asset-detail-header .home-eyebrow,
+html[data-theme="soft"] .asset-detail-header #assetDescription,
+html[data-theme="soft"] .asset-detail-row span,
+html[data-theme="soft"] .asset-transfer-header span {
+    color: #b8b8b8 !important;
+}
+
+html[data-theme="soft"] .asset-detail-card a,
+html[data-theme="soft"] #assetTransfersList a {
+    color: #5aa9ff !important;
+}
+/* Analytics Dark Mode */
+html[data-theme="soft"] .analytics-title-row,
+html[data-theme="soft"] .analytics-metric-card,
+html[data-theme="soft"] .analytics-dashboard-card,
+html[data-theme="soft"] .analytics-card-header,
+html[data-theme="soft"] .analytics-market-chart,
+html[data-theme="soft"] .analytics-market-chart-toolbar,
+html[data-theme="soft"] .analytics-market-chart-stage,
+html[data-theme="soft"] .analytics-ranked-list,
+html[data-theme="soft"] .analytics-transfer-list,
+html[data-theme="soft"] .coverage-list {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+/* Analytics title and headings */
+html[data-theme="soft"] .analytics-title-row h1,
+html[data-theme="soft"] .analytics-card-header h2,
+html[data-theme="soft"] .analytics-metric-card strong,
+html[data-theme="soft"] .analytics-dashboard-card h2 {
+    color: #ffffff !important;
+}
+
+/* Secondary Analytics text */
+html[data-theme="soft"] .analytics-title-row > div > p:not(.home-eyebrow),
+html[data-theme="soft"] .analytics-title-row .home-eyebrow,
+html[data-theme="soft"] .analytics-card-header .home-eyebrow,
+html[data-theme="soft"] .analytics-range-label,
+html[data-theme="soft"] .analytics-metric-card span,
+html[data-theme="soft"] .analytics-metric-card small,
+html[data-theme="soft"] .coverage-list dt,
+html[data-theme="soft"] .analytics-market-chart-toolbar > span {
+    color: #b8b8b8 !important;
+}
+
+/* Analytics metric values */
+html[data-theme="soft"] .coverage-list dd {
+    color: #ffffff !important;
+}
+
+/* Analytics disclosure box */
+html[data-theme="soft"] .analytics-disclosure {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #b8b8b8 !important;
+}
+
+/* Network and Market tabs */
+html[data-theme="soft"] .analytics-tabs {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+}
+
+html[data-theme="soft"] .analytics-tabs button {
+    background: transparent !important;
+    color: #b8b8b8 !important;
+}
+
+html[data-theme="soft"] .analytics-tabs button.active {
+    background: #1b2433 !important;
+    color: #ffffff !important;
+}
+
+/* Ranked and recent-transfer rows */
+html[data-theme="soft"] .analytics-ranked-list > *,
+html[data-theme="soft"] .analytics-transfer-list > * {
+    background: #000000 !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .analytics-ranked-list a,
+html[data-theme="soft"] .analytics-transfer-list a {
+    color: #5aa9ff !important;
+}
+
+/* Market chart range controls */
+html[data-theme="soft"] .chart-ranges button {
+    background: transparent !important;
+    color: #8fa0b8 !important;
+}
+
+html[data-theme="soft"] .chart-ranges button.active {
+    background: #ffffff !important;
+    color: #1676cf !important;
+}
+
+/* Market statistic cards */
+html[data-theme="soft"] .market-stat-card,
+html[data-theme="soft"] .analytics-market-stat,
+html[data-theme="soft"] .market-metric-card {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+/* Market source/footer notice */
+html[data-theme="soft"] .market-source,
+html[data-theme="soft"] .analytics-market-source {
+    background: #0a0a0a !important;
+    color: #b8b8b8 !important;
+}
+
+/* Analytics chart canvas */
+html[data-theme="soft"] .analytics-bar-chart,
+html[data-theme="soft"] #analyticsMarketChartSvg {
+    background: #000000 !important;
+}
+
+html[data-theme="soft"] #analyticsMarketChartSvg text {
+    fill: #8fa0b8 !important;
+}
+
+html[data-theme="soft"] #analyticsMarketGrid line {
+    stroke: #2a2a2a !important;
+}
+/* Analytics chart scrollbar Dark Mode */
+html[data-theme="soft"] .analytics-bar-chart {
+    scrollbar-color: #666666 #0a0a0a;
+}
+
+html[data-theme="soft"] .analytics-bar-chart::-webkit-scrollbar {
+    height: 10px;
+}
+
+html[data-theme="soft"] .analytics-bar-chart::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+
+html[data-theme="soft"] .analytics-bar-chart::-webkit-scrollbar-thumb {
+    background: #666666;
+    border: 2px solid #0a0a0a;
+    border-radius: 999px;
+}
+
+html[data-theme="soft"] .analytics-bar-chart::-webkit-scrollbar-corner {
+    background: #0a0a0a;
+}
+/* Match Analytics transfer symbols to homepage */
+html[data-theme="soft"] .analytics-transfer-row::before {
+    background: #0a0a0a !important;
+    color: #b8b8b8 !important;
+    border-color: #1a1a1a !important;
+}
+/* Match Analytics transfer symbols to homepage */
+html[data-theme="soft"] .analytics-transfer-icon {
+    background: #0a0a0a !important;
+    border: 1px solid #1a1a1a !important;
+    color: #b8b8b8 !important;
+}
+/* KTA Market statistic cards Dark Mode */
+html[data-theme="soft"] .market-coming-grid > div {
+    background: #0a0a0a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+html[data-theme="soft"] .market-coming-grid > div span {
+    color: #b8b8b8 !important;
+}
+
+html[data-theme="soft"]
+    .market-coming-grid
+    > div
+    strong:not(#analyticsMarketChange) {
+    color: #ffffff !important;
+}

@@ -81,7 +81,7 @@ const keetaScanThemes = [
 ];
 
 const keetaScanThemeNames = {
-    soft: "Soft Gray",
+    soft: "Dark Mode",
     clean: "Clean White"
 };
 
@@ -107,7 +107,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "Elige la moneda",
         "Theme": "Tema",
         "Choose the site appearance": "Elige la apariencia del sitio",
-        "Soft Gray": "Gris suave",
+        "Dark Mode": "Modo oscuro",
         "Clean White": "Blanco limpio",
         "Address Display": "Formato de dirección",
         "Choose address truncation format": "Elige cómo abreviar las direcciones",
@@ -316,7 +316,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "Choisissez la devise",
         "Theme": "Thème",
         "Choose the site appearance": "Choisissez l’apparence du site",
-        "Soft Gray": "Gris doux",
+        "Dark Mode": "Mode sombre",
         "Clean White": "Blanc épuré",
         "Address Display": "Affichage des adresses",
         "Choose address truncation format": "Choisissez le format abrégé des adresses",
@@ -525,7 +525,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "Escolha a moeda",
         "Theme": "Tema",
         "Choose the site appearance": "Escolha a aparência do site",
-        "Soft Gray": "Cinza suave",
+        "Dark Mode": "Modo escuro",
         "Clean White": "Branco limpo",
         "Address Display": "Exibição de endereço",
         "Choose address truncation format": "Escolha como abreviar os endereços",
@@ -734,7 +734,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "Gewünschte Währung auswählen",
         "Theme": "Design",
         "Choose the site appearance": "Erscheinungsbild der Website auswählen",
-        "Soft Gray": "Sanftes Grau",
+        "Dark Mode": "Dunkler Modus",
         "Clean White": "Klares Weiß",
         "Address Display": "Adressanzeige",
         "Choose address truncation format": "Format für gekürzte Adressen auswählen",
@@ -943,7 +943,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "选择货币",
         "Theme": "主题",
         "Choose the site appearance": "选择网站外观",
-        "Soft Gray": "柔和灰",
+        "Dark Mode": "暗模式",
         "Clean White": "简洁白",
         "Address Display": "地址显示",
         "Choose address truncation format": "选择地址缩写格式",
@@ -1152,7 +1152,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "अपनी मुद्रा चुनें",
         "Theme": "थीम",
         "Choose the site appearance": "साइट का रूप चुनें",
-        "Soft Gray": "हल्का धूसर",
+        "Dark Mode": "डार्क मोड",
         "Clean White": "साफ़ सफ़ेद",
         "Address Display": "पता प्रदर्शन",
         "Choose address truncation format": "पते को छोटा दिखाने का प्रारूप चुनें",
@@ -1361,7 +1361,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "اختر العملة المطلوبة",
         "Theme": "المظهر",
         "Choose the site appearance": "اختر مظهر الموقع",
-        "Soft Gray": "رمادي هادئ",
+        "Dark Mode": "الوضع الداكن",
         "Clean White": "أبيض نقي",
         "Address Display": "عرض العنوان",
         "Choose address truncation format": "اختر تنسيق اختصار العنوان",
@@ -1570,7 +1570,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "通貨を選択",
         "Theme": "テーマ",
         "Choose the site appearance": "サイトの外観を選択",
-        "Soft Gray": "ソフトグレー",
+        "Dark Mode": "ダークモード",
         "Clean White": "クリーンホワイト",
         "Address Display": "アドレス表示",
         "Choose address truncation format": "アドレスの省略形式を選択",
@@ -1779,7 +1779,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "원하는 통화 선택",
         "Theme": "테마",
         "Choose the site appearance": "사이트 모양 선택",
-        "Soft Gray": "부드러운 회색",
+        "Dark Mode": "다크 모드",
         "Clean White": "깔끔한 흰색",
         "Address Display": "주소 표시",
         "Choose address truncation format": "주소 축약 형식 선택",
@@ -1988,7 +1988,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "Pilih mata uang",
         "Theme": "Tema",
         "Choose the site appearance": "Pilih tampilan situs",
-        "Soft Gray": "Abu-abu Lembut",
+        "Dark Mode": "Modo Escuro",
         "Clean White": "Putih Bersih",
         "Address Display": "Tampilan Alamat",
         "Choose address truncation format": "Pilih format pemendekan alamat",
@@ -2197,7 +2197,7 @@ const keetaViewTranslations = {
         "Choose desired currency": "Выберите валюту",
         "Theme": "Тема",
         "Choose the site appearance": "Выберите оформление сайта",
-        "Soft Gray": "Мягкий серый",
+        "Dark Mode": "Темный режим",
         "Clean White": "Чистый белый",
         "Address Display": "Отображение адреса",
         "Choose address truncation format": "Выберите формат сокращения адреса",
@@ -3357,7 +3357,7 @@ function createSettingsPanel() {
                     </span>
 
                     <select id="settingsTheme">
-                        <option value="soft">Soft Gray</option>
+                        <option value="soft">Dark Mode</option>
                         <option value="clean">Clean White</option>
                     </select>
                 </label>

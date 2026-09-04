@@ -177,7 +177,7 @@ async function loadRecentTransfers(
             await withKeetaViewTimeout(
                 client.getHistory(
                     null,
-                    { depth: 500 }
+                    { depth: 100 }
                 )
             );
 
