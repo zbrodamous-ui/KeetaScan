@@ -517,6 +517,8 @@ if (watchMode) {
         "Live indexer is watching for new history every 60 seconds."
     );
 
+let historicalBackfillComplete = false;
+
     while (true) {
         await new Promise(
             (resolve) =>
@@ -533,9 +535,27 @@ if (watchMode) {
                 "Latest history refresh failed:",
                 error
             );
+        }                
+            if (!historicalBackfillComplete) {
+    try {
+        const historyFound = await testHistoryFetch();
+
+        if (!historyFound) {
+            historicalBackfillComplete = true;
+            console.log(
+                "Historical backfill is complete."
+            );
         }
+    } catch (error) {
+        console.error(
+            "Historical backfill failed:",
+            error
+        );
     }
 }
+        }
+    }
+
 
 database.close();
 process.exit(0);
