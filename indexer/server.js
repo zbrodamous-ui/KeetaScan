@@ -435,6 +435,23 @@ const server =
                         error
                     );
 
+                    if (cached?.data) {
+                    console.log(
+                        "Serving cached KTA market data after CoinGecko failure."
+                    );
+
+                    sendJson(
+                        response,
+                        200,
+                        {
+                            ...cached.data,
+                            stale: true
+                        }
+                    );
+
+                    return;
+                }
+
                     sendJson(
                         response,
                         502,
