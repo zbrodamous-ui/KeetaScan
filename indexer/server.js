@@ -187,7 +187,7 @@ async function sendStaticFile(
                 "X-Frame-Options":
                    "DENY",
 
-                   "Content-Security-Policy-Report-Only":
+                   "Content-Security-Policy":
     "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://static.test.keeta.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
             }
         );
