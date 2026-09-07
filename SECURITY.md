@@ -60,3 +60,18 @@ Priority areas:
 - Multipart request risks in `form-data`
 - Cryptographic implementation risk in `elliptic`
 - Input-handling risks in `lodash`
+
+## Implemented Controls
+
+### Content Security Policy
+
+On 2026-09-07, KeetaView deployed and tested an enforced Content Security Policy.
+
+The policy:
+- Restricts scripts to KeetaView and the official Keeta browser-library domain
+- Permits required WebAssembly without allowing general JavaScript evaluation
+- Restricts images, styles, connections, forms, and base URLs
+- Blocks embedded objects
+- Prevents the site from being framed
+
+The policy was tested in Report-Only mode across all major pages before enforcement.
