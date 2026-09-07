@@ -188,7 +188,7 @@ async function sendStaticFile(
                    "DENY",
 
                    "Content-Security-Policy-Report-Only":
-    "default-src 'self'; script-src 'self' https://static.test.keeta.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+    "default-src 'self'; script-src 'self' 'wasm-unsafe-eval' https://static.test.keeta.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https: wss:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
             }
         );
         response.end(file);
