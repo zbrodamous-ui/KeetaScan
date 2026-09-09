@@ -70,8 +70,9 @@ function shutdown(exitCode = 0) {
 startService(
     "Indexer",
     [
-        "indexer/indexer.js",
-        "--watch"
+    "indexer/indexer.js",
+    "--watch",
+    "0"
     ]
 );
 

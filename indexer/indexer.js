@@ -91,6 +91,7 @@ database.exec(`
     ON transfers(token);
 `);
 
+
 function checkpointDatabase() {
     try {
         const result = database
@@ -116,6 +117,8 @@ function checkpointDatabase() {
         );
     }
 }
+
+checkpointDatabase();
 
 const insertBlock =
     database.prepare(`
@@ -512,7 +515,7 @@ const requestedBatchCount =
 
 const batchesToIndex =
     Number.isInteger(requestedBatchCount) &&
-    requestedBatchCount > 0
+    requestedBatchCount >= 0
         ? requestedBatchCount
         : 5;
 
@@ -547,7 +550,11 @@ if (watchMode) {
         "Live indexer is watching for new history every 60 seconds."
     );
 
-let historicalBackfillComplete = false;
+const historicalBackfillEnabled =
+    process.env.HISTORICAL_BACKFILL === "true";
+
+let historicalBackfillComplete =
+    !historicalBackfillEnabled;
 
     while (true) {
         await new Promise(
