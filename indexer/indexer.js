@@ -29,6 +29,55 @@ const databaseFile =
         "keetascan.db"
     );
 
+const databaseResetId =
+    process.env.KEETAVIEW_DATABASE_RESET || "";
+
+const databaseResetMarker =
+    path.join(
+        dataDirectory,
+        "database-reset-marker.txt"
+    );
+
+const previousDatabaseResetId =
+    fs.existsSync(databaseResetMarker)
+        ? fs.readFileSync(
+            databaseResetMarker,
+            "utf8"
+        ).trim()
+        : "";
+
+if (
+    databaseResetId &&
+    databaseResetId !== previousDatabaseResetId
+) {
+    console.warn(
+        "Performing requested KeetaView database reset:",
+        databaseResetId
+    );
+
+    for (
+        const file of [
+            databaseFile,
+            `${databaseFile}-wal`,
+            `${databaseFile}-shm`,
+            stateFile
+        ]
+    ) {
+        if (fs.existsSync(file)) {
+            fs.unlinkSync(file);
+        }
+    }
+
+    fs.writeFileSync(
+        databaseResetMarker,
+        databaseResetId
+    );
+
+    console.log(
+        "KeetaView database reset completed."
+    );
+}
+
 const databaseAlreadyExisted =
     fs.existsSync(databaseFile);
 
