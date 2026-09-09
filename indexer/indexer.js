@@ -38,6 +38,8 @@ const database =
 database.exec(`
     PRAGMA journal_mode = WAL;
     PRAGMA busy_timeout = 5000;
+    PRAGMA wal_autocheckpoint = 1000;
+    PRAGMA journal_size_limit = 67108864;
 `);
 
     database.exec(`
@@ -88,6 +90,32 @@ database.exec(`
         transfers_by_token
     ON transfers(token);
 `);
+
+function checkpointDatabase() {
+    try {
+        const result = database
+            .prepare("PRAGMA wal_checkpoint(TRUNCATE)")
+            .get();
+
+        if (result.busy > 0) {
+            console.warn(
+                "Database checkpoint postponed because the database is busy."
+            );
+
+            return;
+        }
+
+        console.log(
+            "Database WAL checkpoint completed.",
+            result
+        );
+    } catch (error) {
+        console.error(
+            "Database WAL checkpoint failed:",
+            error
+        );
+    }
+}
 
 const insertBlock =
     database.prepare(`
@@ -206,6 +234,8 @@ fs.writeFileSync(
     stateFile,
     JSON.stringify(state, null, 2)
 );
+
+checkpointDatabase();
 
 console.log(
     "Indexer progress saved."
