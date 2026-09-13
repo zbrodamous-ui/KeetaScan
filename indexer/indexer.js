@@ -140,6 +140,65 @@ database.exec(`
     ON transfers(token);
 `);
 
+function getFileSize(file) {
+    try {
+        return fs.statSync(file).size;
+    } catch (error) {
+        if (error.code === "ENOENT") {
+            return 0;
+        }
+
+        throw error;
+    }
+}
+
+function reportDatabaseStorage() {
+    const databaseBytes =
+        getFileSize(databaseFile);
+
+    const walBytes =
+        getFileSize(`${databaseFile}-wal`);
+
+    const sharedMemoryBytes =
+        getFileSize(`${databaseFile}-shm`);
+
+    const totalBytes =
+        databaseBytes +
+        walBytes +
+        sharedMemoryBytes;
+
+    const bytesToMegabytes =
+        (bytes) =>
+            Number(
+                (
+                    bytes /
+                    1024 /
+                    1024
+                ).toFixed(2)
+            );
+
+    console.log(
+        "Database storage:",
+        {
+            databaseMB:
+                bytesToMegabytes(
+                    databaseBytes
+                ),
+            walMB:
+                bytesToMegabytes(
+                    walBytes
+                ),
+            sharedMemoryMB:
+                bytesToMegabytes(
+                    sharedMemoryBytes
+                ),
+            totalMB:
+                bytesToMegabytes(
+                    totalBytes
+                )
+        }
+    );
+}
 
 function checkpointDatabase() {
     try {
@@ -159,6 +218,9 @@ function checkpointDatabase() {
             "Database WAL checkpoint completed.",
             result
         );
+
+        reportDatabaseStorage();
+
     } catch (error) {
         console.error(
             "Database WAL checkpoint failed:",
@@ -417,7 +479,7 @@ const newestBlock =
                 ?.toString?.();
 
         if (sender) {
-           
+
 
            insertAccount.run(
                 sender,
@@ -440,7 +502,7 @@ const newestBlock =
         ?.toString?.();
 
             if (recipient) {
-                
+
 
                 insertAccount.run(
                     recipient,
