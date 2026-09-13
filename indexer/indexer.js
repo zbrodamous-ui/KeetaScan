@@ -595,15 +595,47 @@ if (watchMode) {
     const refreshInterval =
         60 * 1000;
 
+    const requestedBackfillIntervalMinutes =
+        Number(
+            process.env
+                .HISTORICAL_BACKFILL_INTERVAL_MINUTES ??
+            10
+        );
+
+    const backfillIntervalMinutes =
+        Number.isFinite(
+            requestedBackfillIntervalMinutes
+        ) &&
+        requestedBackfillIntervalMinutes >= 1
+            ? requestedBackfillIntervalMinutes
+            : 10;
+
+    const historicalBackfillInterval =
+        backfillIntervalMinutes *
+        60 *
+        1000;
+
+    const historicalBackfillEnabled =
+        process.env.HISTORICAL_BACKFILL === "true";
+
+    let historicalBackfillComplete =
+        !historicalBackfillEnabled;
+
+    let lastHistoricalBackfillAt = 0;
+
     console.log(
         "Live indexer is watching for new history every 60 seconds."
     );
 
-const historicalBackfillEnabled =
-    process.env.HISTORICAL_BACKFILL === "true";
-
-let historicalBackfillComplete =
-    !historicalBackfillEnabled;
+    if (historicalBackfillEnabled) {
+        console.log(
+            `Historical backfill enabled: one batch every ${backfillIntervalMinutes} minutes.`
+        );
+    } else {
+        console.log(
+            "Historical backfill is disabled."
+        );
+    }
 
     while (true) {
         await new Promise(
@@ -621,26 +653,45 @@ let historicalBackfillComplete =
                 "Latest history refresh failed:",
                 error
             );
-        }                
-            if (!historicalBackfillComplete) {
-    try {
-        const historyFound = await testHistoryFetch();
-
-        if (!historyFound) {
-            historicalBackfillComplete = true;
-            console.log(
-                "Historical backfill is complete."
-            );
         }
-    } catch (error) {
-        console.error(
-            "Historical backfill failed:",
-            error
-        );
+
+        const historicalBackfillDue =
+            Date.now() -
+                lastHistoricalBackfillAt >=
+            historicalBackfillInterval;
+
+        if (
+            !historicalBackfillComplete &&
+            historicalBackfillDue
+        ) {
+            lastHistoricalBackfillAt =
+                Date.now();
+
+            try {
+                console.log(
+                    "Running one controlled historical backfill batch..."
+                );
+
+                const historyFound =
+                    await testHistoryFetch();
+
+                if (!historyFound) {
+                    historicalBackfillComplete =
+                        true;
+
+                    console.log(
+                        "Historical backfill is complete."
+                    );
+                }
+            } catch (error) {
+                console.error(
+                    "Historical backfill failed:",
+                    error
+                );
+            }
+        }
     }
 }
-        }
-    }
 
 
 database.close();
