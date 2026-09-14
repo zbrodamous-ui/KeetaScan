@@ -150,6 +150,10 @@ database.exec(`
     ON blocks(timestamp);
 
     CREATE INDEX IF NOT EXISTS
+        accounts_by_first_seen_timestamp
+    ON accounts(first_seen_timestamp);
+
+    CREATE INDEX IF NOT EXISTS
         transfers_by_timestamp
     ON transfers(timestamp);
 
