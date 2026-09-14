@@ -15,6 +15,14 @@ const transactionResultCount =
 
 const rowsPerPage = 20;
 const tokenInfoCache = new Map();
+const pageParameters =
+    new URLSearchParams(window.location.search);
+const baseAddress =
+    pageParameters.get("base");
+const validBaseAddress =
+    /^0x[0-9a-f]{40}$/i.test(baseAddress || "")
+        ? baseAddress
+        : "";
 
 let currentPage = 1;
 let totalOperations = 0;
@@ -361,7 +369,9 @@ async function loadOperationsPage() {
             statusResponse
         ] = await Promise.all([
             fetchKeetaView(
-                `/api/operations?limit=${rowsPerPage}&offset=${offset}`
+                `/api/operations?limit=${rowsPerPage}&offset=${offset}${validBaseAddress
+                    ? `&base=${encodeURIComponent(validBaseAddress)}`
+                    : ""}`
             ),
             fetchKeetaView(
                 "/api/status"
@@ -384,7 +394,9 @@ async function loadOperationsPage() {
             await statusResponse.json();
 
         totalOperations =
-            Number(status.operations || 0);
+            validBaseAddress
+                ? operations.length
+                : Number(status.operations || 0);
 
         loadedOperations =
             await Promise.all(
@@ -418,7 +430,13 @@ previousPageButton.addEventListener(
         if (currentPage > 1) {
             currentPage -= 1;
             transactionFilter.value = "";
-            loadOperationsPage();
+            if (validBaseAddress) {
+    transactionFilter.value = validBaseAddress;
+    transactionFilter.placeholder =
+        "Showing indexed Base address matches";
+}
+
+loadOperationsPage();
 
             document
                 .querySelector(
