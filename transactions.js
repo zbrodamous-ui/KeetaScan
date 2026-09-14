@@ -17,8 +17,8 @@ const rowsPerPage = 20;
 const tokenInfoCache = new Map();
 
 let currentPage = 1;
-let allTransactions = [];
-let filteredTransactions = [];
+let totalOperations = 0;
+let loadedOperations = [];
 
 function shortValue(value, start = 12, end = 6) {
     if (!value || value === "Not available") {
@@ -28,11 +28,20 @@ function shortValue(value, start = 12, end = 6) {
     return formatKeetaIdentifier(value, start, end);
 }
 
-function transactionUrl(transfer) {
+function operationUrl(operation) {
     return (
-        `transaction.html?block=${encodeURIComponent(transfer.block_hash)}` +
-        `&operation=${transfer.operation_index}`
+        `transaction.html?block=${encodeURIComponent(operation.block_hash)}` +
+        `&operation=${operation.operation_index}`
     );
+}
+
+function formatOperationType(value) {
+    return String(value || "Operation")
+        .toLowerCase()
+        .replace(
+            /\b\w/g,
+            (character) => character.toUpperCase()
+        );
 }
 
 function formatTokenAmount(amount, decimals) {
@@ -52,11 +61,8 @@ function formatTokenAmount(amount, decimals) {
 }
 
 async function getTokenDisplay(tokenAddress, rawAmount) {
-    if (!tokenAddress) {
-        return {
-            amount: BigInt(rawAmount).toLocaleString(),
-            name: "Unknown"
-        };
+    if (!tokenAddress || rawAmount === null) {
+        return null;
     }
 
     let tokenInfo = tokenInfoCache.get(tokenAddress);
@@ -65,285 +71,390 @@ async function getTokenDisplay(tokenAddress, rawAmount) {
         const tokenAccount =
             KeetaNet.lib.Account.fromPublicKeyString(tokenAddress);
 
-        tokenInfo =
-            client.getAccountInfo(tokenAccount);
-
-        tokenInfoCache.set(
-            tokenAddress,
-            tokenInfo
-        );
+        tokenInfo = client.getAccountInfo(tokenAccount);
+        tokenInfoCache.set(tokenAddress, tokenInfo);
     }
 
     tokenInfo = await tokenInfo;
-
-    tokenInfoCache.set(
-        tokenAddress,
-        tokenInfo
-    );
+    tokenInfoCache.set(tokenAddress, tokenInfo);
 
     let decimalPlaces = 0;
 
     try {
         if (tokenInfo?.info?.metadata) {
-            const metadata = JSON.parse(atob(tokenInfo.info.metadata));
-            decimalPlaces = Number(metadata.decimalPlaces || 0);
+            const metadata =
+                JSON.parse(atob(tokenInfo.info.metadata));
+
+            decimalPlaces =
+                Number(metadata.decimalPlaces || 0);
         }
-    } catch (error) {
-        console.warn("Unreadable token metadata:", tokenAddress);
+    } catch {
+        console.warn(
+            "Unreadable token metadata:",
+            tokenAddress
+        );
     }
 
     return {
-        amount: formatTokenAmount(rawAmount, decimalPlaces),
-        name: tokenInfo?.info?.name || shortValue(tokenAddress, 8, 6)
+        amount:
+            formatTokenAmount(rawAmount, decimalPlaces),
+        name:
+            tokenInfo?.info?.name ||
+            shortValue(tokenAddress, 8, 6)
     };
 }
 
 function createAddressLink(address) {
-    if (!address || address === "Not available") {
-        const unavailable = document.createElement("span");
-        unavailable.textContent = "Not available";
+    if (!address) {
+        const unavailable =
+            document.createElement("span");
+
+        unavailable.textContent = "—";
         return unavailable;
     }
 
     const link = document.createElement("a");
-    link.href = `address.html?address=${encodeURIComponent(address)}`;
+    link.href =
+        `address.html?address=${encodeURIComponent(address)}`;
     link.textContent = shortValue(address);
     link.title = address;
-    link.addEventListener("click", (event) => event.stopPropagation());
+    link.addEventListener(
+        "click",
+        (event) => event.stopPropagation()
+    );
+
     return link;
 }
 
-function createTransactionRow(transfer) {
+function createOperationRow(operation) {
     const row = document.createElement("div");
     row.className = "transaction-directory-row";
     row.tabIndex = 0;
     row.setAttribute("role", "link");
     row.setAttribute(
         "aria-label",
-        `Open transaction from block ${transfer.block_hash}`
+        `Open ${formatOperationType(operation.operation_type)} operation from block ${operation.block_hash}`
     );
 
     const blockLink = document.createElement("a");
-    blockLink.className = "transaction-directory-block";
+    blockLink.className =
+        "transaction-directory-block";
     blockLink.href =
-        `block.html?hash=${encodeURIComponent(transfer.block_hash)}`;
-    blockLink.textContent = shortValue(transfer.block_hash);
-    blockLink.title = transfer.block_hash;
-    blockLink.addEventListener("click", (event) => event.stopPropagation());
+        `block.html?hash=${encodeURIComponent(operation.block_hash)}`;
+    blockLink.textContent =
+        shortValue(operation.block_hash);
+    blockLink.title = operation.block_hash;
+    blockLink.addEventListener(
+        "click",
+        (event) => event.stopPropagation()
+    );
 
     const age = document.createElement("span");
     age.className = "transaction-directory-age";
-    age.textContent = timeAgo(new Date(transfer.timestamp));
+    age.textContent =
+        timeAgo(new Date(operation.timestamp));
+
+    const type = document.createElement("span");
+    type.className = "transaction-directory-address";
+    type.textContent =
+        formatOperationType(operation.operation_type);
 
     const sender = document.createElement("span");
-    sender.className = "transaction-directory-address";
-    sender.appendChild(createAddressLink(transfer.sender));
+    sender.className =
+        "transaction-directory-address";
+    sender.appendChild(
+        createAddressLink(operation.sender)
+    );
 
-    const recipient = document.createElement("span");
-    recipient.className = "transaction-directory-address";
-    recipient.appendChild(createAddressLink(transfer.recipient));
+    const details = document.createElement("span");
+    details.className =
+        "transaction-directory-amount";
 
-    const amount = document.createElement("span");
-    amount.className = "transaction-directory-amount";
-    amount.textContent =
-        `${transfer.displayAmount} ${transfer.tokenName}`;
+    if (operation.recipient) {
+        details.appendChild(
+            createAddressLink(operation.recipient)
+        );
+    }
 
-    row.append(blockLink, age, sender, recipient, amount);
+    if (operation.displayAmount) {
+        if (operation.recipient) {
+            details.append(" · ");
+        }
 
-    const openTransaction = () => {
-        window.location.assign(transactionUrl(transfer));
+        details.append(
+            `${operation.displayAmount} ${operation.tokenName}`
+        );
+    }
+
+    if (!operation.recipient && !operation.displayAmount) {
+        details.textContent = "View details";
+    }
+
+    row.append(
+        blockLink,
+        age,
+        type,
+        sender,
+        details
+    );
+
+    const openOperation = () => {
+        window.location.assign(
+            operationUrl(operation)
+        );
     };
 
-    row.addEventListener("click", openTransaction);
+    row.addEventListener("click", openOperation);
     row.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
             event.preventDefault();
-            openTransaction();
+            openOperation();
         }
     });
 
     return row;
 }
 
-function renderCurrentPage() {
-    transactionsPageList.innerHTML = "";
+function visibleOperations() {
+    const query =
+        transactionFilter.value
+            .trim()
+            .toLowerCase();
 
-    const totalResults = filteredTransactions.length;
-    const totalPages = Math.max(1, Math.ceil(totalResults / rowsPerPage));
-
-    if (currentPage > totalPages) {
-        currentPage = totalPages;
+    if (!query) {
+        return loadedOperations;
     }
 
-    const startIndex = (currentPage - 1) * rowsPerPage;
-    const endIndex = Math.min(startIndex + rowsPerPage, totalResults);
-    const visibleTransactions =
-        filteredTransactions.slice(startIndex, endIndex);
+    return loadedOperations.filter((operation) =>
+        [
+            operation.operation_type,
+            operation.block_hash,
+            operation.sender,
+            operation.recipient,
+            operation.token,
+            operation.tokenName
+        ].some((value) =>
+            String(value || "")
+                .toLowerCase()
+                .includes(query)
+        )
+    );
+}
 
-    if (visibleTransactions.length === 0) {
+function renderCurrentPage() {
+    const operations = visibleOperations();
+    const totalPages =
+        Math.max(
+            1,
+            Math.ceil(totalOperations / rowsPerPage)
+        );
+
+    transactionsPageList.innerHTML = "";
+
+    if (operations.length === 0) {
         const empty = document.createElement("p");
         empty.className = "transactions-empty";
-        empty.textContent = allTransactions.length
-            ? "No loaded transactions match that filter."
-            : "No indexed transactions are available.";
+        empty.textContent =
+            transactionFilter.value.trim()
+                ? "No operations on this page match that filter."
+                : "No indexed operations are available.";
+
         transactionsPageList.appendChild(empty);
     } else {
-        visibleTransactions.forEach((transfer) => {
-            transactionsPageList.appendChild(createTransactionRow(transfer));
+        operations.forEach((operation) => {
+            transactionsPageList.appendChild(
+                createOperationRow(operation)
+            );
         });
     }
 
-    transactionResultCount.textContent = totalResults
-        ? `${(startIndex + 1).toLocaleString()}–${endIndex.toLocaleString()} of ${totalResults.toLocaleString()} loaded`
-        : "0 transactions";
+    const firstResult =
+        totalOperations === 0
+            ? 0
+            : (
+                (currentPage - 1) *
+                rowsPerPage
+            ) + 1;
 
-    pageNumber.textContent = `Page ${currentPage} of ${totalPages}`;
-    previousPageButton.disabled = currentPage === 1;
-    nextPageButton.disabled = currentPage >= totalPages;
+    const lastResult =
+        Math.min(
+            currentPage * rowsPerPage,
+            totalOperations
+        );
+
+    transactionResultCount.textContent =
+        transactionFilter.value.trim()
+            ? `${operations.length} matching on this page`
+            : `${firstResult.toLocaleString()}–${lastResult.toLocaleString()} of ${totalOperations.toLocaleString()}`;
+
+    pageNumber.textContent =
+        `Page ${currentPage} of ${totalPages}`;
+
+    previousPageButton.disabled =
+        currentPage === 1;
+
+    nextPageButton.disabled =
+        currentPage >= totalPages;
 }
 
-function filterTransactions() {
-    const query = transactionFilter.value.trim().toLowerCase();
+async function prepareOperation(operation) {
+    if (
+        operation.amount === null ||
+        !operation.token
+    ) {
+        return operation;
+    }
 
-    filteredTransactions = query
-        ? allTransactions.filter((transfer) =>
-            [
-                transfer.block_hash,
-                transfer.sender,
-                transfer.recipient,
-                transfer.token,
-                transfer.tokenName
-            ].some((value) =>
-                String(value || "").toLowerCase().includes(query)
-            )
-        )
-        : [...allTransactions];
-
-    currentPage = 1;
-    renderCurrentPage();
-}
-
-async function prepareTransfer(transfer) {
     try {
-        const tokenDisplay = await getTokenDisplay(
-            transfer.token,
-            transfer.amount
+        const tokenDisplay =
+            await getTokenDisplay(
+                operation.token,
+                operation.amount
+            );
+
+        return {
+            ...operation,
+            displayAmount: tokenDisplay?.amount,
+            tokenName: tokenDisplay?.name
+        };
+    } catch (error) {
+        console.warn(
+            "Unable to format operation token:",
+            operation.token,
+            error
         );
 
         return {
-            ...transfer,
-            displayAmount: tokenDisplay.amount,
-            tokenName: tokenDisplay.name
-        };
-    } catch (error) {
-        console.warn("Unable to format token:", transfer.token, error);
-
-        return {
-            ...transfer,
-            displayAmount: BigInt(transfer.amount).toLocaleString(),
-            tokenName: shortValue(transfer.token, 8, 6)
+            ...operation,
+            displayAmount:
+                BigInt(operation.amount)
+                    .toLocaleString(),
+            tokenName:
+                shortValue(
+                    operation.token,
+                    8,
+                    6
+                )
         };
     }
 }
 
-async function loadTransactionsPage() {
+async function loadOperationsPage() {
     transactionsPageList.innerHTML =
-        '<p class="transactions-empty">Loading transactions…</p>';
-    transactionResultCount.textContent = "Loading transactions…";
+        '<p class="transactions-empty">Loading operations…</p>';
+
+    transactionResultCount.textContent =
+        "Loading operations…";
+
     previousPageButton.disabled = true;
     nextPageButton.disabled = true;
 
     try {
-        const response =
-            await fetchKeetaView("http://localhost:3000/api/transfers?limit=100");
+        const offset =
+            (currentPage - 1) * rowsPerPage;
 
-        if (!response.ok) {
-            throw new Error(`API request failed: ${response.status}`);
+        const [
+            operationsResponse,
+            statusResponse
+        ] = await Promise.all([
+            fetchKeetaView(
+                `/api/operations?limit=${rowsPerPage}&offset=${offset}`
+            ),
+            fetchKeetaView(
+                "/api/status"
+            )
+        ]);
+
+        if (
+            !operationsResponse.ok ||
+            !statusResponse.ok
+        ) {
+            throw new Error(
+                "Unable to load indexed operations"
+            );
         }
 
-        const transfers = await response.json();
+        const operations =
+            await operationsResponse.json();
 
-        allTransactions = transfers
-            .map((transfer) => ({
-                ...transfer,
-                displayAmount: BigInt(transfer.amount).toLocaleString(),
-                tokenName: shortValue(transfer.token, 8, 6)
-            }))
-            .sort(
-                (first, second) =>
-                    new Date(second.timestamp).getTime() -
-                    new Date(first.timestamp).getTime()
+        const status =
+            await statusResponse.json();
+
+        totalOperations =
+            Number(status.operations || 0);
+
+        loadedOperations =
+            await Promise.all(
+                operations.map(prepareOperation)
             );
 
-        filteredTransactions = [...allTransactions];
-        currentPage = 1;
         renderCurrentPage();
-
-        const firstPageTransfers =
-            allTransactions.slice(0, rowsPerPage);
-
-        await Promise.all(
-            firstPageTransfers.map(async (transfer) => {
-                Object.assign(
-                    transfer,
-                    await prepareTransfer(transfer)
-                );
-            })
+    } catch (error) {
+        console.error(
+            "Error loading operations page:",
+            error
         );
 
-        renderCurrentPage();
-
-        Promise.all(
-            allTransactions.slice(rowsPerPage).map(async (transfer) => {
-                Object.assign(
-                    transfer,
-                    await prepareTransfer(transfer)
-                );
-            })
-        ).then(() => {
-            filterTransactions();
-        }).catch((error) => {
-            console.warn(
-                "Some token details could not be loaded:",
-                error
-            );
-        });
-    } catch (error) {
-        console.error("Error loading transactions page:", error);
-        allTransactions = [];
-        filteredTransactions = [];
+        loadedOperations = [];
         transactionsPageList.innerHTML =
-            '<p class="transactions-empty">Unable to load transactions. Make sure the KeetaView API server is running.</p>';
-        transactionResultCount.textContent = "Unavailable";
+            '<p class="transactions-empty">Unable to load operations. Make sure the KeetaView API server is running.</p>';
+        transactionResultCount.textContent =
+            "Unavailable";
         pageNumber.textContent = "Page —";
     }
 }
 
-transactionFilter.addEventListener("input", filterTransactions);
+transactionFilter.addEventListener(
+    "input",
+    renderCurrentPage
+);
 
-previousPageButton.addEventListener("click", () => {
-    if (currentPage > 1) {
-        currentPage -= 1;
-        renderCurrentPage();
-        document.querySelector(".transactions-list-card")?.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+previousPageButton.addEventListener(
+    "click",
+    () => {
+        if (currentPage > 1) {
+            currentPage -= 1;
+            transactionFilter.value = "";
+            loadOperationsPage();
+
+            document
+                .querySelector(
+                    ".transactions-list-card"
+                )
+                ?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+        }
     }
-});
+);
 
-nextPageButton.addEventListener("click", () => {
-    const totalPages =
-        Math.ceil(filteredTransactions.length / rowsPerPage);
+nextPageButton.addEventListener(
+    "click",
+    () => {
+        const totalPages =
+            Math.ceil(
+                totalOperations / rowsPerPage
+            );
 
-    if (currentPage < totalPages) {
-        currentPage += 1;
-        renderCurrentPage();
-        document.querySelector(".transactions-list-card")?.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
+        if (currentPage < totalPages) {
+            currentPage += 1;
+            transactionFilter.value = "";
+            loadOperationsPage();
+
+            document
+                .querySelector(
+                    ".transactions-list-card"
+                )
+                ?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+        }
     }
-});
+);
 
-loadTransactionsPage();
+loadOperationsPage();

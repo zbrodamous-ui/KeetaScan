@@ -560,17 +560,19 @@ const offset =
                     return;
                 }
 
-                const transfer =
+                const operation =
                     database.prepare(`
                         SELECT
                             block_hash,
                             operation_index,
+                            operation_type,
                             sender,
                             recipient,
                             token,
                             amount,
-                            timestamp
-                        FROM transfers
+                            timestamp,
+                            details_json
+                        FROM operations
                         WHERE block_hash = ?
                           AND operation_index = ?
                         LIMIT 1
@@ -579,7 +581,7 @@ const offset =
                         operationIndex
                     );
 
-                if (!transfer) {
+                if (!operation) {
                     sendJson(
                         response,
                         404,
@@ -595,7 +597,89 @@ const offset =
                 sendJson(
                     response,
                     200,
-                    transfer
+                    operation
+                );
+
+                return;
+            }
+
+            if (
+                request.method === "GET" &&
+                url.pathname === "/api/operations"
+            ) {
+                const requestedLimit =
+                    Number(url.searchParams.get("limit"));
+
+                const limit =
+                    Number.isInteger(requestedLimit) &&
+                    requestedLimit > 0
+                        ? Math.min(requestedLimit, 100)
+                        : 20;
+
+                const requestedOffset =
+                    Number(url.searchParams.get("offset"));
+
+                const offset =
+                    Number.isInteger(requestedOffset) &&
+                    requestedOffset >= 0
+                        ? requestedOffset
+                        : 0;
+
+                const address =
+                    url.searchParams.get("address");
+
+                const operationType =
+                    url.searchParams.get("type");
+
+                const conditions = [];
+                const parameters = [];
+
+                if (address) {
+                    conditions.push(
+                        "(sender = ? OR recipient = ?)"
+                    );
+                    parameters.push(address, address);
+                }
+
+                if (operationType) {
+                    conditions.push("operation_type = ?");
+                    parameters.push(operationType);
+                }
+
+                const whereClause =
+                    conditions.length > 0
+                        ? `WHERE ${conditions.join(" AND ")}`
+                        : "";
+
+                const operations =
+                    database.prepare(`
+                        SELECT
+                            block_hash,
+                            operation_index,
+                            operation_type,
+                            sender,
+                            recipient,
+                            token,
+                            amount,
+                            timestamp,
+                            details_json
+                        FROM operations
+                        ${whereClause}
+                        ORDER BY timestamp DESC,
+                                 block_hash DESC,
+                                 operation_index ASC
+                        LIMIT ?
+                        OFFSET ?
+                    `).all(
+                        ...parameters,
+                        limit,
+                        offset
+                    );
+
+                sendJson(
+                    response,
+                    200,
+                    operations
                 );
 
                 return;
@@ -764,6 +848,12 @@ if (
                         FROM transfers
                     `).get().total;
 
+                const operationTotal =
+                    database.prepare(`
+                        SELECT COUNT(*) AS total
+                        FROM operations
+                    `).get().total;
+
                 const topSenders =
                     database.prepare(`
                         SELECT
@@ -834,7 +924,7 @@ if (
                             blocks:
                                 blockSummary.blocks,
                             operations:
-                                blockSummary.operations,
+                                operationTotal,
                             transfers:
                                 transferTotal,
                             accounts:
@@ -886,13 +976,20 @@ if (
                         FROM transfers
                     `).get().total;
 
+                const operations =
+                    database.prepare(`
+                        SELECT COUNT(*) AS total
+                        FROM operations
+                    `).get().total;
+
                 sendJson(
                     response,
                     200,
                     {
                         blocks,
                         accounts,
-                        transfers
+                        transfers,
+                        operations
                     }
                 );
 

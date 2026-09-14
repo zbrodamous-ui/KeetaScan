@@ -2999,6 +2999,7 @@ html[data-theme="clean"] .asset-page-shell .asset-overview-card {
     overflow: hidden;
 }
 
+
 .analytics-card-header {
     display: flex;
     justify-content: space-between;
@@ -3167,6 +3168,10 @@ html[data-theme="clean"] .asset-page-shell .asset-overview-card {
 
 .analytics-ranked-list {
     height: 416px;
+}
+
+.analytics-ranked-list--tall {
+    height: 520px;
 }
 
 .analytics-transfer-list {

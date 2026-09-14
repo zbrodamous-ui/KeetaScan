@@ -2963,14 +2963,6 @@ function resolveKeetaViewResource(resource) {
         return resource;
     }
 
-    const isLocalPage =
-        location.hostname === "localhost" ||
-        location.hostname === "127.0.0.1";
-
-    if (isLocalPage) {
-        return resource;
-    }
-
     return resource.replace(
         /^http:\/\/(?:localhost|127\.0\.0\.1):3000/,
         location.origin
