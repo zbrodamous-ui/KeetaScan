@@ -89,6 +89,15 @@ async function runSearch() {
     const selectedType =
         searchType.value.toLowerCase();
 
+    if (/^0x[0-9a-f]{40}$/i.test(searchText)) {
+        window.location.assign(
+            `transactions.html?base=${encodeURIComponent(
+                searchText
+            )}`
+        );
+        return;
+    }
+
     if (selectedType === "transaction") {
         const selectedTransaction =
             searchText.match(
@@ -139,15 +148,6 @@ async function runSearch() {
             "input",
             () => searchInput.setCustomValidity(""),
             { once: true }
-        );
-        return;
-    }
-
-    if (/^0x[0-9a-f]{40}$/i.test(searchText)) {
-        window.location.assign(
-            `transactions.html?base=${encodeURIComponent(
-                searchText
-            )}`
         );
         return;
     }
