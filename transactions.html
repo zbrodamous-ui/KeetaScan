@@ -7,7 +7,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-    <title>Transactions | KeetaView</title>
+    <title>Network Operations | KeetaView</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
@@ -72,18 +72,18 @@
     <header class="transactions-title-card">
         <div>
             <p class="home-eyebrow">KEETAVIEW INDEX</p>
-            <h1>Transactions</h1>
+            <h1>Network Operations</h1>
             <p>
-                Browse the latest token movements stored by KeetaView.
+                Browse every indexed action recorded on the Keeta Network.
             </p>
         </div>
 
         <label class="transaction-filter">
-            <span>Filter loaded transactions</span>
+            <span>Filter operations on this page</span>
             <input
                 id="transactionFilter"
                 type="search"
-                placeholder="Block, address, or asset"
+                placeholder="Type, block, address, or asset"
                 autocomplete="off"
             >
         </label>
@@ -96,7 +96,7 @@
         <header class="transactions-card-header">
             <div>
                 <p class="home-eyebrow">LATEST INDEXED</p>
-                <h2 id="transactionsListTitle">Token Transfers</h2>
+                <h2 id="transactionsListTitle">Recorded Operations</h2>
             </div>
 
             <span
@@ -112,9 +112,9 @@
                 <div class="transaction-directory-header" aria-hidden="true">
                     <span>Block</span>
                     <span>Age</span>
+                    <span>Type</span>
                     <span>From</span>
-                    <span>To</span>
-                    <span>Amount</span>
+                    <span>Details</span>
                 </div>
 
                 <div
