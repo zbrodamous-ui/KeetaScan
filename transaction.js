@@ -96,6 +96,10 @@ async function loadTransaction() {
         document.getElementById(
             "transactionHash"
         );
+    const operationType =
+        document.getElementById(
+            "operationType"
+        );
     const status =
         document.getElementById("status");
     const from =
@@ -193,6 +197,18 @@ async function loadTransaction() {
             `${formatKeetaIdentifier(
                 blockHash
             )}:${operationIndex}`;
+
+        operationType.textContent =
+            String(
+                transaction.operation_type ||
+                "Operation"
+            )
+                .toLowerCase()
+                .replace(
+                    /\b\w/g,
+                    (character) =>
+                        character.toUpperCase()
+                );
 
         status.textContent = "Success";
 
