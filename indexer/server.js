@@ -631,6 +631,9 @@ const offset =
                 const operationType =
                     url.searchParams.get("type");
 
+                const baseAddress =
+                    url.searchParams.get("base");
+
                 const conditions = [];
                 const parameters = [];
 
@@ -644,6 +647,16 @@ const offset =
                 if (operationType) {
                     conditions.push("operation_type = ?");
                     parameters.push(operationType);
+                }
+
+                if (
+                    baseAddress &&
+                    /^0x[0-9a-f]{40}$/i.test(baseAddress)
+                ) {
+                    conditions.push(
+                        "details_json LIKE ? COLLATE NOCASE"
+                    );
+                    parameters.push(`%${baseAddress}%`);
                 }
 
                 const whereClause =
