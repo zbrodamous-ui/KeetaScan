@@ -119,6 +119,21 @@ database.exec(`
 `);
 
 database.exec(`
+    CREATE TABLE IF NOT EXISTS operations (
+        block_hash TEXT NOT NULL,
+        operation_index INTEGER NOT NULL,
+        operation_type TEXT NOT NULL,
+        sender TEXT,
+        recipient TEXT,
+        token TEXT,
+        amount TEXT,
+        timestamp TEXT NOT NULL,
+        details_json TEXT,
+        PRIMARY KEY (block_hash, operation_index)
+    )
+`);
+
+database.exec(`
     CREATE INDEX IF NOT EXISTS
         blocks_by_timestamp
     ON blocks(timestamp);
@@ -138,6 +153,22 @@ database.exec(`
     CREATE INDEX IF NOT EXISTS
         transfers_by_token
     ON transfers(token);
+
+    CREATE INDEX IF NOT EXISTS
+        operations_by_timestamp
+    ON operations(timestamp);
+
+    CREATE INDEX IF NOT EXISTS
+        operations_by_type
+    ON operations(operation_type);
+
+    CREATE INDEX IF NOT EXISTS
+        operations_by_sender
+    ON operations(sender);
+
+    CREATE INDEX IF NOT EXISTS
+        operations_by_recipient
+    ON operations(recipient);
 `);
 
 function getFileSize(file) {
@@ -267,6 +298,22 @@ ON CONFLICT(address) DO UPDATE SET
             timestamp
         )
         VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+
+    const insertOperation =
+    database.prepare(`
+        INSERT OR REPLACE INTO operations (
+            block_hash,
+            operation_index,
+            operation_type,
+            sender,
+            recipient,
+            token,
+            amount,
+            timestamp,
+            details_json
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const countAccounts =
@@ -454,6 +501,95 @@ async function refreshLatestHistory() {
     return true;
 }
 
+function getOperationType(operation) {
+    const constructorName =
+        operation?.constructor?.name || "Operation";
+
+    const normalizedName =
+        constructorName
+            .replace(/^.*BlockOperation/, "")
+            .replace(/_/g, " ")
+            .trim();
+
+    return normalizedName || "Operation";
+}
+
+function serializeOperation(operation) {
+    const seen = new WeakSet();
+
+    function normalize(value, depth = 0) {
+        if (
+            value === null ||
+            typeof value === "string" ||
+            typeof value === "number" ||
+            typeof value === "boolean"
+        ) {
+            return value;
+        }
+
+        if (typeof value === "bigint") {
+            return value.toString();
+        }
+
+        if (typeof value === "undefined") {
+            return null;
+        }
+
+        if (value instanceof Date) {
+            return value.toISOString();
+        }
+
+        if (value instanceof Uint8Array) {
+            return Buffer.from(value).toString("hex");
+        }
+
+        if (typeof value !== "object") {
+            return String(value);
+        }
+
+        if (seen.has(value)) {
+            return "[Circular]";
+        }
+
+        if (depth >= 5) {
+            return value.toString?.() || "[Object]";
+        }
+
+        seen.add(value);
+
+        if (Array.isArray(value)) {
+            return value.map(
+                (item) => normalize(item, depth + 1)
+            );
+        }
+
+        const normalized = {};
+
+        for (const key of Object.keys(value)) {
+            try {
+                normalized[key] =
+                    normalize(value[key], depth + 1);
+            } catch {
+                normalized[key] =
+                    "[Unavailable]";
+            }
+        }
+
+        return normalized;
+    }
+
+    try {
+        return JSON.stringify(normalize(operation));
+    } catch (error) {
+        console.warn(
+            "Unable to serialize operation details:",
+            error
+        );
+
+        return null;
+    }
+}
+
 async function processHistoryEntry(entry) {
     const blocks =
         entry.voteStaple.blocks;
@@ -500,6 +636,18 @@ const newestBlock =
     operation.token
         ?.publicKeyString
         ?.toString?.();
+
+            insertOperation.run(
+                block.hash.toString(),
+                operationIndex,
+                getOperationType(operation),
+                sender || null,
+                recipient || null,
+                token || null,
+                operation.amount?.toString?.() || null,
+                timestamp,
+                serializeOperation(operation)
+            );
 
             if (recipient) {
 
