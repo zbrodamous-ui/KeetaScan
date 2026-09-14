@@ -3898,6 +3898,13 @@ function initializeDetailSearch() {
             return;
         }
 
+        if (/^0x[0-9a-f]{40}$/i.test(value)) {
+            window.location.assign(
+                `transactions.html?base=${encodeURIComponent(value)}`
+            );
+            return;
+        }
+
         if (value.startsWith("keeta_")) {
             window.location.assign(
                 `address.html?address=${encodeURIComponent(value)}`
