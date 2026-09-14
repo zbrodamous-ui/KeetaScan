@@ -7,7 +7,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-    <title>Transaction | KeetaView</title>
+    <title>Operation | KeetaView</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 </head>
@@ -71,12 +71,17 @@
 <main class="details-page detail-shell transaction-detail-shell">
     <a class="detail-back-link" href="index.html">← Back to Search</a>
 
-    <h1>Transaction</h1>
+    <h1>Operation</h1>
 
     <section class="details-card transaction-card">
         <div class="detail-row">
-            <span class="detail-label">Transaction Hash</span>
+            <span class="detail-label">Operation ID</span>
             <span id="transactionHash">Waiting for search data</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Type</span>
+            <span id="operationType">—</span>
         </div>
 
         <div class="detail-row">
