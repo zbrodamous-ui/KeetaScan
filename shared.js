@@ -3844,6 +3844,13 @@ function initializeDetailSearch() {
             return;
         }
 
+        if (/^0x[0-9a-f]{40}$/i.test(value)) {
+            window.location.assign(
+                `transactions.html?base=${encodeURIComponent(value)}`
+            );
+            return;
+        }
+
         if (type.value.toLowerCase() === "transaction") {
             const selectedTransaction =
                 value.match(
@@ -3894,13 +3901,6 @@ function initializeDetailSearch() {
                 "input",
                 () => input.setCustomValidity(""),
                 { once: true }
-            );
-            return;
-        }
-
-        if (/^0x[0-9a-f]{40}$/i.test(value)) {
-            window.location.assign(
-                `transactions.html?base=${encodeURIComponent(value)}`
             );
             return;
         }
