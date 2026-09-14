@@ -374,7 +374,7 @@ async function testHistoryFetch() {
             startBlocksHash:
             state.historyCursor ||
             undefined,
-            depth: 100
+            depth: 50
         }
     );
     if (history.length === 0) {
