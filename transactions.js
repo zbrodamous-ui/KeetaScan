@@ -361,10 +361,10 @@ async function loadOperationsPage() {
             statusResponse
         ] = await Promise.all([
             fetchKeetaView(
-                `http://localhost:3000/api/operations?limit=${rowsPerPage}&offset=${offset}`
+                `/api/operations?limit=${rowsPerPage}&offset=${offset}`
             ),
             fetchKeetaView(
-                "http://localhost:3000/api/status"
+                "/api/status"
             )
         ]);
 
