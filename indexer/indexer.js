@@ -811,12 +811,21 @@ for (
         `Backfilling batch ${batchNumber} of ${batchesToIndex}...`
     );
 
-    const historyFound =
-        await testHistoryFetch();
+    try {
+        const historyFound =
+            await testHistoryFetch();
 
-    if (!historyFound) {
-        console.log(
-            "Indexer reached the end of historical data."
+        if (!historyFound) {
+            console.log(
+                "Indexer reached the end of historical data."
+            );
+
+            break;
+        }
+    } catch (error) {
+        console.error(
+            `Backfill batch ${batchNumber} failed. Progress was preserved; the batch can be retried later:`,
+            error
         );
 
         break;
