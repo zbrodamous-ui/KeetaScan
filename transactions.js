@@ -243,7 +243,8 @@ function visibleOperations() {
             operation.sender,
             operation.recipient,
             operation.token,
-            operation.tokenName
+            operation.tokenName,
+            operation.details_json
         ].some((value) =>
             String(value || "")
                 .toLowerCase()
@@ -430,13 +431,7 @@ previousPageButton.addEventListener(
         if (currentPage > 1) {
             currentPage -= 1;
             transactionFilter.value = "";
-            if (validBaseAddress) {
-    transactionFilter.value = validBaseAddress;
-    transactionFilter.placeholder =
-        "Showing indexed Base address matches";
-}
-
-loadOperationsPage();
+            loadOperationsPage();
 
             document
                 .querySelector(
@@ -474,5 +469,11 @@ nextPageButton.addEventListener(
         }
     }
 );
+
+if (validBaseAddress) {
+    transactionFilter.value = validBaseAddress;
+    transactionFilter.placeholder =
+        "Showing indexed Base address matches";
+}
 
 loadOperationsPage();
