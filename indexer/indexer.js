@@ -84,6 +84,17 @@ const databaseAlreadyExisted =
 const database =
     new DatabaseSync(databaseFile);
 
+const operationsTableAlreadyExisted =
+    Boolean(
+        database.prepare(`
+            SELECT 1
+            FROM sqlite_master
+            WHERE type = 'table'
+              AND name = 'operations'
+            LIMIT 1
+        `).get()
+    );
+
 database.exec(`
     PRAGMA journal_mode = WAL;
     PRAGMA busy_timeout = 5000;
@@ -728,6 +739,17 @@ if (fs.existsSync(stateFile)) {
 );
 
 }
+
+    if (
+        databaseAlreadyExisted &&
+        !operationsTableAlreadyExisted
+    ) {
+        console.log(
+            "New operations index detected. Restarting historical cursor for complete operation coverage."
+        );
+
+        state.historyCursor = null;
+    }
 
     if (!databaseAlreadyExisted) {
     console.log(
