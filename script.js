@@ -143,6 +143,15 @@ async function runSearch() {
         return;
     }
 
+    if (/^0x[0-9a-f]{40}$/i.test(searchText)) {
+        window.location.assign(
+            `transactions.html?base=${encodeURIComponent(
+                searchText
+            )}`
+        );
+        return;
+    }
+
     if (searchText.startsWith("keeta_")) {
         window.location.assign(
             `address.html?address=${encodeURIComponent(
