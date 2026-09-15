@@ -26,8 +26,8 @@ KeetaView is a fast, local-first explorer for browsing indexed activity on the K
 ## Install
 
 ```powershell
-git clone https://github.com/zbrodamous-ui/KeetaScan.git
-cd KeetaScan
+git clone https://github.com/zbrodamous-ui/KeetaView.git
+cd KeetaView
 npm install
 ```
 

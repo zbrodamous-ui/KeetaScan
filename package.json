@@ -1,5 +1,5 @@
 {
-  "name": "keetascan",
+  "name": "keetaview",
   "version": "1.0.0",
   "description": "A local-first explorer for indexed activity on the Keeta Network.",
   "main": "indexer/start.js",
@@ -12,16 +12,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zbrodamous-ui/KeetaScan.git"
+    "url": "git+https://github.com/zbrodamous-ui/KeetaView.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/zbrodamous-ui/KeetaScan/issues"
+    "url": "https://github.com/zbrodamous-ui/KeetaView/issues"
   },
-  "homepage": "https://github.com/zbrodamous-ui/KeetaScan#readme",
+  "homepage": "https://github.com/zbrodamous-ui/KeetaView#readme",
   "dependencies": {
     "@keetanetwork/keetanet-client": "^0.18.4"
   },
