@@ -192,6 +192,48 @@ function filterAssets() {
     renderAssets();
 }
 
+async function loadIndexedAssets() {
+    try {
+        const response =
+            await fetch(
+                "/api/assets?limit=1000",
+                {
+                    headers: {
+                        Accept: "application/json"
+                    }
+                }
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                `Assets API returned ${response.status}.`
+            );
+        }
+
+        const indexedAssets =
+            await response.json();
+
+        if (!Array.isArray(indexedAssets)) {
+            return [];
+        }
+
+        return indexedAssets
+            .map((asset) => asset?.address)
+            .filter(
+                (address) =>
+                    typeof address === "string" &&
+                    address.length > 0
+            );
+    } catch (error) {
+        console.warn(
+            "Could not load indexed assets:",
+            error
+        );
+
+        return [];
+    }
+}
+
 async function loadAsset(address) {
     const fallback = createAssetFallback(address);
     fallback.name = "Unnamed asset";
@@ -233,7 +275,18 @@ async function loadAsset(address) {
 }
 
 async function loadAssetsPage() {
-    const knownAssets = loadKnownAssets();
+    const savedAssets =
+    loadKnownAssets();
+
+const indexedAssets =
+    await loadIndexedAssets();
+
+const knownAssets = [
+    ...new Set([
+        ...savedAssets,
+        ...indexedAssets
+    ])
+];
 
     if (knownAssets.length === 0) {
         assets = [];

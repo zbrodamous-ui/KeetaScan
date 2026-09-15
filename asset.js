@@ -173,106 +173,55 @@ async function loadRecentTransfers(
         );
 
     try {
-        const history =
-            await withKeetaViewTimeout(
-                client.getHistory(
-                    null,
-                    { depth: 100 }
-                )
+        const response =
+            await fetch(
+                `/api/transfers?token=${encodeURIComponent(assetAddress)}&limit=10`,
+                {
+                    headers: {
+                        Accept: "application/json"
+                    }
+                }
             );
 
-        const latestBlocks =
-            history
-                .flatMap(
-                    (entry) =>
-                        entry.voteStaple.blocks
-                )
-                .sort(
-                    (a, b) =>
-                        b.date - a.date
-                );
-
-        const matchingTransfers = [];
-for (const block of latestBlocks) {
-    for (
-        let operationIndex = 0;
-        operationIndex < block.operations.length;
-        operationIndex++
-    ) {
-        const operation =
-            block.operations[operationIndex];
-                if (!operation.token) {
-                    continue;
-                }
-
-                const tokenAddress =
-                    operation.token
-                        .publicKeyString
-                        .toString();
-
-                if (tokenAddress !== assetAddress) {
-                    continue;
-                }
-
-                const sender =
-                    block.account
-                        ?.publicKeyString
-                        ?.toString?.() ||
-                    "Not available";
-
-                const recipient =
-                    operation.to
-                        ?.publicKeyString
-                        ?.toString?.() ||
-                    "Not available";
-
-                const amount =
-                    operation.amount
-                        ? formatAssetSupply(
-                            operation.amount,
-                            decimalPlaces
-                        )
-                        : "—";
-                        const displayAmount =
-    amount === "-"
-        ? "-"
-        : Number(amount.replace(/,/g, "")).toLocaleString(
-              undefined,
-              {
-                  maximumFractionDigits: 6
-              }
-          );
-
-               matchingTransfers.push({
-                sender,
-                recipient,
-                amount,
-                displayAmount,
-                date: block.date,
-                blockHash: block.hash.toString(),
-                operationIndex,
-            });
-
-                if (matchingTransfers.length >= 10) {
-                    break;
-                }
-            }
-
-            if (matchingTransfers.length >= 10) {
-                break;
-            }
+        if (!response.ok) {
+            throw new Error(
+                `Transfers API returned ${response.status}.`
+            );
         }
 
+        const transfers =
+            await response.json();
 
         transfersList.innerHTML = "";
 
-        if (matchingTransfers.length === 0) {
+        if (
+            !Array.isArray(transfers) ||
+            transfers.length === 0
+        ) {
             transfersList.textContent =
-                "No recent transfers found.";
+                "No indexed transfers found.";
+
             return;
         }
 
-        matchingTransfers.forEach((transfer) => {
+        transfers.forEach((transfer) => {
+            const sender =
+                transfer.sender ||
+                "Not available";
+
+            const recipient =
+                transfer.recipient ||
+                "Not available";
+
+            const amount =
+                transfer.amount !== null &&
+                transfer.amount !== undefined
+                    ? formatAssetSupply(
+                        transfer.amount,
+                        decimalPlaces
+                    )
+                    : "—";
+
             const row =
                 document.createElement("div");
 
@@ -282,34 +231,35 @@ for (const block of latestBlocks) {
             row.innerHTML = `
                 <a
                     data-label="From"
-                    href="address.html?address=${encodeURIComponent(transfer.sender)}"
+                    href="/address?address=${encodeURIComponent(sender)}"
                 >
-                    ${shortAddress(transfer.sender)}
+                    ${shortAddress(sender)}
                 </a>
 
                 <a
                     data-label="To"
-                    href="address.html?address=${encodeURIComponent(transfer.recipient)}"
+                    href="/address?address=${encodeURIComponent(recipient)}"
                 >
-                    ${shortAddress(transfer.recipient)}
+                    ${shortAddress(recipient)}
                 </a>
 
-              <a
-    data-label="Amount"
-    href="transaction.html?block=${encodeURIComponent(transfer.blockHash)}&operation=${transfer.operationIndex}"
-    class="asset-transfer-link"
->
-    ${transfer.displayAmount} ${assetName}
-</a>
+                <a
+                    data-label="Amount"
+                    href="/transaction?block=${encodeURIComponent(transfer.block_hash)}&operation=${transfer.operation_index}"
+                    class="asset-transfer-link"
+                >
+                    ${amount} ${assetName}
+                </a>
 
                 <span data-label="Age">
-                    ${timeAgo(transfer.date)}
+                    ${timeAgo(transfer.timestamp)}
                 </span>
-            `; 
+            `;
 
-            transfersList.appendChild(row);
+            transfersList.appendChild(
+                row
+            );
         });
-
     } catch (error) {
         console.error(
             "Error loading asset transfers:",
@@ -317,7 +267,8 @@ for (const block of latestBlocks) {
         );
 
         transfersList.textContent =
-            "Unable to load recent transfers.";
+            "Unable to load indexed transfers.";
     }
 }
+
 loadAsset();

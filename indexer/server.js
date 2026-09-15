@@ -712,8 +712,31 @@ const offset =
             "address"
         );
 
+const token =
+    url.searchParams.get(
+        "token"
+    );
+
     const transfers =
-        address
+    token
+        ? database.prepare(`
+            SELECT
+                block_hash,
+                operation_index,
+                sender,
+                recipient,
+                token,
+                amount,
+                timestamp
+            FROM transfers
+            WHERE token = ?
+            ORDER BY timestamp DESC
+            LIMIT ?
+        `).all(
+            token,
+            limit
+        )
+        : address
             ? database.prepare(`
                 SELECT
                     block_hash,
@@ -751,6 +774,48 @@ const offset =
         response,
         200,
         transfers
+    );
+
+    return;
+}
+
+if (
+    request.method === "GET" &&
+    url.pathname === "/api/assets"
+) {
+    const requestedLimit =
+        Number(
+            url.searchParams.get(
+                "limit"
+            )
+        );
+
+    const limit =
+        Number.isInteger(
+            requestedLimit
+        ) &&
+        requestedLimit > 0
+            ? Math.min(
+                requestedLimit,
+                1000
+            )
+            : 1000;
+
+    const assets =
+        database.prepare(`
+            SELECT DISTINCT
+                token AS address
+            FROM transfers
+            WHERE token IS NOT NULL
+              AND token <> ''
+            ORDER BY token
+            LIMIT ?
+        `).all(limit);
+
+    sendJson(
+        response,
+        200,
+        assets
     );
 
     return;
