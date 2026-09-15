@@ -2,8 +2,13 @@ const apiEndpoint =
     document.getElementById("apiEndpoint");
 
 if (apiEndpoint) {
-    apiEndpoint.textContent =
-        location.origin;
+    const isLocalPreview =
+        ["localhost", "127.0.0.1"].includes(location.hostname) &&
+        location.port !== "3000";
+
+    apiEndpoint.textContent = isLocalPreview
+        ? "http://127.0.0.1:3000"
+        : location.origin;
 }
 
 const systemStatus = document.getElementById("systemStatus");
@@ -183,26 +188,36 @@ async function loadStatus() {
     setCheckingState();
 
     try {
-        const [statusResponse, analyticsResponse] = await Promise.all([
-            fetchKeetaView("http://localhost:3000/api/status", {
-                cache: "no-store"
-            }),
-            fetchKeetaView("http://localhost:3000/api/analytics", {
-                cache: "no-store"
-            })
-        ]);
+        const statusResponse = await fetchKeetaView(
+            "http://localhost:3000/api/status",
+            { cache: "no-store" }
+        );
 
-        if (!statusResponse.ok || !analyticsResponse.ok) {
-            throw new Error("A KeetaView status endpoint did not respond");
+        if (!statusResponse.ok) {
+            throw new Error("The KeetaView status endpoint did not respond");
         }
 
-        const [status, analytics] = await Promise.all([
-            statusResponse.json(),
-            analyticsResponse.json()
-        ]);
+        const status = await statusResponse.json();
 
-        renderStatus(status, analytics);
+        // Confirm the API immediately using the lightweight status response.
+        renderStatus(status, { summary: status });
         setOnlineState();
+
+        // Load the heavier analytics details afterward.
+        try {
+            const analyticsResponse = await fetchKeetaView(
+                "http://localhost:3000/api/analytics",
+                { cache: "no-store" }
+            );
+
+            if (analyticsResponse.ok) {
+                const analytics = await analyticsResponse.json();
+                renderStatus(status, analytics);
+            }
+        } catch (analyticsError) {
+            console.warn("Analytics details are still loading:", analyticsError);
+        }
+
         await checkMarketFeed();
     } catch (error) {
         setOfflineState(error);

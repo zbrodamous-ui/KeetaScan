@@ -2963,6 +2963,21 @@ function resolveKeetaViewResource(resource) {
         return resource;
     }
 
+    const isLocalPreview =
+        ["localhost", "127.0.0.1"].includes(location.hostname) &&
+        location.port !== "3000";
+
+    if (isLocalPreview) {
+    if (resource.startsWith("/api/")) {
+        return `http://127.0.0.1:3000${resource}`;
+    }
+
+    return resource.replace(
+        /^http:\/\/localhost:3000/,
+        "http://127.0.0.1:3000"
+    );
+}
+
     return resource.replace(
         /^http:\/\/(?:localhost|127\.0\.0\.1):3000/,
         location.origin
